@@ -5,10 +5,12 @@ class DefaultImages {
   static const String g1 = 'assets/images/g1.png';
   static const String g3 = 'assets/images/g3.png';
   static const String google = 'assets/images/google.svg';
+  static const String ob0 = 'assets/images/ob0.png';
   static const String ob2 = 'assets/images/ob2.png';
   static const String ob1 = 'assets/images/ob1.png';
   static const String ob3 = 'assets/images/ob3.png';
   static const String ob4 = 'assets/images/ob4.png';
+  static const String ob5 = 'assets/images/ob5.png';
   static const String goal1 = 'assets/images/goal1.png';
   static const String goal2 = 'assets/images/goal2.png';
   static const String goal3 = 'assets/images/goal3.png';
@@ -90,4 +92,6 @@ class DefaultImages {
   static const String heartGraph = 'assets/images/Heart-graph.png';
   static const String share = 'assets/images/share.svg';
   static const String s1 = 'assets/images/s1.png';
+  static const String sidekick1 = 'assets/images/sidekick1.png';
+  static const String sidekickLogo = 'assets/images/sidekick_logo-removebg-preview.png';
 }

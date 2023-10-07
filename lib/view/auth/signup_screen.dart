@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:sidekick_app/view/auth/form/skip_screen.dart';
+import 'package:sidekick_app/view/auth/reset_password_screen.dart';
 import 'package:sidekick_app/view/auth/signin_screen.dart';
 
 import '../../config/colors.dart';
-import '../../config/images.dart';
 import '../../config/text_style.dart';
 import '../../controller/auth_controller.dart';
 import '../../widget/custom_button.dart';
@@ -20,6 +19,32 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final authController = Get.put(AuthController());
+
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController surnameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
+
+  String? validateData() {
+    /*if (nameController.text.isEmpty) {
+      return "Veuillez entrer votre nom.";
+    }
+    if (surnameController.text.isEmpty) {
+      return "Veuillez entrer votre prénom.";
+    }
+    if (!GetUtils.isEmail(emailController.text)) {
+      return "Veuillez entrer un email valide.";
+    }
+    if (passwordController.text.length < 8) {
+      return "Le mot de passe doit avoir au moins 8 caractères.";
+    }
+    if (passwordController.text != confirmPasswordController.text) {
+      return "Les mots de passe ne correspondent pas.";
+    }*/
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,37 +68,43 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       const SizedBox(height: 20),
                       CustomTextField(
                         text: "Nom",
-                        textEditingController: TextEditingController(),
+                        textEditingController: nameController,
                       ),
                       const SizedBox(height: 15),
                       CustomTextField(
                         text: "Prénom",
-                        textEditingController: TextEditingController(),
+                        textEditingController: surnameController,
                       ),
                       const SizedBox(height: 15),
                       CustomTextField(
                         text: "Email",
-                        textEditingController: TextEditingController(),
+                        textEditingController: emailController,
                       ),
                       const SizedBox(height: 15),
                       CustomTextField(
                         text: "Mot de passe",
-                        textEditingController: TextEditingController(),
+                        textEditingController: passwordController,
                       ),
                       const SizedBox(height: 15),
                       CustomTextField(
                         text: "Confirmer le mot de passe",
-                        textEditingController: TextEditingController(),
+                        textEditingController: confirmPasswordController,
                       ),
                       const SizedBox(height: 30),
                       CustomButton(
                         title: "Inscription",
                         width: Get.width,
                         onTap: () {
-                          Get.to(
-                            const SkipScreen(),
-                            transition: Transition.rightToLeft,
-                          );
+                          String? errorMessage = validateData();
+                          if (errorMessage == null) {
+                            Get.to(() =>
+                              const SkipScreen(),
+                              transition: Transition.rightToLeft,
+                            );
+                          } else {
+                            Get.snackbar("Erreur", errorMessage,
+                                snackPosition: SnackPosition.BOTTOM);
+                          }
                         },
                       ),
                     ],
@@ -84,7 +115,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
           InkWell(
             onTap: () {
-              Get.to(
+              Get.to(() =>
                 const SignInScreen(),
                 transition: Transition.rightToLeft,
               );

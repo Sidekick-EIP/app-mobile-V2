@@ -17,6 +17,7 @@ class OnBoardingScreen extends StatefulWidget {
 
 class _OnBoardingScreenState extends State<OnBoardingScreen> {
   final onboardingController = Get.put(OnBoardingController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,10 +37,10 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   image: DecorationImage(
                     image: AssetImage(
                       onboardingController.flag.value == 0
-                          ? DefaultImages.ob1
+                          ? DefaultImages.ob0
                           : onboardingController.flag.value == 1
-                          ? DefaultImages.ob2
-                          : DefaultImages.ob3,
+                              ? DefaultImages.ob2
+                              : DefaultImages.ob5,
                     ),
                   ),
                 ),
@@ -67,8 +68,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       onboardingController.flag.value == 0
                           ? "Bienvenue sur Sidekick"
                           : onboardingController.flag.value == 1
-                          ? "Connectez-vous avec\nun partenaire"
-                          : "Restez motivé et suivez\nvos progrès à deux",
+                              ? "Connectez-vous avec\nun partenaire"
+                              : "Restez motivé et suivez\nvos progrès à deux",
                       style: pSemiBold20.copyWith(
                         fontSize: 25,
                       ),
@@ -83,8 +84,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       onboardingController.flag.value == 0
                           ? "Connectez-vous avec un partenaire pour atteindre ensemble vos objectifs sportifs et alimentaires !"
                           : onboardingController.flag.value == 1
-                          ? "Créez des duos dynamiques : Sidekick vous jumelle\navec quelqu'un partageant vos ambitions."
-                          : "Restez motivé et suivez vos progrès à deux,\npour une expérience sportive et alimentaire enrichissante !",
+                              ? "Créez des duos dynamiques : Sidekick vous jumelle\navec quelqu'un partageant vos ambitions."
+                              : "Restez motivé et suivez vos progrès à deux,\npour une expérience sportive et alimentaire enrichissante !",
                       style: pRegular14.copyWith(
                         fontSize: 15,
                         color: ConstColors.lightBlackColor,
@@ -137,7 +138,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                               onboardingController.flag.value + 1;
                           if (onboardingController.flag.value == 3) {
                             Get.to(
-                              const SignInScreen(),
+                              () => const SignInScreen(),
                               transition: Transition.rightToLeft,
                             );
                           }
@@ -147,27 +148,27 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   ),
                   onboardingController.flag.value == 0
                       ? Padding(
-                    padding: const EdgeInsets.only(top: 15),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Vous avez déjà un compte ?   ",
-                          style: pRegular14.copyWith(
-                            fontSize: 13,
-                            color: ConstColors.lightBlackColor,
-                          ),
-                        ),
-                        Text(
-                          "Connexion",
-                          style: pRegular14.copyWith(
-                            fontSize: 13,
-                            color: ConstColors.primaryColor,
+                          padding: const EdgeInsets.only(top: 15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Vous avez déjà un compte ?   ",
+                                style: pRegular14.copyWith(
+                                  fontSize: 13,
+                                  color: ConstColors.lightBlackColor,
+                                ),
+                              ),
+                              Text(
+                                "Connexion",
+                                style: pRegular14.copyWith(
+                                  fontSize: 13,
+                                  color: ConstColors.primaryColor,
+                                ),
+                              )
+                            ],
                           ),
                         )
-                      ],
-                    ),
-                  )
                       : const SizedBox(),
                   const SizedBox(height: 25),
                 ],

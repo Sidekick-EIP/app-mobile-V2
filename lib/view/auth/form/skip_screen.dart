@@ -24,10 +24,40 @@ class SkipScreen extends StatefulWidget {
 class _SkipScreenState extends State<SkipScreen> {
   final authController = Get.put(AuthController());
 
+  String? errorMessage;
+
   @override
   void initState() {
     authController.skip.value = 1;
     super.initState();
+  }
+
+  void goToNextStep() {
+    errorMessage = checkForErrorsAtCurrentStep(authController.skip.value);
+    if (errorMessage == null) {
+      authController.skip.value++;
+    } else {
+      setState(() {}); // pour reconstruire et afficher l'erreur
+    }
+  }
+
+  String? checkForErrorsAtCurrentStep(int step) {
+    switch (step) {
+      case 1:
+        // Vérifiez les erreurs pour GenderView
+        // Exemple : if (authController.gender == null) return "Veuillez choisir un genre.";
+        break;
+      case 2:
+        // Vérifiez les erreurs pour GoalView
+        break;
+      case 3:
+        // Vérifiez les erreurs pour SelectHeightView
+        break;
+      // Ajoutez des vérifications pour chaque étape.
+      default:
+        break;
+    }
+    return null;
   }
 
   @override
@@ -98,98 +128,36 @@ class _SkipScreenState extends State<SkipScreen> {
                 ),
               ),
               const SizedBox(height: 100),
+              if (errorMessage != null)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    errorMessage!,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                ),
             ],
           ),
           GetX<AuthController>(
             init: authController,
-            builder: (authController) => authController.skip.value == 1
-                ? Padding(
-                    padding:
-                        const EdgeInsets.only(bottom: 40, left: 20, right: 20),
-                    child: CustomButton(
-                      title: "Suivant",
-                      width: Get.width,
-                      onTap: () {
-                        authController.skip.value = 2;
+            builder: (authController) => Padding(
+              padding: const EdgeInsets.only(bottom: 40, left: 20, right: 20),
+              child: CustomButton(
+                title: authController.skip.value < 7
+                    ? "Suivant"
+                    : "Terminer l'inscription",
+                width: Get.width,
+                onTap: authController.skip.value < 7
+                    ? goToNextStep
+                    : () {
+                        Get.offAll(
+                          const PlanScreen(),
+                          transition: Transition.rightToLeft,
+                        );
                       },
-                    ),
-                  )
-                : authController.skip.value == 2
-                    ? Padding(
-                        padding: const EdgeInsets.only(
-                            bottom: 40, left: 20, right: 20),
-                        child: CustomButton(
-                          title: "Suivant",
-                          width: Get.width,
-                          onTap: () {
-                            authController.skip.value = 3;
-                          },
-                        ),
-                      )
-                    : authController.skip.value == 3
-                        ? Padding(
-                            padding: const EdgeInsets.only(
-                                bottom: 40, left: 20, right: 20),
-                            child: CustomButton(
-                              title: "Suivant",
-                              width: Get.width,
-                              onTap: () {
-                                authController.skip.value = 4;
-                              },
-                            ),
-                          )
-                        : authController.skip.value == 4
-                            ? Padding(
-                                padding: const EdgeInsets.only(
-                                    bottom: 40, left: 20, right: 20),
-                                child: CustomButton(
-                                  title: "Suivant",
-                                  width: Get.width,
-                                  onTap: () {
-                                    authController.skip.value = 5;
-                                  },
-                                ),
-                              )
-                            : authController.skip.value == 5
-                                ? Padding(
-                                    padding: const EdgeInsets.only(
-                                        bottom: 40, left: 20, right: 20),
-                                    child: CustomButton(
-                                      title: "Suivant",
-                                      width: Get.width,
-                                      onTap: () {
-                                        authController.skip.value = 6;
-                                      },
-                                    ),
-                                  )
-                                : authController.skip.value == 6
-                                    ? Padding(
-                                        padding: const EdgeInsets.only(
-                                            bottom: 40, left: 20, right: 20),
-                                        child: CustomButton(
-                                          title: "Suivant",
-                                          width: Get.width,
-                                          onTap: () {
-                                            authController.skip.value = 7;
-                                          },
-                                        ),
-                                      )
-                                    : Padding(
-                                        padding: const EdgeInsets.only(
-                                            bottom: 40, left: 20, right: 20),
-                                        child: CustomButton(
-                                          title: "Terminer l'inscription",
-                                          width: Get.width,
-                                          onTap: () {
-                                            Get.offAll(
-                                              const PlanScreen(),
-                                              transition:
-                                                  Transition.rightToLeft,
-                                            );
-                                          },
-                                        ),
-                                      ),
-          )
+              ),
+            ),
+          ),
         ],
       ),
     );

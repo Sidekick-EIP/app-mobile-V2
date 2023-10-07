@@ -159,11 +159,19 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                                   color: ConstColors.lightBlackColor,
                                 ),
                               ),
-                              Text(
-                                "Connexion",
-                                style: pRegular14.copyWith(
-                                  fontSize: 13,
-                                  color: ConstColors.primaryColor,
+                              InkWell(
+                                onTap: () {
+                                  Get.to(
+                                    () => const SignInScreen(),
+                                    transition: Transition.rightToLeft,
+                                  );
+                                },
+                                child: Text(
+                                  "Connexion",
+                                  style: pRegular14.copyWith(
+                                    fontSize: 13,
+                                    color: ConstColors.primaryColor,
+                                  ),
                                 ),
                               )
                             ],

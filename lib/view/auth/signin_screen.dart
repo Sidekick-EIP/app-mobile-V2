@@ -10,6 +10,7 @@ import 'package:sidekick_app/view/auth/signup_screen.dart';
 import '../../config/colors.dart';
 import '../../config/images.dart';
 import '../../config/text_style.dart';
+import '../../utils/token_storage.dart';
 import '../../widget/custom_button.dart';
 import '../../widget/custom_textfield.dart';
 
@@ -24,6 +25,8 @@ class _SignInScreenState extends State<SignInScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+  final TokenStorage tokenStorage = TokenStorage();
+
   Future<void> signIn() async {
     String apiUrl = dotenv.env['API_BACK_URL'] ?? "";
 
@@ -37,13 +40,16 @@ class _SignInScreenState extends State<SignInScreen> {
     );
 
     if (response.statusCode == 201) {
+      Map<String, dynamic> decodedResponse = jsonDecode(response.body);
+      await tokenStorage.storeAccessToken(decodedResponse['access_token']);
+      await tokenStorage.storeRefreshToken(decodedResponse['refresh_token']);
+
       Get.snackbar("Success", "Vous êtes connecté",
           backgroundColor: Colors.green,
           colorText: Colors.white,
           snackPosition: SnackPosition.BOTTOM);
     } else {
       Map<String, dynamic> decodedResponse = jsonDecode(response.body);
-
       String errorMessage = decodedResponse['error'] ?? "Erreur inconnue";
 
       Get.snackbar("Erreur", errorMessage,
@@ -88,6 +94,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       CustomTextField(
                         text: "Mot de passe",
                         textEditingController: passwordController,
+                        isPassword: true,
                       ),
                       const SizedBox(height: 30),
                       CustomButton(

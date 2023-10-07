@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sidekick_app/view/auth/form/skip_screen.dart';
-import 'package:sidekick_app/view/auth/reset_password_screen.dart';
 import 'package:sidekick_app/view/auth/signin_screen.dart';
 
 import '../../config/colors.dart';
@@ -84,11 +83,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       CustomTextField(
                         text: "Mot de passe",
                         textEditingController: passwordController,
+                        isPassword: true,
                       ),
                       const SizedBox(height: 15),
                       CustomTextField(
                         text: "Confirmer le mot de passe",
                         textEditingController: confirmPasswordController,
+                        isPassword: true,
                       ),
                       const SizedBox(height: 30),
                       CustomButton(

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+import 'package:sidekick_app/providers/auth.dart';
 import 'package:sidekick_app/view/onboarding/onboarding_screen.dart';
 
 Future main() async {
@@ -12,8 +14,11 @@ Future main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]).then(
-        (_) => runApp(
-      const MyApp(),
+    (_) => runApp(
+      ChangeNotifierProvider(
+        create: (context) => Auth(),
+        child: const MyApp(),
+      ),
     ),
   );
 }

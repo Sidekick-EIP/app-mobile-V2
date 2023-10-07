@@ -21,9 +21,22 @@ class ResetPasswordScreen extends StatefulWidget {
 
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final emailPasswordController = TextEditingController();
+  bool isLoading = false;
 
   Future<void> forgotPassword() async {
     String apiUrl = dotenv.env['API_BACK_URL'] ?? "";
+
+    if (!_validateEmail(emailPasswordController.text)) {
+      Get.snackbar("Erreur", "Email non valide",
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM);
+      return;
+    }
+
+    setState(() {
+      isLoading = true; // Commence le chargement
+    });
 
     final response = await http.post(
       Uri.parse("$apiUrl/auth/forgotPassword"),
@@ -48,10 +61,23 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     }
   }
 
+  bool _validateEmail(String email) {
+    RegExp regex = RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+    return regex.hasMatch(email);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ConstColors.secondaryColor,
+      appBar: AppBar(
+        backgroundColor: ConstColors.secondaryColor,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: ConstColors.blackColor),
+          onPressed: () => Get.back(),
+        ),
+      ),
       body: Column(
         children: [
           Expanded(
@@ -81,11 +107,14 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       ),
                       const SizedBox(height: 30),
                       CustomButton(
-                          title: "Envoyer",
-                          width: Get.width,
-                          onTap: () async {
-                            await forgotPassword();
-                          }),
+                        title: isLoading ? "Chargement..." : "Envoyer",
+                        width: Get.width,
+                        onTap: isLoading
+                            ? () {}
+                            : () {
+                                forgotPassword();
+                              },
+                      ),
                     ],
                   ),
                 ),

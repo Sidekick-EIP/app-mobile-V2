@@ -13,6 +13,7 @@ import '../../config/text_style.dart';
 import '../../utils/token_storage.dart';
 import '../../widget/custom_button.dart';
 import '../../widget/custom_textfield.dart';
+import '../tab_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({Key? key}) : super(key: key);
@@ -24,38 +25,72 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  bool isLoading = false;
 
   final TokenStorage tokenStorage = TokenStorage();
 
+  bool _isValidEmail(String email) {
+    return email.contains('@') && email.contains('.');
+  }
+
   Future<void> signIn() async {
-    String apiUrl = dotenv.env['API_BACK_URL'] ?? "";
-
-    final response = await http.post(
-      Uri.parse("$apiUrl/auth/login"),
-      headers: {"Content-Type": "application/x-www-form-urlencoded"},
-      body: {
-        "email": emailController.text,
-        "password": passwordController.text,
-      },
-    );
-
-    if (response.statusCode == 201) {
-      Map<String, dynamic> decodedResponse = jsonDecode(response.body);
-      await tokenStorage.storeAccessToken(decodedResponse['access_token']);
-      await tokenStorage.storeRefreshToken(decodedResponse['refresh_token']);
-
-      Get.snackbar("Success", "Vous êtes connecté",
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.BOTTOM);
-    } else {
-      Map<String, dynamic> decodedResponse = jsonDecode(response.body);
-      String errorMessage = decodedResponse['error'] ?? "Erreur inconnue";
-
-      Get.snackbar("Erreur", errorMessage,
+    if (!_isValidEmail(emailController.text)) {
+      Get.snackbar("Erreur", "Entrez un email valide.",
           backgroundColor: Colors.red,
           colorText: Colors.white,
           snackPosition: SnackPosition.BOTTOM);
+      return;
+    }
+    if (passwordController.text.isEmpty) {
+      Get.snackbar("Erreur", "Entrez un mot de passe.",
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM);
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    String apiUrl = dotenv.env['API_BACK_URL'] ?? "";
+
+    try {
+      final response = await http.post(
+        Uri.parse("$apiUrl/auth/login"),
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: {
+          "email": emailController.text,
+          "password": passwordController.text,
+        },
+      );
+
+      if (response.statusCode == 201) {
+        Map<String, dynamic> decodedResponse = jsonDecode(response.body);
+        await tokenStorage.storeAccessToken(decodedResponse['access_token']);
+        await tokenStorage.storeRefreshToken(decodedResponse['refresh_token']);
+
+        Get.offAll(
+          () => const TabScreen(),
+          transition: Transition.rightToLeft,
+        );
+      } else {
+        Map<String, dynamic> decodedResponse = jsonDecode(response.body);
+        String errorMessage = decodedResponse['error'] ?? "Erreur inconnue";
+        Get.snackbar("Erreur", errorMessage,
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+            snackPosition: SnackPosition.BOTTOM);
+      }
+    } catch (error) {
+      Get.snackbar("Erreur", "Une erreur s'est produite lors de la connexion.",
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM);
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -123,6 +158,16 @@ class _SignInScreenState extends State<SignInScreen> {
                     ],
                   ),
                 ),
+                const SizedBox(height: 10),
+                if (isLoading)
+                  Positioned.fill(
+                    child: Container(
+                      color: ConstColors.secondaryColor,
+                      child: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),

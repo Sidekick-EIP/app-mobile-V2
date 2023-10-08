@@ -21,9 +21,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController surnameController = TextEditingController();
+  final TextEditingController birthDateController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
 
   String? validateData() {
     /*if (nameController.text.isEmpty) {
@@ -34,6 +36,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
     if (!GetUtils.isEmail(emailController.text)) {
       return "Veuillez entrer un email valide.";
+    }
+    if (!_isValidDate(birthDateController.text)) {
+      return "Veuillez entrer une date de naissance valide.";
+    }
+    if (descriptionController.text.isEmpty) {
+      return "Veuillez entrer une description.";
     }
     if (passwordController.text.length < 8) {
       return "Le mot de passe doit avoir au moins 8 caractères.";
@@ -76,6 +84,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       const SizedBox(height: 15),
                       CustomTextField(
+                        text: "Date de naissance",
+                        textEditingController: birthDateController,
+                      ),
+                      const SizedBox(height: 15),
+                      CustomTextField(
                         text: "Email",
                         textEditingController: emailController,
                       ),
@@ -90,6 +103,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         text: "Confirmer le mot de passe",
                         textEditingController: confirmPasswordController,
                         isPassword: true,
+                      ),
+                      const SizedBox(height: 15),
+                      CustomTextField(
+                        text: "Description",
+                        textEditingController: descriptionController,
+                        minLines: 5,
+                        maxLines: 10,
+                        height: 100,
                       ),
                       const SizedBox(height: 30),
                       CustomButton(

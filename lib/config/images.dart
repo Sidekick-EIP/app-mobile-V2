@@ -15,6 +15,7 @@ class DefaultImages {
   static const String goal2 = 'assets/images/goal2.png';
   static const String goal3 = 'assets/images/goal3.png';
   static const String goal4 = 'assets/images/goal4.png';
+  static const String a0 = 'assets/images/a0.png';
   static const String a1 = 'assets/images/a1.png';
   static const String a2 = 'assets/images/a2.png';
   static const String a3 = 'assets/images/a3.png';
@@ -24,6 +25,8 @@ class DefaultImages {
   static const String goals = 'assets/images/goals.svg';
   static const String training = 'assets/images/training.svg';
   static const String home = 'assets/images/home.svg';
+  static const String message = 'assets/images/message.svg';
+  static const String nutrition = 'assets/images/nutrition.svg';
   static const String user = 'assets/images/user.svg';
   static const String search = 'assets/images/Shape.svg';
   static const String error = 'assets/images/feather_info.svg';

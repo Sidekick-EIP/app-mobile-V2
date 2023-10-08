@@ -6,7 +6,7 @@ class AuthController extends GetxController {
   List<bool> genderList = [true, false, false].obs;
   List<bool> goalList = [true, false, false, false].obs;
   List<bool> trainingList = [true, false, false, false].obs;
-  List<bool> activityList = [true, false, false, false, false].obs;
+  List<bool> activityList = List<bool>.filled(30, false).obs;
 
   RxString height = RxString("168");
   RxString weight = RxString("55");

@@ -6,8 +6,75 @@ import '../../../config/images.dart';
 import '../../../config/text_style.dart';
 import '../../../controller/auth_controller.dart';
 
+enum Activities {
+  RUNNING,
+  CYCLING,
+  SWIMMING,
+  WEIGHTLIFTING,
+  YOGA,
+  PILATES,
+  MARTIAL_ARTS,
+  DANCING,
+  HIKING,
+  ROCK_CLIMBING,
+  TENNIS,
+  BASKETBALL,
+  SOCCER,
+  VOLLEYBALL,
+  BASEBALL,
+  SKIING,
+  SNOWBOARDING,
+  SURFING,
+  GOLF,
+  ROWING,
+  CROSSFIT,
+  GYMNASTICS,
+  TRIATHLON,
+  RUGBY,
+  BOXING,
+  SKATING,
+  SQUASH,
+  BADMINTON,
+  HORSE_RIDING,
+  TABLE_TENNIS,
+}
+
+Map<Activities, String> sportsTranslation = {
+  Activities.RUNNING: 'Course à pied',
+  Activities.CYCLING: 'Cyclisme',
+  Activities.SWIMMING: 'Natation',
+  Activities.WEIGHTLIFTING: 'Musculation',
+  Activities.YOGA: 'Yoga',
+  Activities.PILATES: 'Pilates',
+  Activities.MARTIAL_ARTS: 'Arts martiaux',
+  Activities.DANCING: 'Danse',
+  Activities.HIKING: 'Randonnée',
+  Activities.ROCK_CLIMBING: 'Escalade',
+  Activities.TENNIS: 'Tennis',
+  Activities.BASKETBALL: 'Basketball',
+  Activities.SOCCER: 'Football',
+  Activities.VOLLEYBALL: 'Volleyball',
+  Activities.BASEBALL: 'Baseball',
+  Activities.SKIING: 'Ski',
+  Activities.SNOWBOARDING: 'Snowboard',
+  Activities.SURFING: 'Surf',
+  Activities.GOLF: 'Golf',
+  Activities.ROWING: 'Aviron',
+  Activities.CROSSFIT: 'Crossfit',
+  Activities.GYMNASTICS: 'Gymnastique',
+  Activities.TRIATHLON: 'Triathlon',
+  Activities.RUGBY: 'Rugby',
+  Activities.BOXING: 'Boxe',
+  Activities.SKATING: 'Patinage',
+  Activities.SQUASH: 'Squash',
+  Activities.BADMINTON: 'Badminton',
+  Activities.HORSE_RIDING: 'Équitation',
+  Activities.TABLE_TENNIS: 'Tennis de table',
+};
+
 class ActivityView extends StatefulWidget {
   final AuthController authController;
+
   const ActivityView({Key? key, required this.authController})
       : super(key: key);
 
@@ -16,6 +83,8 @@ class ActivityView extends StatefulWidget {
 }
 
 class _ActivityViewState extends State<ActivityView> {
+  List<String> sportsList = sportsTranslation.values.toList();
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -31,7 +100,7 @@ class _ActivityViewState extends State<ActivityView> {
         ),
         const SizedBox(height: 30),
         ListView.builder(
-          itemCount: 5,
+          itemCount: sportsList.length,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) {
@@ -39,7 +108,7 @@ class _ActivityViewState extends State<ActivityView> {
               onTap: () {
                 setState(() {
                   widget.authController.activityList[index] =
-                      !widget.authController.activityList[index];
+                  !widget.authController.activityList[index];
                 });
               },
               child: Padding(
@@ -64,38 +133,18 @@ class _ActivityViewState extends State<ActivityView> {
                           width: 53,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(6),
-                            color: index == 0 || index == 3
-                                ? const Color(0xffFFEAEA)
-                                : index == 2
-                                    ? const Color(0xffEFF7FF)
-                                    : ConstColors.secondaryColor,
+                            color: const Color(0xffEFF7FF),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: Image.asset(
-                              index == 0
-                                  ? DefaultImages.a1
-                                  : index == 1
-                                      ? DefaultImages.a2
-                                      : index == 2
-                                          ? DefaultImages.a3
-                                          : index == 3
-                                              ? DefaultImages.a4
-                                              : DefaultImages.a5,
+                              DefaultImages.a0,
                             ),
                           ),
                         ),
                         const SizedBox(width: 15),
                         Text(
-                          index == 0
-                              ? "Cardio"
-                              : index == 1
-                                  ? "Power training"
-                                  : index == 2
-                                      ? "Stretch"
-                                      : index == 3
-                                          ? "Dancing"
-                                          : "Yoga",
+                          sportsList[index],  // get the sport from the list
                           style: pSemiBold18.copyWith(
                             fontSize: 15,
                           ),
@@ -107,15 +156,15 @@ class _ActivityViewState extends State<ActivityView> {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: widget.authController.activityList[index] ==
-                                    true
+                                true
                                 ? const Color(0xffF25D29)
                                 : Colors.transparent,
                             border: Border.all(
                               color:
-                                  widget.authController.activityList[index] ==
-                                          true
-                                      ? const Color(0xffF25D29)
-                                      : const Color(0xffDAE0E8),
+                              widget.authController.activityList[index] ==
+                                  true
+                                  ? const Color(0xffF25D29)
+                                  : const Color(0xffDAE0E8),
                             ),
                           ),
                           child: const Icon(

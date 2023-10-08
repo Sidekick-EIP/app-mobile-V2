@@ -8,13 +8,19 @@ class CustomTextField extends StatefulWidget {
   final String text;
   final TextEditingController textEditingController;
   final bool isPassword;
+  final int? minLines;
+  final int? maxLines;
+  final double? height;
 
-  const CustomTextField(
-      {Key? key,
-      required this.text,
-      required this.textEditingController,
-      this.isPassword = false})
-      : super(key: key);
+  const CustomTextField({
+    Key? key,
+    required this.text,
+    required this.textEditingController,
+    this.isPassword = false,
+    this.minLines,
+    this.maxLines,
+    this.height,
+  }) : super(key: key);
 
   @override
   CustomTextFieldState createState() => CustomTextFieldState();
@@ -26,7 +32,7 @@ class CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 52,
+      height: widget.height ?? 52, // Use the specified height or default to 52
       width: Get.width,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(23),
@@ -40,6 +46,8 @@ class CustomTextFieldState extends State<CustomTextField> {
           style: pSemiBold18.copyWith(
             fontSize: 13,
           ),
+          minLines: widget.isPassword ? 1 : widget.minLines,
+          maxLines: widget.isPassword ? 1 : widget.maxLines,
           decoration: InputDecoration(
             border: InputBorder.none,
             hintText: widget.text,
@@ -49,16 +57,16 @@ class CustomTextFieldState extends State<CustomTextField> {
             ),
             suffixIcon: widget.isPassword
                 ? GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    onTap: () {
-                      setState(() {
-                        _obscureText = !_obscureText;
-                      });
-                    },
-                    child: Icon(
-                      _obscureText ? Icons.visibility_off : Icons.visibility,
-                    ),
-                  )
+              behavior: HitTestBehavior.translucent,
+              onTap: () {
+                setState(() {
+                  _obscureText = !_obscureText;
+                });
+              },
+              child: Icon(
+                _obscureText ? Icons.visibility_off : Icons.visibility,
+              ),
+            )
                 : null,
           ),
         ),

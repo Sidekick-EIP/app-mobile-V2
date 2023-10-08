@@ -5,39 +5,7 @@ import '../../../config/colors.dart';
 import '../../../config/images.dart';
 import '../../../config/text_style.dart';
 import '../../../controller/auth_controller.dart';
-
-enum Activities {
-  RUNNING,
-  CYCLING,
-  SWIMMING,
-  WEIGHTLIFTING,
-  YOGA,
-  PILATES,
-  MARTIAL_ARTS,
-  DANCING,
-  HIKING,
-  ROCK_CLIMBING,
-  TENNIS,
-  BASKETBALL,
-  SOCCER,
-  VOLLEYBALL,
-  BASEBALL,
-  SKIING,
-  SNOWBOARDING,
-  SURFING,
-  GOLF,
-  ROWING,
-  CROSSFIT,
-  GYMNASTICS,
-  TRIATHLON,
-  RUGBY,
-  BOXING,
-  SKATING,
-  SQUASH,
-  BADMINTON,
-  HORSE_RIDING,
-  TABLE_TENNIS,
-}
+import '../../../enum/activities.dart';
 
 Map<Activities, String> sportsTranslation = {
   Activities.RUNNING: 'Course à pied',

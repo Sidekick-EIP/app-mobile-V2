@@ -11,6 +11,7 @@ class CustomTextField extends StatefulWidget {
   final int? minLines;
   final int? maxLines;
   final double? height;
+  final ValueChanged<String>? onChanged;
 
   const CustomTextField({
     Key? key,
@@ -20,6 +21,7 @@ class CustomTextField extends StatefulWidget {
     this.minLines,
     this.maxLines,
     this.height,
+    this.onChanged,
   }) : super(key: key);
 
   @override
@@ -42,6 +44,7 @@ class CustomTextFieldState extends State<CustomTextField> {
         padding: const EdgeInsets.only(left: 16, right: 16),
         child: TextFormField(
           controller: widget.textEditingController,
+          onChanged: widget.onChanged,
           obscureText: widget.isPassword ? _obscureText : false,
           style: pSemiBold18.copyWith(
             fontSize: 13,

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../config/colors.dart';
-import '../../../config/images.dart';
-import '../../../config/text_style.dart';
-import '../../../controller/auth_controller.dart';
-import '../../../enum/activities.dart';
+import '../../../../config/colors.dart';
+import '../../../../config/images.dart';
+import '../../../../config/text_style.dart';
+import '../../../../controller/auth_controller.dart';
+import '../../../../enum/activities.dart';
+
 
 Map<Activities, String> sportsTranslation = {
   Activities.RUNNING: 'Course à pied',

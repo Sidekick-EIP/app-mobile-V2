@@ -1,9 +1,16 @@
+import 'package:intl/intl.dart';
+
 bool isValidDate(String dateString) {
   try {
-    DateTime inputDate = DateTime.parse(dateString);
+    // Define the format
+    DateFormat format = DateFormat("dd/MM/yyyy");
+
+    // Parse the date using the format
+    DateTime inputDate = format.parseStrict(
+        dateString); // parseStrict ensures that the input matches the format exactly
     DateTime currentDate = DateTime.now();
 
-    // Check if inputDate is before the current date.
+    // Check if the date is before today
     if (inputDate.isBefore(currentDate)) {
       return true;
     } else {

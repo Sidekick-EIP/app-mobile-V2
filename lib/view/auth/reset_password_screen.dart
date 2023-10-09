@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:sidekick_app/view/auth/signup_screen.dart';
+import 'package:sidekick_app/view/auth/register/signup_screen.dart';
 
 import '../../config/colors.dart';
 import '../../config/images.dart';

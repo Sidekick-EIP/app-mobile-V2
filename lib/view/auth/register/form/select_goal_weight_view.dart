@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-import '../../../config/colors.dart';
-import '../../../config/text_style.dart';
-import '../../../controller/auth_controller.dart';
-import '../../../utils/get_regex_string.dart';
+import '../../../../config/colors.dart';
+import '../../../../config/text_style.dart';
+import '../../../../controller/auth_controller.dart';
+import '../../../../utils/get_regex_string.dart';
+
 
 class SelectWeightGoalView extends StatelessWidget {
   final AuthController authController;

@@ -7,8 +7,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:sidekick_app/config/colors.dart';
 import 'package:sidekick_app/controller/auth_controller.dart';
-
+import 'package:sidekick_app/view/auth/register/info_screen.dart';
 
 import '../../../../config/text_style.dart';
 import '../../../../config/images.dart';
@@ -133,6 +134,17 @@ class _PlanScreenState extends State<PlanScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ConstColors.secondaryColor,
+      appBar: AppBar(
+        backgroundColor: ConstColors.secondaryColor,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          color: ConstColors.blackColor,
+          onPressed: () => Get.offAll(() => const InfoScreen(),
+              transition: Transition.leftToRight),
+        ),
+      ),
       body: Stack(
         alignment: Alignment.bottomCenter,
         children: [

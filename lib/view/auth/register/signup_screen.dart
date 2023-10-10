@@ -139,25 +139,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ],
           ),
-          if (isLoading) ...[
-            Positioned.fill(
-              child: Container(
-                color: ConstColors.secondaryColor,
-                child: const Center(
-                  child: CircularProgressIndicator(),
-                ),
-              ),
-            ),
-          ],
-          InkWell(
-            onTap: () {
-              Get.offAll(
-                const SignInScreen(),
-                transition: Transition.rightToLeft,
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 35),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 35,
+            child: InkWell(
+              onTap: () {
+                Get.offAll(
+                  const SignInScreen(),
+                  transition: Transition.rightToLeft,
+                );
+              },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -178,7 +170,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ],
               ),
             ),
-          )
+          ),
+          if (isLoading) ...[
+            Positioned.fill(
+              child: Container(
+                color: ConstColors.secondaryColor,
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );

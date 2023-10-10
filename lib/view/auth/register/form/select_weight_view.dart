@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import '../../../../config/colors.dart';
 import '../../../../config/text_style.dart';
 import '../../../../controller/auth_controller.dart';
-import '../../../../utils/get_regex_string.dart';
 
 
 class SelectWeightView extends StatelessWidget {
@@ -76,12 +75,7 @@ class SelectWeightView extends StatelessWidget {
                     authController.weight(value);
                   },
                   inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.allow(RegExp(getRegexString())),
-                    TextInputFormatter.withFunction(
-                          (oldValue, newValue) => newValue.copyWith(
-                        text: newValue.text.replaceAll('.', ','),
-                      ),
-                    ),
+                    FilteringTextInputFormatter.digitsOnly,
                   ],
                   decoration: const InputDecoration(
                     border: InputBorder.none,

@@ -15,6 +15,7 @@ class DefaultImages {
   static const String goal2 = 'assets/images/goal2.png';
   static const String goal3 = 'assets/images/goal3.png';
   static const String goal4 = 'assets/images/goal4.png';
+  static const String ps1 = 'assets/images/ps1.png';
   static const String a0 = 'assets/images/a0.png';
   static const String a1 = 'assets/images/a1.png';
   static const String a2 = 'assets/images/a2.png';

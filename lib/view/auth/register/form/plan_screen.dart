@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
@@ -30,7 +31,9 @@ class _PlanScreenState extends State<PlanScreen> {
     String? accessToken = await storage.read(key: 'accessToken');
 
     if (accessToken == null) {
-      print('Access token not found.');
+      if (kDebugMode) {
+        print('Access token not found.');
+      }
       return;
     }
 
@@ -42,7 +45,9 @@ class _PlanScreenState extends State<PlanScreen> {
     try {
       parsedBirthDate = format.parse(authController.birthDate.value);
     } catch (e) {
-      print("Error parsing date: $e");
+      if (kDebugMode) {
+        print("Error parsing date: $e");
+      }
       return;
     }
 
@@ -68,9 +73,6 @@ class _PlanScreenState extends State<PlanScreen> {
           .toList(),
     };
 
-    print(body);
-    print(headers);
-
     try {
       final response = await http.post(
         Uri.parse("$apiUrl/user_infos/"),
@@ -88,11 +90,12 @@ class _PlanScreenState extends State<PlanScreen> {
         );
         Get.offAll(() => const HomeView(), transition: Transition.rightToLeft);
       } else {
-        print(response.body);
         showErrorSnackbar();
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       showErrorSnackbar();
     }
   }
@@ -139,7 +142,7 @@ class _PlanScreenState extends State<PlanScreen> {
                 children: [
                   const SizedBox(height: 60),
                   Text(
-                    "Profil completé",
+                    "Profil complété",
                     style: pSemiBold20.copyWith(
                       fontSize: 25,
                     ),
@@ -151,7 +154,7 @@ class _PlanScreenState extends State<PlanScreen> {
                     decoration: const BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage(
-                          DefaultImages.planGraph,
+                          DefaultImages.ps1,
                         ),
                         fit: BoxFit.fill,
                       ),

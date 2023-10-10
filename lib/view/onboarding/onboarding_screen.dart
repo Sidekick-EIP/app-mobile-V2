@@ -130,8 +130,10 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       init: onboardingController,
                       builder: (onboardingController) => CustomButton(
                         title: onboardingController.flag.value == 0
-                            ? "Commencer"
-                            : "Suivant",
+                            ? "Suivant"
+                            : onboardingController.flag.value == 3
+                                ? "Commencer mon inscription"
+                                : "Suivant",
                         width: Get.width,
                         onTap: () {
                           onboardingController.flag.value =

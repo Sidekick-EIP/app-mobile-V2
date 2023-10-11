@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../config/colors.dart';
@@ -12,6 +13,8 @@ class CustomTextField extends StatefulWidget {
   final int? maxLines;
   final double? height;
   final ValueChanged<String>? onChanged;
+  final String? suffixText;
+  final TextInputType? keyboardType;
 
   const CustomTextField({
     Key? key,
@@ -22,6 +25,8 @@ class CustomTextField extends StatefulWidget {
     this.maxLines,
     this.height,
     this.onChanged,
+    this.suffixText,
+    this.keyboardType,
   }) : super(key: key);
 
   @override
@@ -46,6 +51,10 @@ class CustomTextFieldState extends State<CustomTextField> {
           controller: widget.textEditingController,
           onChanged: widget.onChanged,
           obscureText: widget.isPassword ? _obscureText : false,
+          keyboardType: widget.keyboardType,
+          inputFormatters: widget.keyboardType == TextInputType.number
+              ? <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly]
+              : null,
           style: pSemiBold18.copyWith(
             fontSize: 13,
           ),
@@ -54,22 +63,23 @@ class CustomTextFieldState extends State<CustomTextField> {
           decoration: InputDecoration(
             border: InputBorder.none,
             hintText: widget.text,
+            suffixText: widget.suffixText,
             hintStyle: pRegular14.copyWith(
               fontSize: 13,
               color: ConstColors.lightBlackColor,
             ),
             suffixIcon: widget.isPassword
                 ? GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              onTap: () {
-                setState(() {
-                  _obscureText = !_obscureText;
-                });
-              },
-              child: Icon(
-                _obscureText ? Icons.visibility_off : Icons.visibility,
-              ),
-            )
+                    behavior: HitTestBehavior.translucent,
+                    onTap: () {
+                      setState(() {
+                        _obscureText = !_obscureText;
+                      });
+                    },
+                    child: Icon(
+                      _obscureText ? Icons.visibility_off : Icons.visibility,
+                    ),
+                  )
                 : null,
           ),
         ),

@@ -1,20 +1,22 @@
+import 'package:get/get.dart';
+
 class User {
-  String avatar;
-  final String userId;
-  final String? sidekickId;
-  final String email;
-  final bool isDarkMode;
-  String firstname;
-  String lastname;
-  int size;
-  int weight;
-  int goalWeight;
-  String gender;
-  String description;
-  String level;
+  RxString avatar;
+  final RxString userId;
+  final RxString? sidekickId;
+  final RxString email;
+  final RxBool isDarkMode;
+  RxString firstname;
+  RxString lastname;
+  RxInt size;
+  RxInt weight;
+  RxInt goalWeight;
+  RxString gender;
+  RxString description;
+  RxString level;
   List<String> activities;
-  String goal;
-  final String birthDate;
+  RxString goal;
+  final Rx<DateTime> birthDate;
 
   User({
     required this.avatar,
@@ -36,26 +38,26 @@ class User {
   });
 
   void changeAvatarPath(String path) {
-    avatar = path;
+    avatar = path.obs;
   }
 
   User copy({
-    String? avatar,
-    String? userId,
-    String? sidekickId,
-    String? email,
-    bool? isDarkMode,
-    String? firstname,
-    String? lastname,
-    int? size,
-    int? weight,
-    int? goalWeight,
-    String? gender,
-    String? description,
-    String? level,
+    RxString? avatar,
+    RxString? userId,
+    RxString? sidekickId,
+    RxString? email,
+    RxBool? isDarkMode,
+    RxString? firstname,
+    RxString? lastname,
+    RxInt? size,
+    RxInt? weight,
+    RxInt? goalWeight,
+    RxString? gender,
+    RxString? description,
+    RxString? level,
     List<String>? activities,
-    String? goal,
-    String? birthDate,
+    RxString? goal,
+    Rx<DateTime>? birthDate,
   }) {
     return User(
       avatar: avatar ?? this.avatar,
@@ -79,25 +81,25 @@ class User {
 
   static User fromJson(Map<String, dynamic> json) {
     return User(
-      avatar: json['avatar'] ?? "",  // default to an empty string if null
-      userId: json['userId'] ?? "",
-      sidekickId: json['sidekick_id'],
-      email: json['email'] ?? "",
-      isDarkMode: json['isDarkMode'] ?? false, // default to false if null
-      firstname: json['firstname'] ?? "",
-      lastname: json['lastname'] ?? "",
-      size: json['size'] as int? ?? 0,  // default to 0 if null
-      weight: json['weight'] as int? ?? 0,
-      goalWeight: json['goal_weight'] as int? ?? 0,
-      gender: json['gender'] ?? "",
-      description: json['description'] ?? "",
-      level: json['level'] ?? "",
-      activities: List<String>.from(json['activities'] ?? []),  // default to an empty list if null
-      goal: json['goal'] ?? "",
-      birthDate: json['birth_date'] ?? "",
+      avatar: RxString(json['avatar'] ?? ""),
+      userId: RxString(json['userId'] ?? ""),
+      sidekickId:
+          json['sidekick_id'] != null ? RxString(json['sidekick_id']) : null,
+      email: RxString(json['email'] ?? ""),
+      isDarkMode: RxBool(json['isDarkMode'] ?? false),
+      firstname: RxString(json['firstname'] ?? ""),
+      lastname: RxString(json['lastname'] ?? ""),
+      size: RxInt(json['size'] ?? 0),
+      weight: RxInt(json['weight'] ?? 0),
+      goalWeight: RxInt(json['goal_weight'] ?? 0),
+      gender: RxString(json['gender'] ?? ""),
+      description: RxString(json['description'] ?? ""),
+      level: RxString(json['level'] ?? ""),
+      activities: List<String>.from(json['activities'] ?? []),
+      goal: RxString(json['goal'] ?? ""),
+      birthDate: Rx<DateTime>(json['birth_date'] != null ? DateTime.parse(json['birth_date']) : DateTime.now()),
     );
   }
-
 
   Map<String, dynamic> toJson() {
     return {

@@ -57,38 +57,46 @@ class _ProfileViewState extends State<ProfileView> {
                           shape: BoxShape.circle,
                           image: DecorationImage(
                             fit: BoxFit.cover,
-                            image:
-                                NetworkImage(userController.user.value.avatar),
+                            image: NetworkImage(
+                                userController.user.value.avatar.value),
                           ),
                         ),
                       ),
                     ),
                     const SizedBox(height: 10),
                     Center(
-                      child: Text(
-                        "${userController.user.value.firstname} ${userController.user.value.lastname}",
-                        style: pSemiBold18.copyWith(
-                          fontSize: 19.27,
+                      child: Obx(
+                        () => Text(
+                          "${userController.user.value.firstname} ${userController.user.value.lastname}",
+                          style: pSemiBold18.copyWith(
+                            fontSize: 19.27,
+                          ),
                         ),
                       ),
                     ),
                     const SizedBox(height: 30),
                     Row(
                       children: [
-                        card(
-                            userController.user.value.gender == "MALE"
-                                ? DefaultImages.m1
-                                : DefaultImages.p1,
-                            "${userController.user.value.weight} kg"),
+                        Obx(
+                          () => card(
+                              userController.user.value.gender == "MALE"
+                                  ? DefaultImages.m1
+                                  : DefaultImages.p1,
+                              "${userController.user.value.weight} kg"),
+                        ),
                         const SizedBox(width: 16),
-                        card(
-                            userController.user.value.gender == "MALE"
-                                ? DefaultImages.m1
-                                : DefaultImages.p1,
-                            "${userController.user.value.size} cm"),
+                        Obx(
+                          () => card(
+                              userController.user.value.gender == "MALE"
+                                  ? DefaultImages.m1
+                                  : DefaultImages.p1,
+                              "${userController.user.value.size} cm"),
+                        ),
                         const SizedBox(width: 16),
-                        card(DefaultImages.p3,
-                            "${calculateAge(DateTime.parse(userController.user.value.birthDate))} ans"),
+                        Obx(
+                          () => card(DefaultImages.p3,
+                              "${calculateAge(userController.user.value.birthDate.value)} ans"),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 20),
@@ -154,7 +162,7 @@ class _ProfileViewState extends State<ProfileView> {
                               () {
                                 homeController.logout();
                                 Get.offAll(
-                                    () => const SignInScreen(),
+                                  () => const SignInScreen(),
                                   transition: Transition.rightToLeft,
                                 );
                               },

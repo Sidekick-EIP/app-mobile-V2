@@ -14,28 +14,30 @@ class UserController extends GetxController {
 
   Rx<User> user = User(
     avatar:
-        'https://www.vincenthie.com/images/gallery/large/Iron-Man-Portrait.jpg',
-    userId: 'ID',
-    email: 'iron.man@gmail.com',
-    isDarkMode: false,
-    firstname: 'Tony',
-    lastname: 'Stark',
-    size: 185,
-    weight: 76,
-    goalWeight: 82,
-    gender: 'MALE',
-    description: 'Bonjour !',
-    level: 'ADVANCED',
+        RxString('https://www.vincenthie.com/images/gallery/large/Iron-Man-Portrait.jpg'),
+    userId: RxString('ID'),
+    email: RxString('iron.man@gmail.com'),
+    isDarkMode: RxBool(false),
+    firstname: RxString('Tony'),
+    lastname: RxString('Stark'),
+    size: RxInt(185),
+    weight: RxInt(76),
+    goalWeight: RxInt(82),
+    gender: RxString('MALE'),
+    description: RxString('Bonjour !'),
+    level: RxString('ADVANCED'),
     activities: ["SOCCER", "TENNIS"],
-    goal: 'STAY_IN_SHAPE',
-    birthDate: '2001-03-10T00:00:00.000Z',
+    goal: RxString('STAY_IN_SHAPE'),
+    birthDate: Rx<DateTime>(
+      DateTime.parse("1990-05-12")
+    ),
   ).obs;
 
   RxBool isLoading = false.obs;
 
   void addExclamation() {
     user.update((val) {
-      val?.firstname += "!";
+      val!.firstname.value += '!';
     });
   }
 

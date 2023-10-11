@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -106,6 +107,11 @@ class _EditableFieldScreenState extends State<EditableFieldScreen> {
     }
   }
 
+  bool isValidDateFormat(String date) {
+    final RegExp dateRegex = RegExp(r'^\d{2}/\d{2}/\d{4}$');
+    return dateRegex.hasMatch(date);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -160,11 +166,23 @@ class _EditableFieldScreenState extends State<EditableFieldScreen> {
                             if (parsedValue != null) {
                               widget.fieldObservable.value = parsedValue;
                             }
+                          } else if (widget.fieldObservable is Rx<DateTime>) {
+                            if (isValidDateFormat(value)) {
+                              DateFormat format = DateFormat("dd/MM/yyyy");
+                              try {
+                                DateTime parsedBirthDate = format.parse(value);
+                                widget.fieldObservable.value = parsedBirthDate;
+                              } catch (e) {
+                                if (kDebugMode) {
+                                  print("Error parsing date: $e");
+                                }
+                              }
+                            }
                           } else {
                             widget.fieldObservable.value = value;
                           }
                         },
-                        suffixText: widget.suffixText ?? "",
+                        suffixText: widget.suffixText,
                       ),
                       const SizedBox(height: 30),
                       if (errorMessage != null)

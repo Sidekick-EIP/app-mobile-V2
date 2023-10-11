@@ -14,9 +14,9 @@ class User {
   RxString gender;
   RxString description;
   RxString level;
-  List<String> activities;
+  List<RxString> activities;
   RxString goal;
-  final Rx<DateTime> birthDate;
+  Rx<DateTime> birthDate;
 
   User({
     required this.avatar,
@@ -55,7 +55,7 @@ class User {
     RxString? gender,
     RxString? description,
     RxString? level,
-    List<String>? activities,
+    List<RxString>? activities,
     RxString? goal,
     Rx<DateTime>? birthDate,
   }) {
@@ -95,9 +95,14 @@ class User {
       gender: RxString(json['gender'] ?? ""),
       description: RxString(json['description'] ?? ""),
       level: RxString(json['level'] ?? ""),
-      activities: List<String>.from(json['activities'] ?? []),
+      activities: (json['activities'] as List<dynamic>?)
+              ?.map((activity) => RxString(activity as String))
+              .toList() ??
+          [],
       goal: RxString(json['goal'] ?? ""),
-      birthDate: Rx<DateTime>(json['birth_date'] != null ? DateTime.parse(json['birth_date']) : DateTime.now()),
+      birthDate: Rx<DateTime>(json['birth_date'] != null
+          ? DateTime.parse(json['birth_date'])
+          : DateTime.now()),
     );
   }
 

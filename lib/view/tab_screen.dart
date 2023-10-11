@@ -23,6 +23,7 @@ class TabScreen extends StatefulWidget {
 
 class _TabScreenState extends State<TabScreen> {
   final homeController = Get.put(HomeController());
+
   @override
   void initState() {
     homeController.flag.value = 0;
@@ -60,7 +61,7 @@ class _TabScreenState extends State<TabScreen> {
                 homeController.flag.value == 0
                     ? ConstColors.primaryColor
                     : const Color(0xff9299A3),
-                    () {
+                () {
                   homeController.flag.value = 0;
                 },
               ),
@@ -73,7 +74,7 @@ class _TabScreenState extends State<TabScreen> {
                 homeController.flag.value == 1
                     ? ConstColors.primaryColor
                     : const Color(0xff9299A3),
-                    () {
+                () {
                   homeController.flag.value = 1;
                 },
               ),
@@ -86,7 +87,7 @@ class _TabScreenState extends State<TabScreen> {
                 homeController.flag.value == 2
                     ? ConstColors.primaryColor
                     : const Color(0xff9299A3),
-                    () {
+                () {
                   homeController.flag.value = 2;
                 },
               ),
@@ -99,7 +100,7 @@ class _TabScreenState extends State<TabScreen> {
                 homeController.flag.value == 3
                     ? ConstColors.primaryColor
                     : const Color(0xff9299A3),
-                    () {
+                () {
                   homeController.flag.value = 3;
                 },
               ),
@@ -112,7 +113,7 @@ class _TabScreenState extends State<TabScreen> {
                 homeController.flag.value == 4
                     ? ConstColors.primaryColor
                     : const Color(0xff9299A3),
-                    () {
+                () {
                   homeController.flag.value = 4;
                 },
               )
@@ -121,43 +122,44 @@ class _TabScreenState extends State<TabScreen> {
         ),
       ),
       body: GetX<HomeController>(
-        init: homeController,
-        builder: (homeController) => homeController.flag.value == 0
-            ? const HomeView()
-            : homeController.flag.value == 1
-            ? const MessageView()
-            : homeController.flag.value == 2
-            ? const TrainingView()
-            : homeController.flag.value == 3
-            ? const NutritionView()
-            : const ProfileView()
-      ),
+          init: homeController,
+          builder: (homeController) => homeController.flag.value == 0
+              ? const HomeView()
+              : homeController.flag.value == 1
+                  ? const MessageView()
+                  : homeController.flag.value == 2
+                      ? const TrainingView()
+                      : homeController.flag.value == 3
+                          ? const NutritionView()
+                          : const ProfileView()),
     );
   }
 
   Widget card(String image, String text, Color imageColor, Color textColor,
       VoidCallback onTap) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
     return InkWell(
-      onTap: () {
-        onTap();
-      },
+      onTap: onTap,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-            height: 23,
-            width: 23,
+            height: width * 0.06, // environ 6% de la largeur de l'écran
+            width: width * 0.06, // environ 6% de la largeur de l'écran
             child: SvgPicture.asset(
               image,
               fit: BoxFit.fill,
               color: imageColor,
             ),
           ),
-          const SizedBox(height: 6),
+          SizedBox(height: height * 0.01),
+          // environ 1% de la hauteur de l'écran
           Text(
             text,
             style: pSemiBold18.copyWith(
-              fontSize: 9.62,
+              fontSize: width * 0.03, // environ 3% de la largeur de l'écran
               color: textColor,
             ),
           )

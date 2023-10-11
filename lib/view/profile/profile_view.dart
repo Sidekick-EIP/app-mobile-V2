@@ -24,12 +24,6 @@ class _ProfileViewState extends State<ProfileView> {
   final userController = Get.find<UserController>();
 
   @override
-  void initState() {
-    super.initState();
-    userController.fetchUserFromBack();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20),
@@ -79,7 +73,7 @@ class _ProfileViewState extends State<ProfileView> {
                       children: [
                         Obx(
                           () => card(
-                              userController.user.value.gender == "MALE"
+                              userController.user.value.gender.value == "MALE"
                                   ? DefaultImages.m1
                                   : DefaultImages.p1,
                               "${userController.user.value.weight} kg"),
@@ -87,7 +81,7 @@ class _ProfileViewState extends State<ProfileView> {
                         const SizedBox(width: 16),
                         Obx(
                           () => card(
-                              userController.user.value.gender == "MALE"
+                              userController.user.value.gender.value == "MALE"
                                   ? DefaultImages.m1
                                   : DefaultImages.p1,
                               "${userController.user.value.size} cm"),

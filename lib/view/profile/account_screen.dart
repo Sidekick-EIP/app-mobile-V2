@@ -1,6 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:sidekick_app/config/images.dart';
 import 'package:sidekick_app/view/profile/edit/editable_field_screen.dart';
 import 'package:sidekick_app/view/profile/profile_view.dart';
 
@@ -35,16 +38,39 @@ class _AccountScreenState extends State<AccountScreen> {
           ),
         ),
         title: Text(
-          "Informations du compte",
+          "Informations",
           style: pSemiBold20.copyWith(),
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 0, top: 0),
-            child: IconButton(
-              icon: const Icon(Icons.add_circle_outline,
-                  color: ConstColors.primaryColor),
-              onPressed: () {},
+            padding: const EdgeInsets.only(right: 10, top: 0),
+            child: GestureDetector(
+              onTap: () async {
+                try {
+                  await userController.updateUserProfile();
+                  Get.snackbar('Succès', 'Profil mis à jour avec succès!',
+                      snackPosition: SnackPosition.BOTTOM,
+                      backgroundColor: Colors.green,
+                      colorText: Colors.white,
+                      duration: const Duration(seconds: 1));
+                } catch (e) {
+                  if (kDebugMode) {
+                    print(e);
+                  }
+                  Get.snackbar(
+                      'Erreur', 'Erreur lors de la mise à jour du profil.',
+                      snackPosition: SnackPosition.BOTTOM,
+                      backgroundColor: Colors.red,
+                      colorText: Colors.white);
+                }
+              },
+              child: SvgPicture.asset(
+                DefaultImages.share,
+                colorFilter: const ColorFilter.mode(
+                    ConstColors.primaryColor, BlendMode.srcIn),
+                height: 30, // you can set height and width as needed
+                width: 30,
+              ),
             ),
           ),
         ],
@@ -316,35 +342,6 @@ class _AccountScreenState extends State<AccountScreen> {
                                 size: 16,
                               ),
                             ],
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        const Divider(
-                          color: Color(0xffF1F4F8),
-                        ),
-                        const SizedBox(height: 10),
-                        row(
-                          "Email",
-                          "",
-                          () {
-                            Get.to(
-                              () => EditableFieldScreen(
-                                  title: "Modifier votre email",
-                                  fieldLabel:
-                                      userController.user.value.email.value,
-                                  fieldObservable:
-                                      userController.user.value.email),
-                              transition: Transition.rightToLeft,
-                            );
-                          },
-                          Obx(
-                            () => Text(
-                              userController.user.value.email.value,
-                              style: pRegular14.copyWith(
-                                fontSize: 15.41,
-                                color: ConstColors.lightBlackColor,
-                              ),
-                            ),
                           ),
                         ),
                       ],

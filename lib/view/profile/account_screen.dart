@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:sidekick_app/view/profile/profile_view.dart';
 
 import '../../config/colors.dart';
-import '../../config/images.dart';
 import '../../config/text_style.dart';
+import '../../controller/user_controller.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({Key? key}) : super(key: key);
@@ -13,6 +15,8 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
+  final userController = Get.find<UserController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,11 +57,14 @@ class _AccountScreenState extends State<AccountScreen> {
                 const SizedBox(height: 20),
                 Center(
                   child: Container(
-                    height: 77,
-                    width: 77,
-                    decoration: const BoxDecoration(
+                    height: 87,
+                    width: 87,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
                       image: DecorationImage(
-                        image: AssetImage(DefaultImages.p2),
+                        fit: BoxFit.cover,
+                        image:
+                        NetworkImage(userController.user.value.avatar),
                       ),
                     ),
                   ),
@@ -79,13 +86,13 @@ class _AccountScreenState extends State<AccountScreen> {
                     child: Column(
                       children: [
                         row(
-                          "Name",
+                          "Nom",
                           "",
                           () {},
                           Row(
                             children: [
                               Text(
-                                "Deborah Moore   ",
+                                "${userController.user.value.lastname}" "  ",
                                 style: pRegular14.copyWith(
                                   fontSize: 15.41,
                                   color: ConstColors.lightBlackColor,
@@ -105,13 +112,13 @@ class _AccountScreenState extends State<AccountScreen> {
                         ),
                         const SizedBox(height: 10),
                         row(
-                          "Weight",
+                          "Prénom",
                           "",
-                          () {},
+                              () {},
                           Row(
                             children: [
                               Text(
-                                "52.7 kg   ",
+                                "${userController.user.value.firstname}" "  ",
                                 style: pRegular14.copyWith(
                                   fontSize: 15.41,
                                   color: ConstColors.lightBlackColor,
@@ -131,13 +138,91 @@ class _AccountScreenState extends State<AccountScreen> {
                         ),
                         const SizedBox(height: 10),
                         row(
-                          "Date of Birth",
+                          "Poids",
                           "",
                           () {},
                           Row(
                             children: [
                               Text(
-                                "Nov 30, 1990   ",
+                                "${userController.user.value.weight} kg" "  ",
+                                style: pRegular14.copyWith(
+                                  fontSize: 15.41,
+                                  color: ConstColors.lightBlackColor,
+                                ),
+                              ),
+                              const Icon(
+                                Icons.arrow_forward_ios,
+                                color: Color(0xffA9B2BA),
+                                size: 16,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        const Divider(
+                          color: Color(0xffF1F4F8),
+                        ),
+                        const SizedBox(height: 10),
+                        row(
+                          "Poids ciblé",
+                          "",
+                              () {},
+                          Row(
+                            children: [
+                              Text(
+                                "${userController.user.value.goalWeight} kg" "  ",
+                                style: pRegular14.copyWith(
+                                  fontSize: 15.41,
+                                  color: ConstColors.lightBlackColor,
+                                ),
+                              ),
+                              const Icon(
+                                Icons.arrow_forward_ios,
+                                color: Color(0xffA9B2BA),
+                                size: 16,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        const Divider(
+                          color: Color(0xffF1F4F8),
+                        ),
+                        const SizedBox(height: 10),
+                        row(
+                          "Taille",
+                          "",
+                              () {},
+                          Row(
+                            children: [
+                              Text(
+                                "${userController.user.value.size} cm" "  ",
+                                style: pRegular14.copyWith(
+                                  fontSize: 15.41,
+                                  color: ConstColors.lightBlackColor,
+                                ),
+                              ),
+                              const Icon(
+                                Icons.arrow_forward_ios,
+                                color: Color(0xffA9B2BA),
+                                size: 16,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        const Divider(
+                          color: Color(0xffF1F4F8),
+                        ),
+                        const SizedBox(height: 10),
+                        row(
+                          "Date de naissance",
+                          "",
+                          () {},
+                          Row(
+                            children: [
+                              Text(
+                                "${DateFormat('dd/MM/yyyy').format(DateTime.parse(userController.user.value.birthDate))}   ",
                                 style: pRegular14.copyWith(
                                   fontSize: 15.41,
                                   color: ConstColors.lightBlackColor,
@@ -161,7 +246,7 @@ class _AccountScreenState extends State<AccountScreen> {
                           "",
                           () {},
                           Text(
-                            "deborah.moore@email.com",
+                            userController.user.value.email,
                             style: pRegular14.copyWith(
                               fontSize: 15.41,
                               color: ConstColors.lightBlackColor,

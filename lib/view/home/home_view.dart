@@ -24,6 +24,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     _loadTokens();
+    userController.fetchUserFromBack();
     super.initState();
   }
 
@@ -63,19 +64,19 @@ class _HomeViewState extends State<HomeView> {
               onPressed: () {
                 userController.addExclamation();
               },
-              child: Text("Add exclamation")
+              child: const Text("Add exclamation")
             ),
             ElevatedButton(
                 onPressed: () {
                   userController.registerUserIntoStorage();
                 },
-                child: Text("Store user")
+                child: const Text("Store user")
             ),
             ElevatedButton(
                 onPressed: () {
                   userController.clearUserFromStorage();
                 },
-                child: Text("Clear user")
+                child: const Text("Clear user")
             ),
           ],
         ),

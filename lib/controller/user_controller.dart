@@ -15,22 +15,6 @@ class UserController extends GetxController {
   String apiUrl = dotenv.env['API_BACK_URL'] ?? "";
   RxBool isLoading = false.obs;
 
-  String get avatar => user.value.avatar.value;
-  String get firstname => user.value.firstname.value;
-  String get lastname => user.value.lastname.value;
-  String get email => user.value.email.value;
-  bool get isDarkMode => user.value.isDarkMode.value;
-  int get size => user.value.size.value;
-  int get weight => user.value.weight.value;
-  int get goalWeight => user.value.goalWeight.value;
-  String get gender => user.value.gender.value;
-  String get description => user.value.description.value;
-  String get level => user.value.level.value;
-  List<String> get activities =>
-      user.value.activities.map((activity) => activity.value).toList();
-  String get goal => user.value.goal.value;
-  String get birthDate => user.value.birthDate.value.toUtc().toIso8601String();
-
   Rx<User> user = User(
     avatar: RxString(
         'https://www.vincenthie.com/images/gallery/large/Iron-Man-Portrait.jpg'),

@@ -145,7 +145,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: InkWell(
               onTap: () {
                 Get.offAll(
-                  const SignInScreen(),
+                    () => const SignInScreen(),
                   transition: Transition.rightToLeft,
                 );
               },

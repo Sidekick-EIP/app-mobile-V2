@@ -154,7 +154,7 @@ class _ProfileViewState extends State<ProfileView> {
                               () {
                                 homeController.logout();
                                 Get.offAll(
-                                  const SignInScreen(),
+                                    () => const SignInScreen(),
                                   transition: Transition.rightToLeft,
                                 );
                               },

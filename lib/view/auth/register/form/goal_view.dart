@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../config/images.dart';
-import '../../../config/text_style.dart';
-import '../../../controller/auth_controller.dart';
+import '../../../../config/images.dart';
+import '../../../../config/text_style.dart';
+import '../../../../controller/auth_controller.dart';
 
-class GenderView extends StatefulWidget {
+
+class GoalView extends StatefulWidget {
   final AuthController authController;
-  const GenderView({Key? key, required this.authController}) : super(key: key);
+  const GoalView({Key? key, required this.authController}) : super(key: key);
 
   @override
-  State<GenderView> createState() => _GenderViewState();
+  State<GoalView> createState() => _GoalViewState();
 }
 
-class _GenderViewState extends State<GenderView> {
+class _GoalViewState extends State<GoalView> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -21,14 +22,14 @@ class _GenderViewState extends State<GenderView> {
       children: [
         const SizedBox(height: 30),
         Text(
-          "Choisir le genre",
+          "Choisir son objectif",
           style: pSemiBold20.copyWith(
             fontSize: 25,
           ),
         ),
         const SizedBox(height: 30),
         ListView.builder(
-          itemCount: 3,
+          itemCount: 4,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) {
@@ -36,12 +37,12 @@ class _GenderViewState extends State<GenderView> {
               onTap: () {
                 setState(() {
                   for (var i = 0;
-                      i < widget.authController.genderList.length;
+                      i < widget.authController.goalList.length;
                       i++) {
                     if (i == index) {
-                      widget.authController.genderList[i] = true;
+                      widget.authController.goalList[i] = true;
                     } else {
-                      widget.authController.genderList[i] = false;
+                      widget.authController.goalList[i] = false;
                     }
                   }
                 });
@@ -54,7 +55,7 @@ class _GenderViewState extends State<GenderView> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(7.7),
                     border: Border.all(
-                      color: widget.authController.genderList[index] == true
+                      color: widget.authController.goalList[index] == true
                           ? const Color(0xffF25D29)
                           : const Color(0xffE5E9EF),
                     ),
@@ -65,18 +66,22 @@ class _GenderViewState extends State<GenderView> {
                       children: [
                         Image.asset(
                           index == 0
-                              ? DefaultImages.g1
+                              ? DefaultImages.goal1
                               : index == 1
-                                  ? DefaultImages.g2
-                                  : DefaultImages.g3,
+                                  ? DefaultImages.goal2
+                                  : index == 2
+                                      ? DefaultImages.goal3
+                                      : DefaultImages.goal4,
                         ),
                         const SizedBox(width: 15),
                         Text(
                           index == 0
-                              ? "Femme"
+                              ? "Perdre du poids"
                               : index == 1
-                                  ? "Homme"
-                                  : "Non binaire",
+                                  ? "Rester en forme"
+                                  : index == 2
+                                      ? "Prendre du volume musculaire"
+                                      : "Se muscler",
                           style: pSemiBold18.copyWith(
                             fontSize: 15,
                           ),

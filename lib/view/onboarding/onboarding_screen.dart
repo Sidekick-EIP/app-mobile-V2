@@ -31,7 +31,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               child: Container(
                 height: onboardingController.flag.value == 0
                     ? Get.height / 2
-                    : Get.height / 1.8,
+                    : Get.height / 2,
                 decoration: BoxDecoration(
                   color: ConstColors.primaryColor,
                   image: DecorationImage(
@@ -130,8 +130,10 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       init: onboardingController,
                       builder: (onboardingController) => CustomButton(
                         title: onboardingController.flag.value == 0
-                            ? "Commencer"
-                            : "Suivant",
+                            ? "Suivant"
+                            : onboardingController.flag.value == 3
+                                ? "Commencer mon inscription"
+                                : "Suivant",
                         width: Get.width,
                         onTap: () {
                           onboardingController.flag.value =

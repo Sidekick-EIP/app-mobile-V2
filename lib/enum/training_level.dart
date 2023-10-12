@@ -1,0 +1,6 @@
+enum TrainingLevel {
+  BEGINNER,
+  IRREGULAR_TRAINING,
+  INTERMEDIATE,
+  ADVANCED,
+}

@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:sidekick_app/view/auth/signin_screen.dart';
 
 class HomeController extends GetxController {
+  final storage = const FlutterSecureStorage();
+
   RxInt flag = 0.obs;
   RxInt homeFlag = 0.obs;
-  List<bool> activityList =
-      [true, false, false, false, false, false, false, false].obs;
   var scaffoldKey = GlobalKey<ScaffoldState>();
-  List<bool> exerciesList = [true, false, false, false].obs;
-  List<bool> trainingList = [true, false, false, false].obs;
+
+  Future<void> logout() async {
+    await storage.delete(key: 'authToken');
+    Get.offAll(() => const SignInScreen());
+  }
 }

@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-import '../../../config/colors.dart';
-import '../../../config/text_style.dart';
-import '../../../controller/auth_controller.dart';
-import '../../../utils/get_regex_string.dart';
+import '../../../../config/colors.dart';
+import '../../../../config/text_style.dart';
+import '../../../../controller/auth_controller.dart';
 
-class SelectWeightView extends StatelessWidget {
+
+class SelectWeightGoalView extends StatelessWidget {
   final AuthController authController;
-  const SelectWeightView({Key? key, required this.authController})
+
+  const SelectWeightGoalView({Key? key, required this.authController})
       : super(key: key);
 
   @override
@@ -19,7 +20,7 @@ class SelectWeightView extends StatelessWidget {
       children: [
         const SizedBox(height: 30),
         Text(
-          "Sélectionnez son poids",
+          "Sélectionnez le poids cible",
           style: pSemiBold20.copyWith(
             fontSize: 25,
           ),
@@ -70,17 +71,13 @@ class SelectWeightView extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 23, right: 16, top: 3),
                 child: TextFormField(
                   style: pSemiBold20.copyWith(fontSize: 25),
-                  controller: TextEditingController(text: authController.weight.value),
+                  controller:
+                      TextEditingController(text: authController.goalWeight.value),
                   onChanged: (value) {
-                    authController.weight(value);
+                    authController.goalWeight(value);
                   },
                   inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.allow(RegExp(getRegexString())),
-                    TextInputFormatter.withFunction(
-                          (oldValue, newValue) => newValue.copyWith(
-                        text: newValue.text.replaceAll('.', ','),
-                      ),
-                    ),
+                    FilteringTextInputFormatter.digitsOnly,
                   ],
                   decoration: const InputDecoration(
                     border: InputBorder.none,

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-import '../../../config/colors.dart';
-import '../../../config/text_style.dart';
-import '../../../controller/auth_controller.dart';
-import '../../../utils/get_regex_string.dart';
+import '../../../../config/colors.dart';
+import '../../../../config/text_style.dart';
+import '../../../../controller/auth_controller.dart';
+
 
 class SelectHeightView extends StatelessWidget {
   final AuthController authController;
@@ -76,12 +76,7 @@ class SelectHeightView extends StatelessWidget {
                     authController.height(value);
                   },
                   inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.allow(RegExp(getRegexString())),
-                    TextInputFormatter.withFunction(
-                          (oldValue, newValue) => newValue.copyWith(
-                        text: newValue.text.replaceAll('.', ','),
-                      ),
-                    ),
+                    FilteringTextInputFormatter.digitsOnly,
                   ],
                   decoration: const InputDecoration(
                     border: InputBorder.none,

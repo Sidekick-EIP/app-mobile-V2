@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:sidekick_app/view/auth/register/info_screen.dart';
 import 'package:sidekick_app/view/auth/reset_password_screen.dart';
-import 'package:sidekick_app/view/auth/signup_screen.dart';
+import 'package:sidekick_app/view/auth/register/signup_screen.dart';
 
 import '../../config/colors.dart';
 import '../../config/images.dart';
 import '../../config/text_style.dart';
+import '../../utils/is_valid_email.dart';
 import '../../utils/token_storage.dart';
 import '../../widget/custom_button.dart';
 import '../../widget/custom_textfield.dart';
@@ -27,14 +29,25 @@ class _SignInScreenState extends State<SignInScreen> {
   final passwordController = TextEditingController();
   bool isLoading = false;
 
+  String apiUrl = dotenv.env['API_BACK_URL'] ?? "";
   final TokenStorage tokenStorage = TokenStorage();
 
-  bool _isValidEmail(String email) {
-    return email.contains('@') && email.contains('.');
+  Future<bool> checkUserInfos() async {
+    String? accessToken = await tokenStorage.getAccessToken();
+
+    final response = await http.get(
+      Uri.parse("$apiUrl/user_infos/"),
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Authorization": "Bearer $accessToken"
+      },
+    );
+
+    return response.statusCode == 200;
   }
 
   Future<void> signIn() async {
-    if (!_isValidEmail(emailController.text)) {
+    if (!isValidEmail(emailController.text)) {
       Get.snackbar("Erreur", "Entrez un email valide.",
           backgroundColor: Colors.red,
           colorText: Colors.white,
@@ -53,8 +66,6 @@ class _SignInScreenState extends State<SignInScreen> {
       isLoading = true;
     });
 
-    String apiUrl = dotenv.env['API_BACK_URL'] ?? "";
-
     try {
       final response = await http.post(
         Uri.parse("$apiUrl/auth/login"),
@@ -70,10 +81,19 @@ class _SignInScreenState extends State<SignInScreen> {
         await tokenStorage.storeAccessToken(decodedResponse['access_token']);
         await tokenStorage.storeRefreshToken(decodedResponse['refresh_token']);
 
-        Get.offAll(
-          () => const TabScreen(),
-          transition: Transition.rightToLeft,
-        );
+        // 2. Vérification des informations de l'utilisateur après une connexion réussie
+        bool hasValidInfos = await checkUserInfos();
+        if (hasValidInfos) {
+          Get.offAll(
+                () => const TabScreen(),
+            transition: Transition.rightToLeft,
+          );
+        } else {
+          Get.offAll(
+                () => const InfoScreen(),
+            transition: Transition.rightToLeft,
+          );
+        }
       } else {
         Map<String, dynamic> decodedResponse = jsonDecode(response.body);
         String errorMessage = decodedResponse['error'] ?? "Erreur inconnue";

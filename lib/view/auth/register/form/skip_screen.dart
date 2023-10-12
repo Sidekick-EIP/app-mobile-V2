@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sidekick_app/view/auth/form/plan_screen.dart';
-import 'package:sidekick_app/view/auth/form/select_goal_weight_view.dart';
-import 'package:sidekick_app/view/auth/form/select_height_view.dart';
-import 'package:sidekick_app/view/auth/form/select_weight_view.dart';
-import 'package:sidekick_app/view/auth/form/training_view.dart';
+import 'package:sidekick_app/view/auth/register/form/plan_screen.dart';
+import 'package:sidekick_app/view/auth/register/form/select_goal_weight_view.dart';
+import 'package:sidekick_app/view/auth/register/form/select_height_view.dart';
+import 'package:sidekick_app/view/auth/register/form/select_weight_view.dart';
+import 'package:sidekick_app/view/auth/register/form/training_view.dart';
 
-import '../../../config/colors.dart';
-import '../../../config/text_style.dart';
-import '../../../controller/auth_controller.dart';
-import '../../../widget/custom_button.dart';
+import '../../../../config/colors.dart';
+import '../../../../config/text_style.dart';
+import '../../../../controller/auth_controller.dart';
+import '../../../../widget/custom_button.dart';
 import 'activity_view.dart';
 import 'gender_view.dart';
 import 'goal_view.dart';
@@ -22,7 +22,7 @@ class SkipScreen extends StatefulWidget {
 }
 
 class _SkipScreenState extends State<SkipScreen> {
-  final authController = Get.put(AuthController());
+  final authController = Get.find<AuthController>();
 
   String? errorMessage;
 
@@ -35,25 +35,65 @@ class _SkipScreenState extends State<SkipScreen> {
   void goToNextStep() {
     errorMessage = checkForErrorsAtCurrentStep(authController.skip.value);
     if (errorMessage == null) {
+      setState(() {});
       authController.skip.value++;
     } else {
-      setState(() {}); // pour reconstruire et afficher l'erreur
+      setState(() {});
     }
   }
 
   String? checkForErrorsAtCurrentStep(int step) {
     switch (step) {
       case 1:
-        // Vérifiez les erreurs pour GenderView
-        // Exemple : if (authController.gender == null) return "Veuillez choisir un genre.";
         break;
       case 2:
-        // Vérifiez les erreurs pour GoalView
+        if (authController.goalList.every((element) => !element)) {
+          return "Veuillez choisir un objectif.";
+        }
         break;
       case 3:
-        // Vérifiez les erreurs pour SelectHeightView
+        if (authController.height.isEmpty) {
+          return "Veuillez choisir une taille.";
+        }
+        if (int.parse(authController.height.value) <= 20) {
+          return "Veuillez choisir une taille supérieure à 0 cm.";
+        }
+        if (int.parse(authController.height.value) >= 250) {
+          return "Veuillez choisir une taille inférieure à 250 cm.";
+        }
         break;
-      // Ajoutez des vérifications pour chaque étape.
+      case 4:
+        if (authController.weight.isEmpty) {
+          return "Veuillez choisir un poids.";
+        }
+        if (int.parse(authController.weight.value) <= 0) {
+          return "Veuillez choisir un poids supérieur à 0 kg.";
+        }
+        if (int.parse(authController.weight.value) >= 250) {
+          return "Veuillez choisir un poids inférieur à 250 kg.";
+        }
+        break;
+      case 5:
+        if (authController.goalWeight.isEmpty) {
+          return "Veuillez choisir un poids cible.";
+        }
+        if (int.parse(authController.goalWeight.value) <= 0) {
+          return "Veuillez choisir un poids cible supérieur à 0 kg.";
+        }
+        if (int.parse(authController.goalWeight.value) >= 250) {
+          return "Veuillez choisir un poids cible inférieur à 250 kg.";
+        }
+        break;
+      case 6:
+        if (authController.trainingList.every((element) => !element)) {
+          return "Veuillez choisir un niveau d'entraînement.";
+        }
+        break;
+      case 7:
+        if (authController.activityList.every((element) => !element)) {
+          return "Veuillez choisir un niveau d'activité.";
+        }
+        break;
       default:
         break;
     }
@@ -131,9 +171,11 @@ class _SkipScreenState extends State<SkipScreen> {
               if (errorMessage != null)
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    errorMessage!,
-                    style: const TextStyle(color: Colors.red),
+                  child: Center(
+                    child: Text(
+                      errorMessage!,
+                      style: const TextStyle(color: Colors.red),
+                    ),
                   ),
                 ),
             ],
@@ -150,10 +192,23 @@ class _SkipScreenState extends State<SkipScreen> {
                 onTap: authController.skip.value < 7
                     ? goToNextStep
                     : () {
-                        Get.offAll(
-                          const PlanScreen(),
-                          transition: Transition.rightToLeft,
-                        );
+                        if (checkForErrorsAtCurrentStep(
+                                authController.skip.value) ==
+                            null) {
+                          Get.offAll(
+                              () => const PlanScreen(),
+                            transition: Transition.rightToLeft,
+                          );
+                        } else {
+                          Get.snackbar(
+                              "Erreur",
+                              checkForErrorsAtCurrentStep(
+                                      authController.skip.value) ??
+                                  "Verifiez vos données",
+                              backgroundColor: Colors.red,
+                              colorText: Colors.white,
+                              snackPosition: SnackPosition.BOTTOM);
+                        }
                       },
               ),
             ),

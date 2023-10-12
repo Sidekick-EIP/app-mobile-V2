@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../config/colors.dart';
-import '../../../config/text_style.dart';
-import '../../../controller/auth_controller.dart';
+import '../../../../config/colors.dart';
+import '../../../../config/text_style.dart';
+import '../../../../controller/auth_controller.dart';
 
 class TraningLevelView extends StatefulWidget {
   final AuthController authController;

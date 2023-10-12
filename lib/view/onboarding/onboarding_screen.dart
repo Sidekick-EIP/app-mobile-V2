@@ -31,7 +31,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               child: Container(
                 height: onboardingController.flag.value == 0
                     ? Get.height / 2
-                    : Get.height / 1.8,
+                    : Get.height / 2,
                 decoration: BoxDecoration(
                   color: ConstColors.primaryColor,
                   image: DecorationImage(

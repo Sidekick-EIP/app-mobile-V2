@@ -1,9 +1,15 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:sidekick_app/config/images.dart';
+import 'package:sidekick_app/view/profile/edit/editable_field_screen.dart';
 import 'package:sidekick_app/view/profile/profile_view.dart';
 
 import '../../config/colors.dart';
-import '../../config/images.dart';
 import '../../config/text_style.dart';
+import '../../controller/user_controller.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({Key? key}) : super(key: key);
@@ -13,6 +19,8 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
+  final userController = Get.find<UserController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +30,7 @@ class _AccountScreenState extends State<AccountScreen> {
         backgroundColor: Colors.transparent,
         leading: InkWell(
           onTap: () {
-            Navigator.pop(context);
+            Get.back();
           },
           child: const Icon(
             Icons.arrow_back,
@@ -30,16 +38,39 @@ class _AccountScreenState extends State<AccountScreen> {
           ),
         ),
         title: Text(
-          "Informations du compte",
+          "Informations",
           style: pSemiBold20.copyWith(),
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 0, top: 0),
-            child: IconButton(
-              icon: const Icon(Icons.add_circle_outline, color: ConstColors.primaryColor),
-              onPressed: () {
+            padding: const EdgeInsets.only(right: 10, top: 0),
+            child: GestureDetector(
+              onTap: () async {
+                try {
+                  await userController.updateUserProfile();
+                  Get.snackbar('Succès', 'Profil mis à jour avec succès!',
+                      snackPosition: SnackPosition.BOTTOM,
+                      backgroundColor: Colors.green,
+                      colorText: Colors.white,
+                      duration: const Duration(seconds: 1));
+                } catch (e) {
+                  if (kDebugMode) {
+                    print(e);
+                  }
+                  Get.snackbar(
+                      'Erreur', 'Erreur lors de la mise à jour du profil.',
+                      snackPosition: SnackPosition.BOTTOM,
+                      backgroundColor: Colors.red,
+                      colorText: Colors.white);
+                }
               },
+              child: SvgPicture.asset(
+                DefaultImages.share,
+                colorFilter: const ColorFilter.mode(
+                    ConstColors.primaryColor, BlendMode.srcIn),
+                height: 30, // you can set height and width as needed
+                width: 30,
+              ),
             ),
           ),
         ],
@@ -53,11 +84,14 @@ class _AccountScreenState extends State<AccountScreen> {
                 const SizedBox(height: 20),
                 Center(
                   child: Container(
-                    height: 77,
-                    width: 77,
-                    decoration: const BoxDecoration(
+                    height: 87,
+                    width: 87,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
                       image: DecorationImage(
-                        image: AssetImage(DefaultImages.p2),
+                        fit: BoxFit.cover,
+                        image: NetworkImage(
+                            userController.user.value.avatar.value),
                       ),
                     ),
                   ),
@@ -79,16 +113,28 @@ class _AccountScreenState extends State<AccountScreen> {
                     child: Column(
                       children: [
                         row(
-                          "Name",
+                          "Nom",
                           "",
-                          () {},
+                          () {
+                            Get.to(
+                              () => EditableFieldScreen(
+                                  title: "Modifier votre nom",
+                                  fieldLabel:
+                                      userController.user.value.lastname.value,
+                                  fieldObservable:
+                                      userController.user.value.lastname),
+                              transition: Transition.rightToLeft,
+                            );
+                          },
                           Row(
                             children: [
-                              Text(
-                                "Deborah Moore   ",
-                                style: pRegular14.copyWith(
-                                  fontSize: 15.41,
-                                  color: ConstColors.lightBlackColor,
+                              Obx(
+                                () => Text(
+                                  "${userController.user.value.lastname}" "  ",
+                                  style: pRegular14.copyWith(
+                                    fontSize: 15.41,
+                                    color: ConstColors.lightBlackColor,
+                                  ),
                                 ),
                               ),
                               const Icon(
@@ -105,16 +151,28 @@ class _AccountScreenState extends State<AccountScreen> {
                         ),
                         const SizedBox(height: 10),
                         row(
-                          "Weight",
+                          "Prénom",
                           "",
-                          () {},
+                          () {
+                            Get.to(
+                              () => EditableFieldScreen(
+                                  title: "Modifier votre prénom",
+                                  fieldLabel:
+                                      userController.user.value.firstname.value,
+                                  fieldObservable:
+                                      userController.user.value.firstname),
+                              transition: Transition.rightToLeft,
+                            );
+                          },
                           Row(
                             children: [
-                              Text(
-                                "52.7 kg   ",
-                                style: pRegular14.copyWith(
-                                  fontSize: 15.41,
-                                  color: ConstColors.lightBlackColor,
+                              Obx(
+                                () => Text(
+                                  "${userController.user.value.firstname}" "  ",
+                                  style: pRegular14.copyWith(
+                                    fontSize: 15.41,
+                                    color: ConstColors.lightBlackColor,
+                                  ),
                                 ),
                               ),
                               const Icon(
@@ -131,16 +189,31 @@ class _AccountScreenState extends State<AccountScreen> {
                         ),
                         const SizedBox(height: 10),
                         row(
-                          "Date of Birth",
+                          "Poids",
                           "",
-                          () {},
+                          () {
+                            Get.to(
+                              () => EditableFieldScreen(
+                                title: "Modifier votre poids",
+                                fieldLabel: userController
+                                    .user.value.weight.value
+                                    .toString(),
+                                fieldObservable:
+                                    userController.user.value.weight,
+                                suffixText: "kg",
+                              ),
+                              transition: Transition.rightToLeft,
+                            );
+                          },
                           Row(
                             children: [
-                              Text(
-                                "Nov 30, 1990   ",
-                                style: pRegular14.copyWith(
-                                  fontSize: 15.41,
-                                  color: ConstColors.lightBlackColor,
+                              Obx(
+                                () => Text(
+                                  "${userController.user.value.weight} kg" "  ",
+                                  style: pRegular14.copyWith(
+                                    fontSize: 15.41,
+                                    color: ConstColors.lightBlackColor,
+                                  ),
                                 ),
                               ),
                               const Icon(
@@ -157,15 +230,118 @@ class _AccountScreenState extends State<AccountScreen> {
                         ),
                         const SizedBox(height: 10),
                         row(
-                          "Email",
+                          "Poids ciblé",
                           "",
-                          () {},
-                          Text(
-                            "deborah.moore@email.com",
-                            style: pRegular14.copyWith(
-                              fontSize: 15.41,
-                              color: ConstColors.lightBlackColor,
-                            ),
+                          () {
+                            Get.to(
+                              () => EditableFieldScreen(
+                                  title: "Modifier votre poids ciblé",
+                                  fieldLabel: userController
+                                      .user.value.goalWeight.value
+                                      .toString(),
+                                  fieldObservable:
+                                      userController.user.value.goalWeight,
+                                  suffixText: "kg"),
+                              transition: Transition.rightToLeft,
+                            );
+                          },
+                          Row(
+                            children: [
+                              Obx(
+                                () => Text(
+                                  "${userController.user.value.goalWeight} kg"
+                                  "  ",
+                                  style: pRegular14.copyWith(
+                                    fontSize: 15.41,
+                                    color: ConstColors.lightBlackColor,
+                                  ),
+                                ),
+                              ),
+                              const Icon(
+                                Icons.arrow_forward_ios,
+                                color: Color(0xffA9B2BA),
+                                size: 16,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        const Divider(
+                          color: Color(0xffF1F4F8),
+                        ),
+                        const SizedBox(height: 10),
+                        row(
+                          "Taille",
+                          "",
+                          () {
+                            Get.to(
+                              () => EditableFieldScreen(
+                                  title: "Modifier votre taille",
+                                  fieldLabel: userController
+                                      .user.value.size.value
+                                      .toString(),
+                                  fieldObservable:
+                                      userController.user.value.size,
+                                  suffixText: "cm"),
+                              transition: Transition.rightToLeft,
+                            );
+                          },
+                          Row(
+                            children: [
+                              Obx(
+                                () => Text(
+                                  "${userController.user.value.size} cm" "  ",
+                                  style: pRegular14.copyWith(
+                                    fontSize: 15.41,
+                                    color: ConstColors.lightBlackColor,
+                                  ),
+                                ),
+                              ),
+                              const Icon(
+                                Icons.arrow_forward_ios,
+                                color: Color(0xffA9B2BA),
+                                size: 16,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        const Divider(
+                          color: Color(0xffF1F4F8),
+                        ),
+                        const SizedBox(height: 10),
+                        row(
+                          "Date de naissance",
+                          "",
+                          () {
+                            Get.to(
+                              () => EditableFieldScreen(
+                                  title: "Modifier votre date de naissance",
+                                  fieldLabel: DateFormat('dd/MM/yyyy').format(
+                                      userController
+                                          .user.value.birthDate.value),
+                                  fieldObservable:
+                                      userController.user.value.birthDate),
+                              transition: Transition.rightToLeft,
+                            );
+                          },
+                          Row(
+                            children: [
+                              Obx(
+                                () => Text(
+                                  "${DateFormat('dd/MM/yyyy').format(userController.user.value.birthDate.value)}   ",
+                                  style: pRegular14.copyWith(
+                                    fontSize: 15.41,
+                                    color: ConstColors.lightBlackColor,
+                                  ),
+                                ),
+                              ),
+                              const Icon(
+                                Icons.arrow_forward_ios,
+                                color: Color(0xffA9B2BA),
+                                size: 16,
+                              ),
+                            ],
                           ),
                         ),
                       ],

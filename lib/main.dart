@@ -5,8 +5,10 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sidekick_app/providers/auth.dart';
+import 'package:sidekick_app/utils/token_storage.dart';
 import 'package:sidekick_app/view/auth/signin_screen.dart';
 import 'package:sidekick_app/view/onboarding/onboarding_screen.dart';
+import 'package:sidekick_app/view/tab_screen.dart';
 
 Future main() async {
   await dotenv.load(fileName: ".env");
@@ -34,11 +36,18 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final TokenStorage tokenStorage = TokenStorage();
+  String _accessToken = "";
   bool? isFirstTime;
+
+  _loadTokens() async {
+    _accessToken = await tokenStorage.getAccessToken() ?? "";
+  }
 
   @override
   void initState() {
     super.initState();
+    _loadTokens();
     _checkFirstTime();
   }
 
@@ -86,7 +95,9 @@ class _MyAppState extends State<MyApp> {
             },
           ),
         ),
-        home: isFirstTime! ? const OnBoardingScreen() : const SignInScreen(),
+        home: _accessToken != "" ? const TabScreen()
+            : isFirstTime! ? const OnBoardingScreen()
+            : const SignInScreen(),
       );
     }
   }

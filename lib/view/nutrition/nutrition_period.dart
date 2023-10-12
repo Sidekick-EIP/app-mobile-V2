@@ -1,11 +1,5 @@
-import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:sidekick_app/config/colors.dart';
-import 'package:sidekick_app/config/text_style.dart';
-import 'package:sidekick_app/controller/home_controller.dart';
 import 'package:sidekick_app/controller/nutrition_controller.dart';
 import 'package:sidekick_app/controller/user_controller.dart';
 import 'package:sidekick_app/models/nutrition.dart';
@@ -14,15 +8,16 @@ class NutritionPeriod extends StatefulWidget {
   const NutritionPeriod({Key? key}) : super(key: key);
 
   @override
-  State<NutritionPeriod> createState() => _NutritionViewState();
+  NutritionPeriodState createState() => NutritionPeriodState();
 }
 
-class _NutritionViewState extends State<NutritionPeriod> {
+class NutritionPeriodState extends State<NutritionPeriod> {
   late Future<Nutrition> futureNutrition;
   final userController = Get.find<UserController>();
-
   final nutritionController = Get.put(NutritionController(), permanent: true);
-  String getDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0).toIso8601String();
+  String getDate =
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day)
+          .toIso8601String();
 
   @override
   void initState() {
@@ -37,39 +32,47 @@ class _NutritionViewState extends State<NutritionPeriod> {
     });
   }
 
-  final homeController = Get.put(HomeController());
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width;
+    var size = MediaQuery.of(context).size;
+
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          color: Colors.black,
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Get.back()
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0, // Remove shadow
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: height * 0.08),
+          SizedBox(height: size.height * 0.08),
           Padding(
-            padding: const EdgeInsets.only(left: 0, right: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Container(
-                  width: width * 0.22,
-                  height: height * 0.04,
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 198, 198, 198),
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                )
-              ],
+            padding: const EdgeInsets.only(right: 20),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                width: size.width * 0.22,
+                height: size.height * 0.04,
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 198, 198, 198),
+                  borderRadius: BorderRadius.circular(24),
+                ),
+              ),
             ),
           ),
-          SizedBox(height: height * 0.01),
+          const SizedBox(height: 10),
           FutureBuilder<Nutrition>(
             future: futureNutrition,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return DisplayNutritionPage(width: width, height: height, nutritionData: snapshot.data!);
+                return DisplayNutritionPage(
+                  size: size,
+                  nutritionData: snapshot.data!,
+                );
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');
               }
@@ -83,10 +86,12 @@ class _NutritionViewState extends State<NutritionPeriod> {
 }
 
 class DisplayNutritionPage extends StatelessWidget {
-  const DisplayNutritionPage({super.key, required this.width, required this.height, required this.nutritionData});
+  const DisplayNutritionPage({
+    required this.size,
+    required this.nutritionData,
+  });
 
-  final double width;
-  final double height;
+  final Size size;
   final Nutrition nutritionData;
 
   @override
@@ -94,43 +99,9 @@ class DisplayNutritionPage extends StatelessWidget {
     return Expanded(
       child: ListView(
         physics: const ClampingScrollPhysics(),
-        padding: EdgeInsets.zero,
         children: [
-          Column(
-            children: [
-              const CategoryWidget(),
-              const Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        children: [],
-                      ),
-                    ),
-                    SizedBox(width: 15),
-                    Expanded(
-                      child: Column(
-                        children: [],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: height * 0.015,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20),
-                child: Row(
-                  children: [
-                    SizedBox(width: width * 0.05),
-                  ],
-                ),
-              ),
-              TodaysMeals(width: width, height: height, nutritionData: nutritionData),
-            ],
-          ),
+          const CategoryWidget(),
+          TodaysMeals(size: size, nutritionData: nutritionData),
         ],
       ),
     );
@@ -139,112 +110,98 @@ class DisplayNutritionPage extends StatelessWidget {
 
 class TodaysMeals extends StatelessWidget {
   const TodaysMeals({
-    super.key,
-    required this.width,
-    required this.height,
+    required this.size,
     required this.nutritionData,
   });
 
-  final double width;
-  final double height;
+  final Size size;
   final Nutrition nutritionData;
 
   @override
   Widget build(BuildContext context) {
+    final mealPeriods = [
+      {
+        "name": "Petit déjeuner",
+        "emoji": "🍳",
+        "period": "breakfast",
+        "color": Colors.green,
+        "colorAccent": Colors.greenAccent
+      },
+      {
+        "name": "Déjeuner",
+        "emoji": "🍝",
+        "period": "lunch",
+        "color": Colors.orange,
+        "colorAccent": const Color.fromARGB(255, 255, 203, 136)
+      },
+      {
+        "name": "Dinner",
+        "emoji": "🥗",
+        "period": "dinner",
+        "color": Colors.blue,
+        "colorAccent": const Color.fromARGB(255, 159, 194, 255)
+      },
+      {
+        "name": "Snacks",
+        "emoji": "🥪",
+        "period": "snacks",
+        "color": Colors.red,
+        "colorAccent": const Color.fromARGB(255, 255, 147, 147)
+      },
+    ];
+
     return Column(
       children: [
         SizedBox(
-          width: width * 0.85,
-          height: height * 0.06,
+          width: size.width * 0.85,
+          height: size.height * 0.06,
           child: const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                "Repas du jour",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
-              Text(
-                "Voir tous les repas >",
-                style: TextStyle(color: Colors.purple),
-              ),
+              Text("Repas du jour",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+              Text("Voir tous les repas >",
+                  style: TextStyle(color: Colors.purple)),
             ],
           ),
         ),
         SizedBox(
-            width: width,
-            height: height * 0.5,
-            child: Column(
-              children: [
-                MealPeriodCard(
-                  width: width,
-                  height: height,
-                  color: Colors.green,
-                  colorAccent: Colors.greenAccent,
-                  mealPeriodName: "Petit déjeuner   ",
-                  emojiImg: "🍳",
+          width: size.width,
+          height: size.height * 0.5,
+          child: Column(
+            children: mealPeriods.map((meal) {
+              return Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: MealPeriodCard(
+                  size: size,
+                  color: meal["color"] as Color,
+                  colorAccent: meal["colorAccent"] as Color,
+                  mealPeriodName: meal["name"] as String,
+                  emojiImg: meal["emoji"] as String,
                   nutritionData: nutritionData,
-                  period: "breakfast",
+                  period: meal["period"] as String,
                 ),
-                SizedBox(
-                  height: height * 0.01,
-                ),
-                MealPeriodCard(
-                  width: width,
-                  height: height,
-                  color: Colors.orange,
-                  colorAccent: const Color.fromARGB(255, 255, 203, 136),
-                  mealPeriodName: "Déjeuner   ",
-                  emojiImg: "🍝",
-                  nutritionData: nutritionData,
-                  period: "lunch",
-                ),
-                SizedBox(
-                  height: height * 0.01,
-                ),
-                MealPeriodCard(
-                  width: width,
-                  height: height,
-                  color: Colors.blue,
-                  colorAccent: const Color.fromARGB(255, 159, 194, 255),
-                  mealPeriodName: "Dinner   ",
-                  emojiImg: "🥗",
-                  nutritionData: nutritionData,
-                  period: "dinner",
-                ),
-                SizedBox(
-                  height: height * 0.01,
-                ),
-                MealPeriodCard(
-                  width: width,
-                  height: height,
-                  color: Colors.red,
-                  colorAccent: const Color.fromARGB(255, 255, 147, 147),
-                  mealPeriodName: "Snacks   ",
-                  emojiImg: "🥪",
-                  nutritionData: nutritionData,
-                  period: "snacks",
-                ),
-              ],
-            ))
+              );
+            }).toList(),
+          ),
+        )
       ],
     );
   }
 }
 
 class MealPeriodCard extends StatelessWidget {
-  const MealPeriodCard(
-      {super.key,
-      required this.width,
-      required this.height,
-      required this.color,
-      required this.colorAccent,
-      required this.mealPeriodName,
-      required this.emojiImg,
-      required this.nutritionData,
-      required this.period});
+  const MealPeriodCard({
+    required this.size,
+    required this.color,
+    required this.colorAccent,
+    required this.mealPeriodName,
+    required this.emojiImg,
+    required this.nutritionData,
+    required this.period,
+  });
 
-  final double width;
-  final double height;
+  final Size size;
   final Color color;
   final Color colorAccent;
   final String mealPeriodName;
@@ -259,14 +216,14 @@ class MealPeriodCard extends StatelessWidget {
         color: Color.fromARGB(255, 231, 231, 231),
         borderRadius: BorderRadius.all(Radius.circular(20)),
       ),
-      width: width * 0.85,
-      height: height * 0.1,
+      width: size.width * 0.85,
+      height: size.height * 0.1,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Container(
-            width: width * 0.15,
-            height: height * 0.07,
+            width: size.width * 0.15,
+            height: size.height * 0.07,
             decoration: BoxDecoration(
               color: colorAccent,
               borderRadius: const BorderRadius.all(Radius.circular(20)),
@@ -279,8 +236,8 @@ class MealPeriodCard extends StatelessWidget {
             ),
           ),
           SizedBox(
-            width: width * 0.5,
-            height: height * 0.1,
+            width: size.width * 0.5,
+            height: size.height * 0.1,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -295,18 +252,18 @@ class MealPeriodCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      "300 Cal",
-                      // nutritionData.meals[period].calories,
+                      "300 Cal", // Replace this with actual data if available
                       style: TextStyle(
-                          color: color,
-                          height: 0.9,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 10,
-                          background: Paint()
-                            ..strokeWidth = 12.0
-                            ..color = colorAccent
-                            ..style = PaintingStyle.stroke
-                            ..strokeJoin = StrokeJoin.round),
+                        color: color,
+                        height: 0.9,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 10,
+                        background: Paint()
+                          ..strokeWidth = 12.0
+                          ..color = colorAccent
+                          ..style = PaintingStyle.stroke
+                          ..strokeJoin = StrokeJoin.round,
+                      ),
                     )
                   ],
                 ),
@@ -317,19 +274,7 @@ class MealPeriodCard extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(
-            width: width * 0.1,
-            height: height * 0.1,
-            child: const Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  ">",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-                ),
-              ],
-            ),
-          ),
+          const Icon(Icons.chevron_right, size: 30.0),
         ],
       ),
     );
@@ -337,7 +282,7 @@ class MealPeriodCard extends StatelessWidget {
 }
 
 class CategoryWidget extends StatefulWidget {
-  const CategoryWidget({super.key});
+  const CategoryWidget();
 
   @override
   _CategoryWidgetState createState() => _CategoryWidgetState();
@@ -345,11 +290,12 @@ class CategoryWidget extends StatefulWidget {
 
 class _CategoryWidgetState extends State<CategoryWidget> {
   int selectedCategoryIndex = 0;
-
-  // Define your category names
-  List<String> categories = ['Category 1', 'Category 2', 'Category 3', 'Category 4'];
-
-  // Store the previous selected index for the animation
+  List<String> categories = [
+    'Category 1',
+    'Category 2',
+    'Category 3',
+    'Category 4'
+  ];
   int previousCategoryIndex = 0;
 
   @override

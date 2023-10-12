@@ -24,6 +24,12 @@ class _ProfileViewState extends State<ProfileView> {
   final userController = Get.find<UserController>();
 
   @override
+  void initState() {
+    print(userController.user.value.gender.value);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20),

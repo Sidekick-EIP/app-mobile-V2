@@ -15,7 +15,7 @@ import '../../../../config/text_style.dart';
 import '../../../../config/images.dart';
 import '../../../../utils/token_storage.dart';
 import '../../../../widget/custom_button.dart';
-import '../../../home/home_view.dart';
+import '../../../tab_screen.dart';
 
 class PlanScreen extends StatefulWidget {
   const PlanScreen({Key? key}) : super(key: key);
@@ -93,9 +93,8 @@ class _PlanScreenState extends State<PlanScreen> {
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
-        Get.offAll(() => const HomeView(), transition: Transition.rightToLeft);
+        Get.offAll(() => const TabScreen(), transition: Transition.rightToLeft);
       } else {
-        print(response.body);
         showErrorSnackbar();
       }
     } catch (e) {

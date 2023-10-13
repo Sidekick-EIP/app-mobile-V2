@@ -189,122 +189,80 @@ class DisplayNutritionPage extends StatelessWidget {
       flex: 3,
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                width: 15.0,
-                height: 15.0,
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 98, 7, 255),
-                  borderRadius: BorderRadius.circular(4.0),
-                ),
-              ),
-              Text(
-                "Glucides",
-                style: pSemiBold20.copyWith(
-                  fontSize: 14,
-                ),
-              ),
-              Text(
-                "${nutritionData.carbs != 0 ? nutritionData.carbs : 100} / 200 g",
-                style: pRegular14.copyWith(
-                  fontSize: 14,
-                ),
-              ),
-              Text(
-                "${(nutritionData.carbs != 0 ? nutritionData.carbs : 100 / 200 * 100).toStringAsFixed(0)} %",
-                style: pSemiBold18.copyWith(
-                  fontSize: 14,
-                ),
-              ),
-            ],
+          _buildMacronutrientRow(
+            color: const Color.fromARGB(255, 98, 7, 255),
+            name: "Glucides",
+            value: nutritionData.carbs,
+            totalValue: 200,
           ),
           const SizedBox(height: 10),
-          const Divider(
-            color: Color(0xffA9B2BA),
+          const Divider(color: Color(0xffA9B2BA)),
+          const SizedBox(height: 10),
+          _buildMacronutrientRow(
+            color: Colors.red,
+            name: "Proteines",
+            value: nutritionData.protein,
+            totalValue: 129,
           ),
           const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                width: 15.0,
-                height: 15.0,
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.circular(4.0),
-                ),
-              ),
-              Text(
-                "Proteines",
-                style: pSemiBold20.copyWith(
-                  fontSize: 14,
-                ),
-              ),
-              Text(
-                "${nutritionData.carbs != 0 ? nutritionData.carbs : 80} / 129 g",
-                style: pRegular14.copyWith(
-                  fontSize: 14,
-                ),
-              ),
-              Text(
-                "${(nutritionData.carbs != 0 ? nutritionData.carbs : 80 / 129 * 100).toStringAsFixed(0)} %",
-                style: pSemiBold18.copyWith(
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ),
+          const Divider(color: Color(0xffA9B2BA)),
           const SizedBox(height: 10),
-          const Divider(
-            color: Color(0xffA9B2BA),
-          ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                width: 15.0,
-                height: 15.0,
-                decoration: BoxDecoration(
-                  color: Colors.amber,
-                  borderRadius: BorderRadius.circular(4.0),
-                ),
-              ),
-              Text(
-                "Lipides",
-                style: pSemiBold20.copyWith(
-                  fontSize: 14,
-                ),
-              ),
-              Text(
-                "${nutritionData.carbs != 0 ? nutritionData.carbs : 20} / 50 g",
-                style: pRegular14.copyWith(
-                  fontSize: 14,
-                ),
-              ),
-              Text(
-                "${(nutritionData.carbs != 0 ? nutritionData.carbs : 20 / 50 * 100).toStringAsFixed(0)} %",
-                style: pSemiBold18.copyWith(
-                  fontSize: 14,
-                ),
-              ),
-            ],
+          _buildMacronutrientRow(
+            color: Colors.amber,
+            name: "Lipides",
+            value: nutritionData.fat,
+            totalValue: 50,
           ),
         ],
       ),
     );
   }
 
+  Widget _buildMacronutrientRow({
+    required Color color,
+    required String name,
+    required int value,
+    required int totalValue,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Container(
+          width: 15.0,
+          height: 15.0,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(4.0),
+          ),
+        ),
+        Text(
+          name,
+          style: pSemiBold20.copyWith(fontSize: 14),
+        ),
+        Text(
+          "${value != 0 ? value : totalValue} / $totalValue g",
+          style: pRegular14.copyWith(fontSize: 14),
+        ),
+        Text(
+          "${(value != 0 ? value : totalValue / totalValue * 100).toStringAsFixed(0)} %",
+          style: pSemiBold18.copyWith(fontSize: 14),
+        ),
+      ],
+    );
+  }
+
   Widget _buildCarbsProteinFatIndicators() {
     // Individual percentages
-    double carbsPercentage = (nutritionData.carbs != 0 ? nutritionData.carbs : 100) / 200 * 100;
-    double proteinPercentage = (nutritionData.protein != 0 ? nutritionData.protein : 80) / 129 * 100;
-    double fatPercentage = (nutritionData.fat != 0 ? nutritionData.fat : 20) / 50 * 100;
+    double carbsPercentage =
+        (nutritionData.carbs != 0 ? nutritionData.carbs : 100) / 200 * 100;
+    double proteinPercentage =
+        (nutritionData.protein != 0 ? nutritionData.protein : 80) / 129 * 100;
+    double fatPercentage =
+        (nutritionData.fat != 0 ? nutritionData.fat : 20) / 50 * 100;
 
     // Global percentage
-    double globalPercentage = (carbsPercentage + proteinPercentage + fatPercentage) / 3;
+    double globalPercentage =
+        (carbsPercentage + proteinPercentage + fatPercentage) / 3;
 
     return CircularPercentIndicator(
       radius: 90,

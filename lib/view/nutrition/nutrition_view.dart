@@ -167,53 +167,18 @@ class DisplayNutritionPage extends StatelessWidget {
       padding: EdgeInsets.symmetric(
           horizontal: width * 0.05, vertical: height * 0.01),
       child: Container(
-        height: 220,
+        height: 380,
         decoration: BoxDecoration(
           color: ConstColors.secondaryColor,
           borderRadius: BorderRadius.circular(24),
         ),
-        child: Row(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
           children: [
             _buildCarbsProteinFatIndicators(),
-            const SizedBox(width: 10),
+            const SizedBox(height: 30),
             _buildMacronutrientData(),
           ],
-        ),
-      ),
-    );
-  }
-
-  Expanded _buildCarbsProteinFatIndicators() {
-    return Expanded(
-      flex: 5,
-      child: CircularPercentIndicator(
-        radius: 85,
-        lineWidth: 12,
-        animation: true,
-        percent: nutritionData.carbs / 200,
-        circularStrokeCap: CircularStrokeCap.round,
-        progressColor: const Color.fromARGB(255, 98, 7, 255),
-        backgroundColor:
-            const Color.fromARGB(255, 207, 207, 207).withOpacity(0.2),
-        center: CircularPercentIndicator(
-          radius: 65,
-          lineWidth: 12,
-          animation: true,
-          percent: nutritionData.protein / 129,
-          circularStrokeCap: CircularStrokeCap.round,
-          progressColor: Colors.red,
-          backgroundColor:
-              const Color.fromARGB(255, 207, 207, 207).withOpacity(0.2),
-          center: CircularPercentIndicator(
-            radius: 45,
-            lineWidth: 12,
-            animation: true,
-            percent: nutritionData.fat / 50,
-            circularStrokeCap: CircularStrokeCap.round,
-            progressColor: Colors.amber,
-            backgroundColor:
-                const Color.fromARGB(255, 207, 207, 207).withOpacity(0.2),
-          ),
         ),
       ),
     );
@@ -223,15 +188,156 @@ class DisplayNutritionPage extends StatelessWidget {
     return Expanded(
       flex: 3,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _buildMacronutrientItem("Glucides", nutritionData.carbs, "200 g",
-              const Color.fromARGB(255, 98, 7, 255)),
-          _buildMacronutrientItem(
-              "Proteines", nutritionData.protein, "129 g", Colors.red),
-          _buildMacronutrientItem(
-              "Lipides", nutritionData.fat, "50 g", Colors.amber),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                width: 15.0,
+                height: 15.0,
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 98, 7, 255),
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
+              ),
+              Text(
+                "Glucides",
+                style: pSemiBold20.copyWith(
+                  fontSize: 14,
+                ),
+              ),
+              Text(
+                "${nutritionData.carbs != 0 ? nutritionData.carbs : 100} / 200 g",
+                style: pRegular14.copyWith(
+                  fontSize: 14,
+                ),
+              ),
+              Text(
+                "${(nutritionData.carbs != 0 ? nutritionData.carbs : 100 / 200 * 100).toStringAsFixed(0)} %",
+                style: pSemiBold18.copyWith(
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          const Divider(
+            color: Color(0xffA9B2BA),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                width: 15.0,
+                height: 15.0,
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
+              ),
+              Text(
+                "Proteines",
+                style: pSemiBold20.copyWith(
+                  fontSize: 14,
+                ),
+              ),
+              Text(
+                "${nutritionData.carbs != 0 ? nutritionData.carbs : 80} / 129 g",
+                style: pRegular14.copyWith(
+                  fontSize: 14,
+                ),
+              ),
+              Text(
+                "${(nutritionData.carbs != 0 ? nutritionData.carbs : 80 / 129 * 100).toStringAsFixed(0)} %",
+                style: pSemiBold18.copyWith(
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          const Divider(
+            color: Color(0xffA9B2BA),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                width: 15.0,
+                height: 15.0,
+                decoration: BoxDecoration(
+                  color: Colors.amber,
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
+              ),
+              Text(
+                "Lipides",
+                style: pSemiBold20.copyWith(
+                  fontSize: 14,
+                ),
+              ),
+              Text(
+                "${nutritionData.carbs != 0 ? nutritionData.carbs : 20} / 50 g",
+                style: pRegular14.copyWith(
+                  fontSize: 14,
+                ),
+              ),
+              Text(
+                "${(nutritionData.carbs != 0 ? nutritionData.carbs : 20 / 50 * 100).toStringAsFixed(0)} %",
+                style: pSemiBold18.copyWith(
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildCarbsProteinFatIndicators() {
+    // Individual percentages
+    double carbsPercentage = (nutritionData.carbs != 0 ? nutritionData.carbs : 100) / 200 * 100;
+    double proteinPercentage = (nutritionData.protein != 0 ? nutritionData.protein : 80) / 129 * 100;
+    double fatPercentage = (nutritionData.fat != 0 ? nutritionData.fat : 20) / 50 * 100;
+
+    // Global percentage
+    double globalPercentage = (carbsPercentage + proteinPercentage + fatPercentage) / 3;
+
+    return CircularPercentIndicator(
+      radius: 90,
+      lineWidth: 10,
+      animation: true,
+      percent: (nutritionData.carbs != 0 ? nutritionData.carbs : 100) / 200,
+      circularStrokeCap: CircularStrokeCap.round,
+      progressColor: const Color.fromARGB(255, 98, 7, 255),
+      backgroundColor: const Color.fromARGB(255, 98, 7, 255).withOpacity(0.2),
+      center: CircularPercentIndicator(
+        radius: 78,
+        lineWidth: 10,
+        animation: true,
+        percent:
+            (nutritionData.protein != 0 ? nutritionData.protein : 80) / 129,
+        circularStrokeCap: CircularStrokeCap.round,
+        progressColor: Colors.red,
+        backgroundColor: Colors.red.withOpacity(0.2),
+        center: CircularPercentIndicator(
+          radius: 66,
+          lineWidth: 10,
+          animation: true,
+          percent: (nutritionData.fat != 0 ? nutritionData.fat : 20) / 50,
+          circularStrokeCap: CircularStrokeCap.round,
+          progressColor: Colors.amber,
+          backgroundColor: Colors.amber.withOpacity(0.2),
+          center: Text(
+            "${globalPercentage.toStringAsFixed(0)} %",
+            style: pSemiBold20.copyWith(
+              fontSize: 20,
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -243,17 +349,15 @@ class DisplayNutritionPage extends StatelessWidget {
       children: [
         Text(
           name,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
+          style: pSemiBold18.copyWith(
+            fontSize: 12,
             color: color,
           ),
         ),
         Text(
           "$value / $totalValue",
-          style: const TextStyle(
+          style: pRegular14.copyWith(
             fontSize: 14,
-            fontWeight: FontWeight.w500,
           ),
         ),
       ],

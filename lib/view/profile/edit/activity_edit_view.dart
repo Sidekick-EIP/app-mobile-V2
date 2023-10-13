@@ -1,24 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../config/colors.dart';
-import '../../../../config/images.dart';
-import '../../../../config/text_style.dart';
-import '../../../../controller/auth_controller.dart';
-import '../../../../enum/activities_map.dart';
+import '../../../config/colors.dart';
+import '../../../config/images.dart';
+import '../../../config/text_style.dart';
+import '../../../controller/user_controller.dart';
+import '../../../enum/activities_map.dart';
 
-class ActivityView extends StatefulWidget {
-  final AuthController authController;
-
-  const ActivityView({Key? key, required this.authController})
-      : super(key: key);
+class ActivityEditView extends StatefulWidget {
+  const ActivityEditView({Key? key}) : super(key: key);
 
   @override
-  State<ActivityView> createState() => _ActivityViewState();
+  ActivityEditViewState createState() => ActivityEditViewState();
 }
 
-class _ActivityViewState extends State<ActivityView> {
+class ActivityEditViewState extends State<ActivityEditView> {
+  final userController = Get.find<UserController>();
   List<String> sportsList = sportsTranslation.values.toList();
+  List<bool> activityList = [];
+  String enumToString(Object? o) => o.toString().split('.').last;
+
+  List<bool> getActivityStatusBasedOnEnum() {
+    List<bool> results = [];
+
+    for (var activityEnum in sportsTranslation.keys) {
+      String enumString = activityEnum.toString().split('.').last;
+      if (userController.user.value.activities.contains(enumString)) {
+        results.add(true);
+      } else {
+        results.add(false);
+      }
+    }
+
+    return results;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    userController.activityList = getActivityStatusBasedOnEnum();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +48,7 @@ class _ActivityViewState extends State<ActivityView> {
       children: [
         const SizedBox(height: 30),
         Text(
-          "Choisissez les activités qui vous intéressent",
+          "Modifier mes activités",
           style: pSemiBold20.copyWith(
             fontSize: 25,
           ),
@@ -35,15 +56,14 @@ class _ActivityViewState extends State<ActivityView> {
         ),
         const SizedBox(height: 30),
         ListView.builder(
-          itemCount: sportsList.length,
+          itemCount: userController.activityList.length,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) {
             return InkWell(
               onTap: () {
                 setState(() {
-                  widget.authController.activityList[index] =
-                  !widget.authController.activityList[index];
+                  userController.activityList[index] = !userController.activityList[index];
                 });
               },
               child: Padding(
@@ -54,7 +74,7 @@ class _ActivityViewState extends State<ActivityView> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(7.7),
                     border: Border.all(
-                      color: widget.authController.activityList[index] == true
+                      color: userController.activityList[index] == true
                           ? const Color(0xffF25D29)
                           : const Color(0xffE5E9EF),
                     ),
@@ -79,7 +99,7 @@ class _ActivityViewState extends State<ActivityView> {
                         ),
                         const SizedBox(width: 15),
                         Text(
-                          sportsList[index],  // get the sport from the list
+                          sportsList[index], // get the sport from the list
                           style: pSemiBold18.copyWith(
                             fontSize: 15,
                           ),
@@ -90,14 +110,11 @@ class _ActivityViewState extends State<ActivityView> {
                           width: 19,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: widget.authController.activityList[index] ==
-                                true
+                            color: userController.activityList[index] == true
                                 ? const Color(0xffF25D29)
                                 : Colors.transparent,
                             border: Border.all(
-                              color:
-                              widget.authController.activityList[index] ==
-                                  true
+                              color: userController.activityList[index] == true
                                   ? const Color(0xffF25D29)
                                   : const Color(0xffDAE0E8),
                             ),

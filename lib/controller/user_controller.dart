@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:sidekick_app/utils/user_storage.dart';
 import 'package:http/http.dart' as http;
 
+import '../enum/activities.dart';
 import '../models/user.dart';
 import '../utils/token_storage.dart';
 
@@ -14,6 +15,8 @@ class UserController extends GetxController {
   final TokenStorage tokenStorage = TokenStorage();
   String apiUrl = dotenv.env['API_BACK_URL'] ?? "";
   RxBool isLoading = false.obs;
+
+  List<bool> activityList = List<bool>.filled(30, false).obs;
 
   Rx<User> user = User(
     avatar: RxString(
@@ -39,6 +42,14 @@ class UserController extends GetxController {
     user.update((val) {
       val!.firstname.value += '!';
     });
+  }
+
+  List<Activities> get selectedActivities {
+    List<Activities> activities = [];
+    for (int i = 0; i < activityList.length; i++) {
+      if (activityList[i]) activities.add(Activities.values[i]);
+    }
+    return activities;
   }
 
   // If you plan to implement this method, handle potential errors with try-catch.

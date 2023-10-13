@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sidekick_app/view/profile/activity_screen.dart';
 
 import '../../config/colors.dart';
 import '../../config/images.dart';
@@ -22,12 +23,6 @@ class ProfileView extends StatefulWidget {
 class _ProfileViewState extends State<ProfileView> {
   final homeController = Get.put(HomeController());
   final userController = Get.find<UserController>();
-
-  @override
-  void initState() {
-    print(userController.user.value.gender.value);
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -142,6 +137,46 @@ class _ProfileViewState extends State<ProfileView> {
                               () {
                                 Get.to(
                                   () => const AccountScreen(),
+                                  transition: Transition.rightToLeft,
+                                );
+                              },
+                              const Icon(
+                                Icons.arrow_forward_ios,
+                                color: Color(0xffA9B2BA),
+                                size: 16,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            const Divider(
+                              color: Color(0xffA9B2BA),
+                            ),
+                            const SizedBox(height: 10),
+                            row(
+                              "Objectifs",
+                              "",
+                                  () {
+                                Get.to(
+                                      () => const AccountScreen(),
+                                  transition: Transition.rightToLeft,
+                                );
+                              },
+                              const Icon(
+                                Icons.arrow_forward_ios,
+                                color: Color(0xffA9B2BA),
+                                size: 16,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            const Divider(
+                              color: Color(0xffA9B2BA),
+                            ),
+                            const SizedBox(height: 10),
+                            row(
+                              "Activités favorites",
+                              "",
+                                  () {
+                                Get.to(
+                                      () => const ActivityScreen(),
                                   transition: Transition.rightToLeft,
                                 );
                               },

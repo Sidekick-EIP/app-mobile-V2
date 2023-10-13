@@ -76,8 +76,6 @@ class _PlanScreenState extends State<PlanScreen> {
           .toList(),
     };
 
-    print(body);
-
     try {
       final response = await http.post(
         Uri.parse("$apiUrl/user_infos/"),

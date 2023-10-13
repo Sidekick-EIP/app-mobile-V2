@@ -344,6 +344,47 @@ class _AccountScreenState extends State<AccountScreen> {
                             ],
                           ),
                         ),
+                        const SizedBox(height: 10),
+                        const Divider(
+                          color: Color(0xffF1F4F8),
+                        ),
+                        const SizedBox(height: 10),
+                        row(
+                          "Description",
+                          "",
+                              () {
+                            Get.to(
+                                  () => EditableFieldScreen(
+                                  title: "Modifier votre description",
+                                  fieldLabel:
+                                  userController.user.value.description.value,
+                                  fieldObservable:
+                                  userController.user.value.description,
+                                    minLines: 5,
+                                    maxLines: 10,
+                                    height: 156),
+                              transition: Transition.rightToLeft,
+                            );
+                          },
+                          Row(
+                            children: [
+                              Obx(
+                                    () => Text(
+                                  "${userController.user.value.description}" "  ",
+                                  style: pRegular14.copyWith(
+                                    fontSize: 15.41,
+                                    color: ConstColors.lightBlackColor,
+                                  ),
+                                ),
+                              ),
+                              const Icon(
+                                Icons.arrow_forward_ios,
+                                color: Color(0xffA9B2BA),
+                                size: 16,
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),

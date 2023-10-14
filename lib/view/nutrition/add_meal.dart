@@ -15,14 +15,14 @@ import 'package:sidekick_app/view/nutrition/edit_meal.dart';
 
 enum SampleItem { itemOne, itemTwo }
 
-class NutritionPeriod extends StatefulWidget {
-  const NutritionPeriod({Key? key}) : super(key: key);
+class AddMeal extends StatefulWidget {
+  const AddMeal({Key? key}) : super(key: key);
 
   @override
-  State<NutritionPeriod> createState() => _NutritionPeriodState();
+  State<AddMeal> createState() => _AddMealState();
 }
 
-class _NutritionPeriodState extends State<NutritionPeriod> {
+class _AddMealState extends State<AddMeal> {
   late Future<Nutrition> futureNutrition;
   final userController = Get.find<UserController>();
 
@@ -75,36 +75,6 @@ class _NutritionPeriodState extends State<NutritionPeriod> {
                     },
                   ),
                 ),
-                InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const AddMeal(),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    width: width * 0.22,
-                    height: height * 0.05,
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 198, 198, 198),
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Icon(
-                          Icons.add,
-                          size: 28.0,
-                        ),
-                        Icon(
-                          Icons.wysiwyg,
-                          size: 28.0,
-                        ),
-                      ],
-                    ),
-                  ),
-                )
               ],
             ),
           ),
@@ -145,7 +115,7 @@ class DisplayNutritionPage extends StatelessWidget {
               SizedBox(
                 height: height * 0.03,
               ),
-              const CategoryWidget(),
+              const SearchWidget(),
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: Row(
@@ -159,49 +129,6 @@ class DisplayNutritionPage extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class CategoryWidget extends StatefulWidget {
-  const CategoryWidget({super.key});
-
-  @override
-  _CategoryWidgetState createState() => _CategoryWidgetState();
-}
-
-class _CategoryWidgetState extends State<CategoryWidget> {
-  int selectedCategoryIndex = 0;
-
-  List<String> categories = ['Petit déjeuner', 'Déjeuner', 'Dinner', 'Snack'];
-
-  int previousCategoryIndex = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(categories.length, (index) {
-        return InkWell(
-          onTap: () {
-            setState(() {
-              previousCategoryIndex = selectedCategoryIndex;
-              selectedCategoryIndex = index;
-            });
-          },
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            padding: const EdgeInsets.all(12.0),
-            color: index == selectedCategoryIndex ? const Color.fromARGB(255, 243, 131, 33) : Colors.grey,
-            child: Text(
-              categories[index],
-              style: const TextStyle(
-                color: Colors.white,
-              ),
-            ),
-          ),
-        );
-      }),
     );
   }
 }
@@ -227,7 +154,7 @@ class TodaysMeals extends StatelessWidget {
         ),
         SizedBox(
             width: width,
-            height: height * 0.5,
+            height: height * 0.7,
             child: Column(
               children: [
                 MealPeriodCard(
@@ -280,127 +207,105 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(width: 1.6, color: const Color.fromARGB(66, 128, 128, 128)),
-        color: const Color.fromARGB(255, 255, 255, 255),
-        borderRadius: const BorderRadius.all(Radius.circular(20)),
-      ),
-      width: widget.width * 0.9,
-      height: widget.height * 0.21,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Container(
-                width: widget.width * 0.15,
-                height: widget.height * 0.07,
-                decoration: BoxDecoration(
-                  color: widget.colorAccent,
-                  borderRadius: const BorderRadius.all(Radius.circular(20)),
-                ),
-                child: Center(
-                  child: Text(
-                    widget.emojiImg,
-                    style: const TextStyle(fontSize: 35),
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const EditMeal(),
+          ),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(width: 1.6, color: const Color.fromARGB(66, 128, 128, 128)),
+          color: const Color.fromARGB(255, 255, 255, 255),
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
+        ),
+        width: widget.width * 0.9,
+        height: widget.height * 0.21,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                  width: widget.width * 0.15,
+                  height: widget.height * 0.07,
+                  decoration: BoxDecoration(
+                    color: widget.colorAccent,
+                    borderRadius: const BorderRadius.all(Radius.circular(20)),
+                  ),
+                  child: Center(
+                    child: Text(
+                      widget.emojiImg,
+                      style: const TextStyle(fontSize: 35),
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(
-                width: widget.width * 0.55,
-                height: widget.height * 0.1,
-                child: Row(
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: widget.width * 0.55,
-                          height: widget.height * 0.05,
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              widget.mealName,
-                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                SizedBox(
+                  width: widget.width * 0.66,
+                  height: widget.height * 0.1,
+                  child: Row(
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: widget.width * 0.55,
+                            height: widget.height * 0.05,
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                widget.mealName,
+                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          width: widget.width * 0.55,
-                          height: widget.height * 0.02,
-                          child: const Text(
-                            "390 kcal ° 200 g",
-                            style: TextStyle(fontSize: 12, color: Colors.grey),
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
+                          SizedBox(
+                            width: widget.width * 0.55,
+                            height: widget.height * 0.02,
+                            child: const Text(
+                              "390 kcal ° 200 g",
+                              style: TextStyle(fontSize: 12, color: Colors.grey),
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Container(
-                width: widget.width * 0.11,
-                height: widget.height * 0.05,
-                decoration: const BoxDecoration(
-                  color: Color.fromARGB(255, 205, 205, 205),
-                  borderRadius: BorderRadius.all(Radius.circular(40)),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                MacrosWidgetCard(
+                  width: widget.width,
+                  height: widget.height,
+                  grams: "40 g",
+                  macros: "Glucides",
+                  barColor: const Color.fromARGB(255, 98, 7, 255),
                 ),
-                child: PopupMenuButton<String>(
-                  itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                    const PopupMenuItem<String>(
-                      value: 'Modifier',
-                      child: Text('Modifier'),
-                    ),
-                    const PopupMenuItem<String>(
-                      value: 'Supprimer',
-                      child: Text('Supprimer'),
-                    ),
-                  ],
-                  onSelected: (String choice) {
-                    if (choice == 'Modifier') {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const EditMeal(),
-                        ),
-                      );
-                    } else if (choice == 'Supprimer') {
-                      print('Delete chosen');
-                    }
-                  },
+                MacrosWidgetCard(
+                  width: widget.width,
+                  height: widget.height,
+                  grams: "50 g",
+                  macros: "Proteines",
+                  barColor: Colors.red,
                 ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              MacrosWidgetCard(
-                width: widget.width,
-                height: widget.height,
-                grams: "40 g",
-                macros: "Glucides",
-                barColor: const Color.fromARGB(255, 98, 7, 255),
-              ),
-              MacrosWidgetCard(
-                width: widget.width,
-                height: widget.height,
-                grams: "50 g",
-                macros: "Proteines",
-                barColor: Colors.red,
-              ),
-              MacrosWidgetCard(
-                width: widget.width,
-                height: widget.height,
-                grams: "25 g",
-                macros: "Lipides",
-                barColor: Colors.amber,
-              ),
-            ],
-          )
-        ],
+                MacrosWidgetCard(
+                  width: widget.width,
+                  height: widget.height,
+                  grams: "25 g",
+                  macros: "Lipides",
+                  barColor: Colors.amber,
+                ),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -490,6 +395,23 @@ class MacrosWidgetCard extends StatelessWidget {
           ),
         )
       ],
+    );
+  }
+}
+
+class SearchWidget extends StatefulWidget {
+  const SearchWidget({super.key});
+
+  @override
+  _SearchWidgetState createState() => _SearchWidgetState();
+}
+
+class _SearchWidgetState extends State<SearchWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return const Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [],
     );
   }
 }

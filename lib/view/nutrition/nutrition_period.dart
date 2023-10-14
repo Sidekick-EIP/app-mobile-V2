@@ -16,8 +16,9 @@ import 'package:sidekick_app/view/nutrition/edit_meal.dart';
 enum SampleItem { itemOne, itemTwo }
 
 class NutritionPeriod extends StatefulWidget {
-  const NutritionPeriod({Key? key}) : super(key: key);
+  const NutritionPeriod({Key? key, required this.date}) : super(key: key);
 
+  final String date;
   @override
   State<NutritionPeriod> createState() => _NutritionPeriodState();
 }
@@ -25,6 +26,7 @@ class NutritionPeriod extends StatefulWidget {
 class _NutritionPeriodState extends State<NutritionPeriod> {
   late Future<Nutrition> futureNutrition;
   final userController = Get.find<UserController>();
+  String period = "dinners";
 
   final nutritionController = Get.put(NutritionController(), permanent: true);
   String getDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0).toIso8601String();
@@ -32,17 +34,9 @@ class _NutritionPeriodState extends State<NutritionPeriod> {
   @override
   void initState() {
     super.initState();
-    futureNutrition = nutritionController.fetchNutrition("${getDate}Z");
+    futureNutrition = nutritionController.fetchNutrition("${widget.date}Z");
   }
 
-  void updateDate(String newDate) {
-    setState(() {
-      getDate = newDate;
-      futureNutrition = nutritionController.fetchNutrition("${getDate}Z");
-    });
-  }
-
-  final homeController = Get.put(HomeController());
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -104,59 +98,31 @@ class _NutritionPeriodState extends State<NutritionPeriod> {
                       ],
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),
           SizedBox(height: height * 0.01),
+          SizedBox(
+            height: height * 0.03,
+          ),
+          const CategoryWidget(),
           FutureBuilder<Nutrition>(
             future: futureNutrition,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return DisplayNutritionPage(width: width, height: height, nutritionData: snapshot.data!);
+                return DisplayNutritionPage(
+                  width: width,
+                  height: height,
+                  nutritionData: snapshot.data!,
+                  period: period,
+                );
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');
               }
               return const Center(child: CircularProgressIndicator());
             },
           )
-        ],
-      ),
-    );
-  }
-}
-
-class DisplayNutritionPage extends StatelessWidget {
-  const DisplayNutritionPage({super.key, required this.width, required this.height, required this.nutritionData});
-
-  final double width;
-  final double height;
-  final Nutrition nutritionData;
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: ListView(
-        physics: const ClampingScrollPhysics(),
-        padding: EdgeInsets.zero,
-        children: [
-          Column(
-            children: [
-              SizedBox(
-                height: height * 0.03,
-              ),
-              const CategoryWidget(),
-              Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20),
-                child: Row(
-                  children: [
-                    SizedBox(width: width * 0.05),
-                  ],
-                ),
-              ),
-              TodaysMeals(width: width, height: height, nutritionData: nutritionData),
-            ],
-          ),
         ],
       ),
     );
@@ -192,7 +158,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             padding: const EdgeInsets.all(12.0),
-            color: index == selectedCategoryIndex ? const Color.fromARGB(255, 243, 131, 33) : Colors.grey,
+            color: index == selectedCategoryIndex ? const Color.fromRGBO(242, 93, 41, 1) : Colors.grey,
             child: Text(
               categories[index],
               style: const TextStyle(
@@ -206,17 +172,35 @@ class _CategoryWidgetState extends State<CategoryWidget> {
   }
 }
 
-class TodaysMeals extends StatelessWidget {
-  const TodaysMeals({
-    super.key,
-    required this.width,
-    required this.height,
-    required this.nutritionData,
-  });
+class DisplayNutritionPage extends StatelessWidget {
+  const DisplayNutritionPage({super.key, required this.width, required this.height, required this.nutritionData, required this.period});
 
   final double width;
   final double height;
   final Nutrition nutritionData;
+  final String period;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: height * 0.75,
+      width: width,
+      child: ListView.builder(
+          itemCount: nutritionData.meals[period]!["meals"].length,
+          itemBuilder: (context, index) {
+            return TodaysMeals(width: width, height: height, nutritionData: nutritionData, food: nutritionData.meals[period]!["meals"][index]);
+          }),
+    );
+  }
+}
+
+class TodaysMeals extends StatelessWidget {
+  const TodaysMeals({super.key, required this.width, required this.height, required this.nutritionData, required this.food});
+
+  final double width;
+  final double height;
+  final Nutrition nutritionData;
+  final Food food;
 
   @override
   Widget build(BuildContext context) {
@@ -227,7 +211,7 @@ class TodaysMeals extends StatelessWidget {
         ),
         SizedBox(
             width: width,
-            height: height * 0.5,
+            height: height * 0.22,
             child: Column(
               children: [
                 MealPeriodCard(
@@ -235,7 +219,7 @@ class TodaysMeals extends StatelessWidget {
                   height: height,
                   color: Colors.green,
                   colorAccent: Colors.greenAccent,
-                  mealName: "Salade de pates au riz cantonais et a la sauce",
+                  mealName: food.name,
                   emojiImg: "🥗",
                   nutritionData: nutritionData,
                   period: "breakfast",

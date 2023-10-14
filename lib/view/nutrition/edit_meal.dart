@@ -38,7 +38,6 @@ class _EditMealState extends State<EditMeal> {
     });
   }
 
-  final homeController = Get.put(HomeController());
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;

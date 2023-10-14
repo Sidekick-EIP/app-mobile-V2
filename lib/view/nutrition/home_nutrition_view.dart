@@ -38,7 +38,6 @@ class _NutritionViewState extends State<NutritionView> {
     });
   }
 
-  final homeController = Get.put(HomeController());
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -69,12 +68,10 @@ class _NutritionViewState extends State<NutritionView> {
             ],
           ),
         ),
-        SizedBox(height: height * 0.01),
         SizedBox(
-          height: height * 0.12,
+          height: height * 0.15,
           width: Get.width,
           child: ListView.builder(
-            padding: const EdgeInsets.only(left: 20),
             itemCount: 8,
             scrollDirection: Axis.horizontal,
             itemBuilder: (BuildContext context, int index) {
@@ -102,7 +99,7 @@ class _NutritionViewState extends State<NutritionView> {
           future: futureNutrition,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return DisplayNutritionPage(width: width, height: height, nutritionData: snapshot.data!);
+              return DisplayNutritionPage(width: width, height: height, nutritionData: snapshot.data!, date: getDate);
             } else if (snapshot.hasError) {
               return Text('${snapshot.error}');
             }
@@ -115,11 +112,12 @@ class _NutritionViewState extends State<NutritionView> {
 }
 
 class DisplayNutritionPage extends StatelessWidget {
-  const DisplayNutritionPage({super.key, required this.width, required this.height, required this.nutritionData});
+  const DisplayNutritionPage({super.key, required this.width, required this.height, required this.nutritionData, required this.date});
 
   final double width;
   final double height;
   final Nutrition nutritionData;
+  final String date;
 
   @override
   Widget build(BuildContext context) {
@@ -159,7 +157,7 @@ class DisplayNutritionPage extends StatelessWidget {
                                 radius: 85,
                                 lineWidth: 12,
                                 animation: true,
-                                percent: nutritionData.carbs / 200,
+                                percent: nutritionData.carbs > 200 ? 1 : nutritionData.carbs / 200,
                                 circularStrokeCap: CircularStrokeCap.round,
                                 progressColor: const Color.fromARGB(255, 98, 7, 255),
                                 backgroundColor: const Color.fromARGB(255, 207, 207, 207).withOpacity(0.2),
@@ -167,7 +165,7 @@ class DisplayNutritionPage extends StatelessWidget {
                                   radius: 65,
                                   lineWidth: 12,
                                   animation: true,
-                                  percent: nutritionData.protein / 129,
+                                  percent: nutritionData.protein > 129 ? 1 : nutritionData.protein / 129,
                                   circularStrokeCap: CircularStrokeCap.round,
                                   progressColor: Colors.red,
                                   backgroundColor: const Color.fromARGB(255, 207, 207, 207).withOpacity(0.2),
@@ -175,7 +173,7 @@ class DisplayNutritionPage extends StatelessWidget {
                                     radius: 45,
                                     lineWidth: 12,
                                     animation: true,
-                                    percent: nutritionData.fat / 50,
+                                    percent: nutritionData.fat > 50 ? 1 : nutritionData.fat / 50,
                                     circularStrokeCap: CircularStrokeCap.round,
                                     progressColor: Colors.amber,
                                     backgroundColor: const Color.fromARGB(255, 207, 207, 207).withOpacity(0.2),
@@ -312,7 +310,7 @@ class DisplayNutritionPage extends StatelessWidget {
                                         radius: 60,
                                         lineWidth: 12,
                                         animation: true,
-                                        percent: (2100 - nutritionData.calories) / 2100,
+                                        percent: nutritionData.calories > 2100 ? 0.0 : ((2100 - nutritionData.calories) / 2100),
                                         circularStrokeCap: CircularStrokeCap.round,
                                         progressColor: const Color.fromARGB(255, 0, 193, 51),
                                         backgroundColor: const Color.fromARGB(255, 200, 200, 200).withOpacity(0.2),
@@ -442,7 +440,7 @@ class DisplayNutritionPage extends StatelessWidget {
                   ],
                 ),
               ),
-              TodaysMeals(width: width, height: height, nutritionData: nutritionData),
+              TodaysMeals(width: width, height: height, nutritionData: nutritionData, date: date),
             ],
           ),
         ],
@@ -457,11 +455,13 @@ class TodaysMeals extends StatelessWidget {
     required this.width,
     required this.height,
     required this.nutritionData,
+    required this.date,
   });
 
   final double width;
   final double height;
   final Nutrition nutritionData;
+  final String date;
 
   @override
   Widget build(BuildContext context) {
@@ -481,7 +481,7 @@ class TodaysMeals extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => const NutritionPeriod(),
+                      builder: (context) => NutritionPeriod(date: date),
                     ),
                   );
                 },

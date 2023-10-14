@@ -99,4 +99,5 @@ class DefaultImages {
   static const String sidekick1 = 'assets/images/sidekick1.png';
   static const String sidekickLogo = 'assets/images/sidekick_logo-removebg-preview.png';
   static const String sidekickLogoV2 = 'assets/images/sidekick_logoV2.png';
+  static const String m1 = 'assets/images/m1.png';
 }

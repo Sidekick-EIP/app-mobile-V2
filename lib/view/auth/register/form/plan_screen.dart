@@ -13,6 +13,7 @@ import 'package:sidekick_app/view/auth/register/info_screen.dart';
 
 import '../../../../config/text_style.dart';
 import '../../../../config/images.dart';
+import '../../../../utils/token_storage.dart';
 import '../../../../widget/custom_button.dart';
 import '../../../home/home_view.dart';
 
@@ -29,7 +30,8 @@ class _PlanScreenState extends State<PlanScreen> {
 
   Future<void> postUserInfos() async {
     String apiUrl = dotenv.env['API_BACK_URL'] ?? "";
-    String? accessToken = await storage.read(key: 'accessToken');
+    final TokenStorage tokenStorage = TokenStorage();
+    String? accessToken = await tokenStorage.getAccessToken();
 
     if (accessToken == null) {
       if (kDebugMode) {
@@ -74,6 +76,8 @@ class _PlanScreenState extends State<PlanScreen> {
           .toList(),
     };
 
+    print(body);
+
     try {
       final response = await http.post(
         Uri.parse("$apiUrl/user_infos/"),
@@ -91,6 +95,7 @@ class _PlanScreenState extends State<PlanScreen> {
         );
         Get.offAll(() => const HomeView(), transition: Transition.rightToLeft);
       } else {
+        print(response.body);
         showErrorSnackbar();
       }
     } catch (e) {

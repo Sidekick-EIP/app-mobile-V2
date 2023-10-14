@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -6,6 +5,8 @@ import '../../config/colors.dart';
 import '../../config/images.dart';
 import '../../config/text_style.dart';
 import '../../controller/home_controller.dart';
+import '../../controller/user_controller.dart';
+import '../../utils/calculate_age.dart';
 import '../../widget/custom_button.dart';
 import '../auth/signin_screen.dart';
 import 'account_screen.dart';
@@ -20,6 +21,7 @@ class ProfileView extends StatefulWidget {
 
 class _ProfileViewState extends State<ProfileView> {
   final homeController = Get.put(HomeController());
+  final userController = Get.find<UserController>();
 
   @override
   Widget build(BuildContext context) {
@@ -43,32 +45,52 @@ class _ProfileViewState extends State<ProfileView> {
                   children: [
                     Center(
                       child: Container(
-                        height: 77,
-                        width: 77,
-                        decoration: const BoxDecoration(
+                        height: 87,
+                        width: 87,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
                           image: DecorationImage(
-                            image: AssetImage(DefaultImages.p2),
+                            fit: BoxFit.cover,
+                            image: NetworkImage(
+                                userController.user.value.avatar.value),
                           ),
                         ),
                       ),
                     ),
                     const SizedBox(height: 10),
                     Center(
-                      child: Text(
-                        "Deborah Moore",
-                        style: pSemiBold18.copyWith(
-                          fontSize: 19.27,
+                      child: Obx(
+                        () => Text(
+                          "${userController.user.value.firstname} ${userController.user.value.lastname}",
+                          style: pSemiBold18.copyWith(
+                            fontSize: 19.27,
+                          ),
                         ),
                       ),
                     ),
                     const SizedBox(height: 30),
                     Row(
                       children: [
-                        card(DefaultImages.p1, "55 kg"),
+                        Obx(
+                          () => card(
+                              userController.user.value.gender.value == "MALE"
+                                  ? DefaultImages.m1
+                                  : DefaultImages.p1,
+                              "${userController.user.value.weight} kg"),
+                        ),
                         const SizedBox(width: 16),
-                        card(DefaultImages.p1, "167 cm"),
+                        Obx(
+                          () => card(
+                              userController.user.value.gender.value == "MALE"
+                                  ? DefaultImages.m1
+                                  : DefaultImages.p1,
+                              "${userController.user.value.size} cm"),
+                        ),
                         const SizedBox(width: 16),
-                        card(DefaultImages.p3, "26 ans"),
+                        Obx(
+                          () => card(DefaultImages.p3,
+                              "${calculateAge(userController.user.value.birthDate.value)} ans"),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 20),
@@ -113,7 +135,7 @@ class _ProfileViewState extends State<ProfileView> {
                               "",
                               () {
                                 Get.to(
-                                  const AccountScreen(),
+                                  () => const AccountScreen(),
                                   transition: Transition.rightToLeft,
                                 );
                               },
@@ -134,7 +156,7 @@ class _ProfileViewState extends State<ProfileView> {
                               () {
                                 homeController.logout();
                                 Get.offAll(
-                                  const SignInScreen(),
+                                  () => const SignInScreen(),
                                   transition: Transition.rightToLeft,
                                 );
                               },

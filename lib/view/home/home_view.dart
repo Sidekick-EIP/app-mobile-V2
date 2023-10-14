@@ -14,18 +14,6 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   final homeController = Get.put(HomeController());
   final userController = Get.put(UserController(), permanent: true);
-  final TokenStorage tokenStorage = TokenStorage();
-
-  _loadTokens() async {
-    var token = await tokenStorage.getAccessToken() ?? "";
-  }
-
-  @override
-  void initState() {
-    _loadTokens();
-    userController.fetchUserFromBack();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,12 +46,6 @@ class _HomeViewState extends State<HomeView> {
                   }
                 }
               ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                userController.addExclamation();
-              },
-              child: const Text("Add exclamation")
             ),
             ElevatedButton(
                 onPressed: () {

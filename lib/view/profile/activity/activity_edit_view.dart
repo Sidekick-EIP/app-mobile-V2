@@ -17,7 +17,7 @@ class ActivityEditView extends StatefulWidget {
 class ActivityEditViewState extends State<ActivityEditView> {
   final userController = Get.find<UserController>();
   List<String> sportsList = sportsTranslation.values.toList();
-  List<bool> activityList = [];
+
   String enumToString(Object? o) => o.toString().split('.').last;
 
   List<bool> getActivityStatusBasedOnEnum() {
@@ -25,7 +25,7 @@ class ActivityEditViewState extends State<ActivityEditView> {
 
     for (var activityEnum in sportsTranslation.keys) {
       String enumString = activityEnum.toString().split('.').last;
-      if (userController.user.value.activities.contains(enumString)) {
+      if (userController.user.value.activities.toString().contains(enumString)) {
         results.add(true);
       } else {
         results.add(false);
@@ -63,7 +63,8 @@ class ActivityEditViewState extends State<ActivityEditView> {
             return InkWell(
               onTap: () {
                 setState(() {
-                  userController.activityList[index] = !userController.activityList[index];
+                  userController.activityList[index] =
+                      !userController.activityList[index];
                 });
               },
               child: Padding(

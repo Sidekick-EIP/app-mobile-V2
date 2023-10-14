@@ -7,6 +7,7 @@ import 'package:sidekick_app/utils/user_storage.dart';
 import 'package:http/http.dart' as http;
 
 import '../enum/activities.dart';
+import '../enum/goal.dart';
 import '../models/user.dart';
 import '../utils/token_storage.dart';
 
@@ -17,6 +18,8 @@ class UserController extends GetxController {
   RxBool isLoading = false.obs;
 
   List<bool> activityList = List<bool>.filled(30, false).obs;
+  List<bool> goalList = List<bool>.filled(4, false).obs;
+  List<bool> trainingList = List<bool>.filled(30, false).obs;
 
   Rx<User> user = User(
     avatar: RxString(
@@ -50,6 +53,13 @@ class UserController extends GetxController {
       if (activityList[i]) activities.add(Activities.values[i]);
     }
     return activities;
+  }
+
+  Goal get selectedGoal {
+    for (int i = 0; i < goalList.length; i++) {
+      if (goalList[i]) return Goal.values[i];
+    }
+    return Goal.STAY_IN_SHAPE;  // default value
   }
 
   // If you plan to implement this method, handle potential errors with try-catch.

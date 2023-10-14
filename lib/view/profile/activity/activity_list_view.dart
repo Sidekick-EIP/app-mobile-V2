@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sidekick_app/controller/user_controller.dart';
 
-import '../../config/images.dart';
-import '../../config/text_style.dart';
-import '../../enum/activities.dart';
-import '../../enum/activities_map.dart';
+import '../../../config/images.dart';
+import '../../../config/text_style.dart';
+import '../../../enum/activities.dart';
+import '../../../enum/activities_map.dart';
 
 class ActivityListView extends StatefulWidget {
   const ActivityListView({Key? key}) : super(key: key);

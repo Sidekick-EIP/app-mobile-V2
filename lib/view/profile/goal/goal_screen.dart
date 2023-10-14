@@ -2,33 +2,31 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sidekick_app/config/text_style.dart';
-import 'package:sidekick_app/view/profile/edit/activity_edit_view.dart';
+import 'package:sidekick_app/view/profile/goal/goal_edit_view.dart';
+import 'package:sidekick_app/view/profile/goal/goal_list_view.dart';
 
-import '../../config/colors.dart';
-import '../../controller/user_controller.dart';
-import '../../widget/custom_button.dart';
-import 'activity_list_view.dart';
+import '../../../config/colors.dart';
+import '../../../controller/user_controller.dart';
+import '../../../widget/custom_button.dart';
 
-class ActivityScreen extends StatefulWidget {
-  const ActivityScreen({Key? key}) : super(key: key);
+class GoalScreen extends StatefulWidget {
+  const GoalScreen({Key? key}) : super(key: key);
 
   @override
-  State<ActivityScreen> createState() => _ActivityScreenState();
+  State<GoalScreen> createState() => GoalScreenState();
 }
 
-class _ActivityScreenState extends State<ActivityScreen> {
+class GoalScreenState extends State<GoalScreen> {
   final userController = Get.find<UserController>();
   bool isEditMode = false;
-  late List<RxString> initialValue;
+  late String initialValue;
 
   String enumToString(Object? o) => o.toString().split('.').last;
 
   @override
   void initState() {
     super.initState();
-    initialValue = userController.user.value.activities
-        .map((activity) => RxString(activity.toString().split('.').last))
-        .toList();
+    initialValue = userController.user.value.goal.value;
   }
 
   @override
@@ -43,7 +41,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
             if (!isEditMode) {
               Get.back();
             } else {
-              userController.user.value.activities = initialValue;
+              userController.user.value.goal.value = initialValue;
               setState(() {
                 isEditMode = !isEditMode;
               });
@@ -59,19 +57,19 @@ class _ActivityScreenState extends State<ActivityScreen> {
             padding: const EdgeInsets.only(right: 10, top: 0),
             child: !isEditMode
                 ? TextButton(
-                    onPressed: () {
-                      setState(() {
-                        isEditMode = !isEditMode;
-                      });
-                    },
-                    child: Text("Éditer",
-                        style: pSemiBold20.copyWith(
-                            fontSize: 15.39, color: ConstColors.primaryColor)),
-                  )
+              onPressed: () {
+                setState(() {
+                  isEditMode = !isEditMode;
+                });
+              },
+              child: Text("Éditer",
+                  style: pSemiBold20.copyWith(
+                      fontSize: 15.39, color: ConstColors.primaryColor)),
+            )
                 : const SizedBox(
-                    height: 0,
-                    width: 0,
-                  ),
+              height: 0,
+              width: 0,
+            ),
           ),
         ],
       ),
@@ -83,8 +81,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: isEditMode
-                    ? const ActivityEditView()
-                    : const ActivityListView(),
+                    ? const GoalEditView()
+                    : const GoalListView(),
               ),
               const SizedBox(height: 100),
             ],
@@ -96,10 +94,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 title: "Enregistrer",
                 width: Get.width,
                 onTap: () async {
-                  userController.user.value.activities = userController
-                      .selectedActivities
-                      .map((activity) => RxString(enumToString(activity)))
-                      .toList();
+                  userController.user.value.goal.value = enumToString(userController.selectedGoal);
                   try {
                     await userController.updateUserProfile();
                     Get.snackbar('Succès', 'Profil mis à jour avec succès!',

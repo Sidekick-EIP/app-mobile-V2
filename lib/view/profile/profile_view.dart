@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sidekick_app/view/profile/activity_screen.dart';
+import 'package:sidekick_app/view/profile/activity/activity_screen.dart';
 
 import '../../config/colors.dart';
 import '../../config/images.dart';
@@ -12,6 +12,7 @@ import '../../widget/custom_button.dart';
 import '../auth/signin_screen.dart';
 import 'account_screen.dart';
 import 'filter_view.dart';
+import 'goal/goal_screen.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({Key? key}) : super(key: key);
@@ -156,7 +157,7 @@ class _ProfileViewState extends State<ProfileView> {
                               "",
                                   () {
                                 Get.to(
-                                      () => const AccountScreen(),
+                                      () => const GoalScreen(),
                                   transition: Transition.rightToLeft,
                                 );
                               },

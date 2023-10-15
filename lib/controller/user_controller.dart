@@ -3,13 +3,11 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
+import 'package:sidekick_app/models/user.dart';
+import 'package:sidekick_app/utils/token_storage.dart';
+import 'package:sidekick_app/utils/http_request.dart';
 import 'package:sidekick_app/utils/user_storage.dart';
 import 'package:http/http.dart' as http;
-
-import '../enum/activities.dart';
-import '../enum/goal.dart';
-import '../models/user.dart';
-import '../utils/token_storage.dart';
 
 class UserController extends GetxController {
   final UserStorage _userStorage = UserStorage();
@@ -41,56 +39,17 @@ class UserController extends GetxController {
     birthDate: Rx<DateTime>(DateTime.parse("1990-05-12")),
   ).obs;
 
-  void addExclamation() {
-    user.update((val) {
-      val!.firstname.value += '!';
-    });
-  }
-
-  List<Activities> get selectedActivities {
-    List<Activities> activities = [];
-    for (int i = 0; i < activityList.length; i++) {
-      if (activityList[i]) activities.add(Activities.values[i]);
-    }
-    return activities;
-  }
-
-  Goal get selectedGoal {
-    for (int i = 0; i < goalList.length; i++) {
-      if (goalList[i]) return Goal.values[i];
-    }
-    return Goal.STAY_IN_SHAPE;  // default value
-  }
-
-  // If you plan to implement this method, handle potential errors with try-catch.
-  void fetchUserFromBack() async {
-    isLoading.value = true;
-    String? accessToken = await tokenStorage.getAccessToken();
-
-    if (accessToken == null) {
-      isLoading.value = false;
-      return;
-    }
-
-    final response = await http.get(
-      Uri.parse('$apiUrl/user_infos/'),
-      headers: {
-        'Authorization': 'Bearer $accessToken',
-      },
-    );
+  Future<void> fetchUserFromBack() async {
+    final response = await HttpRequest.mainGet('/user_infos/');
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> body = jsonDecode(response.body);
       user.value = User.fromJson(body);
-    } else if (response.statusCode == 401) {
-      final String? refreshToken = await tokenStorage.getRefreshToken();
-      // Handle refreshing the token here
-      // If refreshed, then try fetching the user info again.
-    } else {
-      // Handle other error scenarios.
+    } else if (response.statusCode == 500) {
+      if (kDebugMode) {
+        print("Error 500 from server");
+      }
     }
-
-    isLoading.value = false;
   }
 
   Future<void> updateUserProfile() async {
@@ -150,27 +109,15 @@ class UserController extends GetxController {
   @override
   void onReady() async {
     super.onReady();
-
     try {
       isLoading.value = true;
-      var userStr = await _userStorage.getUser() ?? "";
-
-      if (userStr.isNotEmpty) {
-        user.value = User.fromJson(jsonDecode(userStr));
-      } else {
-        // TODO request from back
-        await Future.delayed(const Duration(seconds: 2));
-      }
+      await fetchUserFromBack();
     } catch (e) {
       if (kDebugMode) {
         print("Error fetching user: $e");
       }
     } finally {
       isLoading.value = false;
-    }
-
-    if (kDebugMode) {
-      print('on ready!!');
     }
   }
 }

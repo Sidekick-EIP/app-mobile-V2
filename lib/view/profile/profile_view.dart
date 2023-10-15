@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sidekick_app/view/profile/activity/activity_screen.dart';
+import 'package:sidekick_app/view/profile/training/training_screen.dart';
 
 import '../../config/colors.dart';
 import '../../config/images.dart';
@@ -155,9 +156,29 @@ class _ProfileViewState extends State<ProfileView> {
                             row(
                               "Objectifs",
                               "",
-                                  () {
+                              () {
                                 Get.to(
-                                      () => const GoalScreen(),
+                                  () => const GoalScreen(),
+                                  transition: Transition.rightToLeft,
+                                );
+                              },
+                              const Icon(
+                                Icons.arrow_forward_ios,
+                                color: Color(0xffA9B2BA),
+                                size: 16,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            const Divider(
+                              color: Color(0xffA9B2BA),
+                            ),
+                            const SizedBox(height: 10),
+                            row(
+                              "Niveau d'entrainement",
+                              "",
+                              () {
+                                Get.to(
+                                  () => const TrainingScreen(),
                                   transition: Transition.rightToLeft,
                                 );
                               },
@@ -175,9 +196,9 @@ class _ProfileViewState extends State<ProfileView> {
                             row(
                               "Activités favorites",
                               "",
-                                  () {
+                              () {
                                 Get.to(
-                                      () => const ActivityScreen(),
+                                  () => const ActivityScreen(),
                                   transition: Transition.rightToLeft,
                                 );
                               },

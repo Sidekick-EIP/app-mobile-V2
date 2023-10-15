@@ -7,6 +7,7 @@ import 'package:sidekick_app/view/profile/goal/goal_list_view.dart';
 
 import '../../../config/colors.dart';
 import '../../../controller/user_controller.dart';
+import '../../../utils/getter/selected_goal.dart';
 import '../../../widget/custom_button.dart';
 
 class GoalScreen extends StatefulWidget {
@@ -94,7 +95,7 @@ class GoalScreenState extends State<GoalScreen> {
                 title: "Enregistrer",
                 width: Get.width,
                 onTap: () async {
-                  userController.user.value.goal.value = enumToString(userController.selectedGoal);
+                  userController.user.value.goal.value = enumToString(getSelectedGoal(userController.goalList));
                   try {
                     await userController.updateUserProfile();
                     Get.snackbar('Succès', 'Profil mis à jour avec succès!',

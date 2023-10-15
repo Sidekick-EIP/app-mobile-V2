@@ -9,13 +9,17 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:sidekick_app/config/colors.dart';
 import 'package:sidekick_app/controller/auth_controller.dart';
+import 'package:sidekick_app/utils/getter/selected_activities.dart';
+import 'package:sidekick_app/utils/getter/selected_training_level.dart';
 import 'package:sidekick_app/view/auth/register/info_screen.dart';
 
 import '../../../../config/text_style.dart';
 import '../../../../config/images.dart';
+import '../../../../utils/getter/selected_goal.dart';
 import '../../../../utils/token_storage.dart';
 import '../../../../widget/custom_button.dart';
 import '../../../tab_screen.dart';
+import '../../../../utils/getter/selected_gender.dart';
 
 class PlanScreen extends StatefulWidget {
   const PlanScreen({Key? key}) : super(key: key);
@@ -67,11 +71,12 @@ class _PlanScreenState extends State<PlanScreen> {
       "size": int.parse(authController.height.value),
       "goal_weight": int.parse(authController.goalWeight.value),
       "weight": int.parse(authController.weight.value),
-      "gender": enumToString(authController.selectedGender),
+      "gender": enumToString(getSelectedGender(authController.genderList)),
       "description": authController.description.value,
-      "goal": enumToString(authController.selectedGoal),
-      "level": enumToString(authController.selectedTrainingLevel),
-      "activities": authController.selectedActivities
+      "goal": enumToString(getSelectedGoal(authController.goalList)),
+      "level":
+          enumToString(getSelectedTrainingLevel(authController.trainingList)),
+      "activities": getSelectedActivities(authController.activityList)
           .map((activity) => enumToString(activity))
           .toList(),
     };

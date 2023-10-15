@@ -6,6 +6,7 @@ import 'package:sidekick_app/view/profile/activity/activity_edit_view.dart';
 
 import '../../../config/colors.dart';
 import '../../../controller/user_controller.dart';
+import '../../../utils/getter/selected_activities.dart';
 import '../../../widget/custom_button.dart';
 import 'activity_list_view.dart';
 
@@ -96,9 +97,10 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 title: "Enregistrer",
                 width: Get.width,
                 onTap: () async {
-                  userController.user.value.activities = userController.selectedActivities
-                      .map((activity) => RxString(enumToString(activity)))
-                      .toList();
+                  userController.user.value.activities =
+                      getSelectedActivities(userController.activityList)
+                          .map((activity) => RxString(enumToString(activity)))
+                          .toList();
                   try {
                     await userController.updateUserProfile();
                     Get.snackbar('Succès', 'Profil mis à jour avec succès!',

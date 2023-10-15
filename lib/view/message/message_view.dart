@@ -25,9 +25,6 @@ class _MessageViewState extends State<MessageView> {
                   "Welcome ${userController.user.value.firstname}"
               )),
             ),
-            ElevatedButton(onPressed: () {
-              userController.addExclamation();
-            }, child: const Text("Increment"))
           ],
         ),
       ),

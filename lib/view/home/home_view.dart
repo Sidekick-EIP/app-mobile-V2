@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../controller/user_controller.dart';
-import '../../controller/home_controller.dart';
-import '../../utils/token_storage.dart';
+import 'package:sidekick_app/controller/home_controller.dart';
+import 'package:sidekick_app/controller/user_controller.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -15,17 +13,11 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   final homeController = Get.put(HomeController());
   final userController = Get.put(UserController(), permanent: true);
-  final TokenStorage tokenStorage = TokenStorage();
-
-  _loadTokens() async {
-    var token = await tokenStorage.getAccessToken() ?? "";
-  }
 
   @override
   void initState() {
-    _loadTokens();
-    userController.fetchUserFromBack();
     super.initState();
+    userController.fetchUserFromBack();
   }
 
   @override
@@ -59,12 +51,6 @@ class _HomeViewState extends State<HomeView> {
                   }
                 }
               ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                userController.addExclamation();
-              },
-              child: const Text("Add exclamation")
             ),
             ElevatedButton(
                 onPressed: () {

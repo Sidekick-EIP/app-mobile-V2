@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import 'package:sidekick_app/controller/nutrition_controller.dart';
 import 'package:sidekick_app/controller/user_controller.dart';
 import 'package:sidekick_app/models/nutrition.dart';
@@ -39,10 +40,9 @@ class NutritionPeriodState extends State<NutritionPeriod> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          color: Colors.black,
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Get.back()
-        ),
+            color: Colors.black,
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Get.back()),
         backgroundColor: Colors.transparent,
         elevation: 0.0, // Remove shadow
       ),

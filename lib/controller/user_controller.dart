@@ -85,7 +85,6 @@ class UserController extends GetxController {
     if (response.statusCode == 200) {
       final Map<String, dynamic> body = jsonDecode(response.body);
       user.value = User.fromJson(body);
-      _userStorage.storeUser(user.value);
     } else {
       if (kDebugMode) {
         print('Failed to update profile: ${response.statusCode}');

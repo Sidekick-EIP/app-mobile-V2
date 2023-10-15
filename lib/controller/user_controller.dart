@@ -3,11 +3,10 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
+import 'package:sidekick_app/models/user.dart';
+import 'package:sidekick_app/utils/token_storage.dart';
 import 'package:sidekick_app/utils/user_storage.dart';
 import 'package:http/http.dart' as http;
-
-import '../models/user.dart';
-import '../utils/token_storage.dart';
 
 class UserController extends GetxController {
   final UserStorage _userStorage = UserStorage();

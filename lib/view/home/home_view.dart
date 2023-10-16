@@ -15,12 +15,6 @@ class _HomeViewState extends State<HomeView> {
   final userController = Get.put(UserController(), permanent: true);
 
   @override
-  void initState() {
-    super.initState();
-    userController.fetchUserFromBack();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

@@ -47,15 +47,17 @@ class _ProfileViewState extends State<ProfileView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Center(
-                      child: Container(
-                        height: 87,
-                        width: 87,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: NetworkImage(
-                                userController.user.value.avatar.value),
+                      child: Obx(
+                        () => Container(
+                          height: 87,
+                          width: 87,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: NetworkImage(
+                                  userController.user.value.avatar.value),
+                            ),
                           ),
                         ),
                       ),

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -7,15 +8,14 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:http/http.dart' as http;
 import 'package:sidekick_app/config/images.dart';
 import 'package:sidekick_app/view/profile/edit/editable_field_screen.dart';
 import 'package:sidekick_app/view/profile/profile_view.dart';
+import 'package:sidekick_app/utils/http_request.dart';
 
 import '../../config/colors.dart';
 import '../../config/text_style.dart';
 import '../../controller/user_controller.dart';
-import '../../utils/token_storage.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({Key? key}) : super(key: key);
@@ -67,53 +67,30 @@ class _AccountScreenState extends State<AccountScreen> {
 
   Future<void> _pickAndUploadImage(ImageSource source) async {
     final ImagePicker picker = ImagePicker();
-    String apiUrl = dotenv.env['API_BACK_URL'] ?? "";
-
     final XFile? image = await picker.pickImage(source: source);
 
     if (image != null) {
       final File file = File(image.path);
-      var request =
-          http.MultipartRequest('POST', Uri.parse('$apiUrl/user_infos/avatar'));
-      final TokenStorage tokenStorage = TokenStorage();
-      var accessToken = await tokenStorage.getAccessToken();
+      final response = await HttpRequest.mainMultiplePartPost(
+        '/user_infos/avatar',
+        file.path,
+      );
 
-      if (accessToken == null) {
-        return;
-      }
-
-      request.headers.addAll({
-        'Authorization': 'Bearer $accessToken',
-        'Content-Type': 'multipart/form-data',
-      });
-      request.files.add(await http.MultipartFile.fromPath('file', file.path));
-
-      try {
-        var response = await request.send();
-
-        if (response.statusCode == 201) {
-          userController.user.value.avatar.value =
-              await response.stream.bytesToString();
-          setState(() {});
-          Get.snackbar('Succès', 'Image de profil mise à jour avec succès!',
-              snackPosition: SnackPosition.BOTTOM,
-              backgroundColor: Colors.green,
-              colorText: Colors.white,
-              duration: const Duration(seconds: 1));
-        } else {
-          if (kDebugMode) {
-            print(response.statusCode);
-            print('Error uploading image: ${response.reasonPhrase}');
-          }
-        }
-      } catch (e) {
-        if (kDebugMode) {
-          print('Error uploading image: $e');
-        }
-        Get.snackbar('Erreur', 'Erreur lors de la mise à jour de l\'image.',
+      if (response.statusCode == 201) {
+        String responseBody = await utf8.decodeStream(response.stream);
+        Map<String, dynamic> decodedResponse = jsonDecode(responseBody);
+        userController.user.value.avatar.value = decodedResponse['avatar'];
+        setState(() {});
+        Get.snackbar('Succès', 'Image de profil mise à jour avec succès!',
             snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.red,
-            colorText: Colors.white);
+            backgroundColor: Colors.green,
+            colorText: Colors.white,
+            duration: const Duration(seconds: 1));
+      } else {
+        if (kDebugMode) {
+          print(response.statusCode);
+          print('Error uploading image: ${response.reasonPhrase}');
+        }
       }
     }
   }

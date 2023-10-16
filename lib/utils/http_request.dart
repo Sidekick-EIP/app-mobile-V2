@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
@@ -22,11 +21,13 @@ class HttpRequest {
       final response =
           await simpleGet(url, {'Authorization': 'Bearer $accessToken'});
       if (response.statusCode == 401) {
-        final response = await refreshTokens(userController.user.value.email.value, refreshToken);
+        final response = await refreshTokens(
+            userController.user.value.email.value, refreshToken);
         if (response.statusCode == 201) {
           Map<String, dynamic> decodedResponse = jsonDecode(response.body);
           await tokenStorage.storeAccessToken(decodedResponse['access_token']);
-          await tokenStorage.storeRefreshToken(decodedResponse['refresh_token']);
+          await tokenStorage
+              .storeRefreshToken(decodedResponse['refresh_token']);
           return (await simpleGet(
               url, {'Authorization': 'Bearer $accessToken'}));
         }
@@ -38,7 +39,9 @@ class HttpRequest {
   }
 
   static Future mainPost(String url, body,
-      {Map<String, String> headers = const {'Content-Type': 'application/json'}}) async {
+      {Map<String, String> headers = const {
+        'Content-Type': 'application/json'
+      }}) async {
     final userController = Get.put(UserController(), permanent: true);
     final TokenStorage tokenStorage = TokenStorage();
     var accessToken = await tokenStorage.getAccessToken() ?? "";
@@ -48,11 +51,13 @@ class HttpRequest {
       headers["Authorization"] = 'Bearer $accessToken';
       final response = await simplePost(url, headers, body);
       if (response.statusCode == 401) {
-        final response = await refreshTokens(userController.user.value.email.value, refreshToken);
+        final response = await refreshTokens(
+            userController.user.value.email.value, refreshToken);
         if (response.statusCode == 201) {
           Map<String, dynamic> decodedResponse = jsonDecode(response.body);
           await tokenStorage.storeAccessToken(decodedResponse['access_token']);
-          await tokenStorage.storeRefreshToken(decodedResponse['refresh_token']);
+          await tokenStorage
+              .storeRefreshToken(decodedResponse['refresh_token']);
           return await simplePost(url, headers, body);
         }
       }
@@ -63,7 +68,9 @@ class HttpRequest {
   }
 
   static Future mainPut(String url, body,
-      {Map<String, String> headers = const {'Content-Type': 'application/json'}}) async {
+      {Map<String, String> headers = const {
+        'Content-Type': 'application/json'
+      }}) async {
     final userController = Get.put(UserController(), permanent: true);
     final TokenStorage tokenStorage = TokenStorage();
     var accessToken = await tokenStorage.getAccessToken() ?? "";
@@ -73,11 +80,13 @@ class HttpRequest {
       headers["Authorization"] = 'Bearer $accessToken';
       final response = await simplePut(url, headers, body);
       if (response.statusCode == 401) {
-        final response = await refreshTokens(userController.user.value.email.value, refreshToken);
+        final response = await refreshTokens(
+            userController.user.value.email.value, refreshToken);
         if (response.statusCode == 201) {
           Map<String, dynamic> decodedResponse = jsonDecode(response.body);
           await tokenStorage.storeAccessToken(decodedResponse['access_token']);
-          await tokenStorage.storeRefreshToken(decodedResponse['refresh_token']);
+          await tokenStorage
+              .storeRefreshToken(decodedResponse['refresh_token']);
           return await simplePut(url, headers, body);
         }
       }
@@ -97,12 +106,15 @@ class HttpRequest {
       final response =
           await simpleDelete(url, {'Authorization': 'Bearer $accessToken'});
       if (response.statusCode == 401) {
-        final response = await refreshTokens(userController.user.value.email.value, refreshToken);
+        final response = await refreshTokens(
+            userController.user.value.email.value, refreshToken);
         if (response.statusCode == 201) {
           Map<String, dynamic> decodedResponse = jsonDecode(response.body);
           await tokenStorage.storeAccessToken(decodedResponse['access_token']);
-          await tokenStorage.storeRefreshToken(decodedResponse['refresh_token']);
-          return await simpleDelete(url, {'Authorization': 'Bearer $accessToken'});
+          await tokenStorage
+              .storeRefreshToken(decodedResponse['refresh_token']);
+          return await simpleDelete(
+              url, {'Authorization': 'Bearer $accessToken'});
         }
       }
       return (response);
@@ -111,8 +123,7 @@ class HttpRequest {
     }
   }
 
-  static Future mainMultiplePartPost(String url, BuildContext context,
-      String filepath) async {
+  static Future mainMultiplePartPost(String url, String filepath) async {
     final userController = Get.put(UserController(), permanent: true);
     final TokenStorage tokenStorage = TokenStorage();
     var accessToken = await tokenStorage.getAccessToken() ?? "";
@@ -126,7 +137,8 @@ class HttpRequest {
         },
         filepath);
     if (response.statusCode == 401) {
-      final response = await refreshTokens(userController.user.value.email.value, refreshToken);
+      final response = await refreshTokens(
+          userController.user.value.email.value, refreshToken);
       if (response.statusCode == 201) {
         Map<String, dynamic> decodedResponse = jsonDecode(response.body);
         await tokenStorage.storeAccessToken(decodedResponse['access_token']);

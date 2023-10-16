@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:sidekick_app/controller/socket_controller.dart';
+import 'package:sidekick_app/models/partner.dart';
 import 'package:sidekick_app/models/user.dart';
 import 'package:sidekick_app/utils/token_storage.dart';
 import 'package:sidekick_app/utils/http_request.dart';
@@ -40,17 +41,43 @@ class UserController extends GetxController {
     birthDate: Rx<DateTime>(DateTime.parse("1990-05-12")),
   ).obs;
 
+  Rx<Partner> partner = Partner(
+      avatar: RxString('https://www.vincenthie.com/images/gallery/large/Iron-Man-Portrait.jpg'),
+      firstname: RxString('John'),
+      lastname: RxString('Doe'),
+      size: RxInt(185),
+      gender: RxString('MALE'),
+      description: RxString('Bonjour !'),
+      level: RxString('ADVANCED'),
+      activities:
+        ["SOCCER", "TENNIS"].map((activities) => RxString(activities)).toList(),
+      goal: RxString('STAY_IN_SHAPE'),
+      birthDate: Rx<DateTime>(DateTime.parse("1990-05-12")),
+  ).obs;
+
   Future<void> fetchUserFromBack() async {
     final response = await HttpRequest.mainGet('/user_infos/');
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> body = jsonDecode(response.body);
       user.value = User.fromJson(body);
-      final socketController = Get.put(SocketController(), permanent: true);
-      socketController.initSocket(user.value.userId.value);
-      socketController.connectToSocket();
-      socketController.setOnMessage();
-      socketController.setOnMatching();
+    } else if (response.statusCode == 500) {
+      if (kDebugMode) {
+        print("Error 500 from server");
+      }
+    }
+  }
+
+  Future<void> fetchSidekickFromBack() async {
+    final response = await HttpRequest.mainGet('/user_infos/sidekick');
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> body = jsonDecode(response.body);
+      partner.value = Partner.fromJson(body);
+    } else if (response.statusCode == 404) {
+      if (kDebugMode) {
+        print("The user doesn't have a sidekick.");
+      }
     } else if (response.statusCode == 500) {
       if (kDebugMode) {
         print("Error 500 from server");
@@ -118,6 +145,14 @@ class UserController extends GetxController {
     try {
       isLoading.value = true;
       await fetchUserFromBack();
+      if (user.value.sidekickId != null) {
+        await fetchSidekickFromBack();
+      }
+      final socketController = Get.put(SocketController(), permanent: true);
+      socketController.initSocket(user.value.userId.value);
+      socketController.connectToSocket();
+      socketController.setOnMessage();
+      socketController.setOnMatching();
     } catch (e) {
       if (kDebugMode) {
         print("Error fetching user: $e");

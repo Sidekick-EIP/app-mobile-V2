@@ -25,16 +25,22 @@ class NutritionPeriod extends StatefulWidget {
 
 class _NutritionPeriodState extends State<NutritionPeriod> {
   late Future<Nutrition> futureNutrition;
-  final userController = Get.find<UserController>();
-  String period = "dinners";
+
+  String period = "breakfast";
+  int getId = 0;
 
   final nutritionController = Get.put(NutritionController(), permanent: true);
-  String getDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0).toIso8601String();
 
   @override
   void initState() {
     super.initState();
     futureNutrition = nutritionController.fetchNutrition("${widget.date}Z");
+  }
+
+  void updatePeriod(String newPeriod) {
+    setState(() {
+      period = newPeriod;
+    });
   }
 
   @override
@@ -106,17 +112,16 @@ class _NutritionPeriodState extends State<NutritionPeriod> {
           SizedBox(
             height: height * 0.03,
           ),
-          const CategoryWidget(),
+          CategoryWidget(
+            period: period,
+            updatePeriod: updatePeriod,
+          ),
+          SizedBox(height: height * 0.01),
           FutureBuilder<Nutrition>(
             future: futureNutrition,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return DisplayNutritionPage(
-                  width: width,
-                  height: height,
-                  nutritionData: snapshot.data!,
-                  period: period,
-                );
+                return MealViewBuilder(width: width, height: height, nutritionData: snapshot.data!, period: period);
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');
               }
@@ -130,7 +135,10 @@ class _NutritionPeriodState extends State<NutritionPeriod> {
 }
 
 class CategoryWidget extends StatefulWidget {
-  const CategoryWidget({super.key});
+  CategoryWidget({super.key, required this.period, required this.updatePeriod});
+
+  late String period;
+  final Function(String) updatePeriod;
 
   @override
   _CategoryWidgetState createState() => _CategoryWidgetState();
@@ -139,8 +147,8 @@ class CategoryWidget extends StatefulWidget {
 class _CategoryWidgetState extends State<CategoryWidget> {
   int selectedCategoryIndex = 0;
 
-  List<String> categories = ['Petit déjeuner', 'Déjeuner', 'Dinner', 'Snack'];
-
+  List<String> categories = ['Petit déjeuner', 'Déjeuner', 'Dinner', 'Snacks'];
+  List<String> setCategories = ['breakfast', 'lunch', 'dinners', 'snacks'];
   int previousCategoryIndex = 0;
 
   @override
@@ -153,6 +161,8 @@ class _CategoryWidgetState extends State<CategoryWidget> {
             setState(() {
               previousCategoryIndex = selectedCategoryIndex;
               selectedCategoryIndex = index;
+              // widget.period = setCategories[index];
+              widget.updatePeriod(setCategories[index]);
             });
           },
           child: AnimatedContainer(
@@ -172,8 +182,8 @@ class _CategoryWidgetState extends State<CategoryWidget> {
   }
 }
 
-class DisplayNutritionPage extends StatelessWidget {
-  const DisplayNutritionPage({super.key, required this.width, required this.height, required this.nutritionData, required this.period});
+class MealViewBuilder extends StatelessWidget {
+  const MealViewBuilder({super.key, required this.width, required this.height, required this.nutritionData, required this.period});
 
   final double width;
   final double height;
@@ -188,71 +198,41 @@ class DisplayNutritionPage extends StatelessWidget {
       child: ListView.builder(
           itemCount: nutritionData.meals[period]!["meals"].length,
           itemBuilder: (context, index) {
-            return TodaysMeals(width: width, height: height, nutritionData: nutritionData, food: nutritionData.meals[period]!["meals"][index]);
+            return Column(
+              children: [
+                SizedBox(
+                    width: width,
+                    height: height * 0.22,
+                    child: Column(
+                      children: [
+                        MealPeriodCard(
+                          width: width,
+                          height: height,
+                          color: Colors.green,
+                          colorAccent: Colors.greenAccent,
+                          food: nutritionData.meals[period]!["meals"][index],
+                          period: "breakfast",
+                        ),
+                        Container(
+                          height: height * 0.01,
+                        ),
+                      ],
+                    ))
+              ],
+            );
           }),
     );
   }
 }
 
-class TodaysMeals extends StatelessWidget {
-  const TodaysMeals({super.key, required this.width, required this.height, required this.nutritionData, required this.food});
-
-  final double width;
-  final double height;
-  final Nutrition nutritionData;
-  final Food food;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: height * 0.05,
-        ),
-        SizedBox(
-            width: width,
-            height: height * 0.22,
-            child: Column(
-              children: [
-                MealPeriodCard(
-                  width: width,
-                  height: height,
-                  color: Colors.green,
-                  colorAccent: Colors.greenAccent,
-                  mealName: food.name,
-                  emojiImg: "🥗",
-                  nutritionData: nutritionData,
-                  period: "breakfast",
-                ),
-                SizedBox(
-                  height: height * 0.01,
-                ),
-              ],
-            ))
-      ],
-    );
-  }
-}
-
 class MealPeriodCard extends StatefulWidget {
-  const MealPeriodCard(
-      {super.key,
-      required this.width,
-      required this.height,
-      required this.color,
-      required this.colorAccent,
-      required this.mealName,
-      required this.emojiImg,
-      required this.nutritionData,
-      required this.period});
+  const MealPeriodCard({super.key, required this.width, required this.height, required this.color, required this.colorAccent, required this.food, required this.period});
 
   final double width;
   final double height;
   final Color color;
   final Color colorAccent;
-  final String mealName;
-  final String emojiImg;
-  final Nutrition nutritionData;
+  final Food food;
   final String period;
 
   @override
@@ -264,6 +244,7 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
 
   @override
   Widget build(BuildContext context) {
+    int totalMacros = widget.food.carbs + widget.food.protein + widget.food.fat;
     return Container(
       decoration: BoxDecoration(
         border: Border.all(width: 1.6, color: const Color.fromARGB(66, 128, 128, 128)),
@@ -287,9 +268,10 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
                   borderRadius: const BorderRadius.all(Radius.circular(20)),
                 ),
                 child: Center(
-                  child: Text(
-                    widget.emojiImg,
-                    style: const TextStyle(fontSize: 35),
+                  child: Image(
+                    image: NetworkImage(widget.food.picture),
+                    width: widget.width * 0.1,
+                    height: widget.height * 0.1,
                   ),
                 ),
               ),
@@ -307,7 +289,7 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              widget.mealName,
+                              widget.food.name,
                               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                             ),
                           ),
@@ -315,9 +297,9 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
                         SizedBox(
                           width: widget.width * 0.55,
                           height: widget.height * 0.02,
-                          child: const Text(
-                            "390 kcal ° 200 g",
-                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                          child: Text(
+                            "${widget.food.calories} kcal • ${widget.food.weight} g",
+                            style: const TextStyle(fontSize: 12, color: Colors.grey),
                           ),
                         )
                       ],
@@ -347,7 +329,7 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
                     if (choice == 'Modifier') {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => const EditMeal(),
+                          builder: (context) => EditMeal(food: widget.food),
                         ),
                       );
                     } else if (choice == 'Supprimer') {
@@ -364,23 +346,26 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
               MacrosWidgetCard(
                 width: widget.width,
                 height: widget.height,
-                grams: "40 g",
+                grams: "${widget.food.carbs.toString()} g",
                 macros: "Glucides",
                 barColor: const Color.fromARGB(255, 98, 7, 255),
+                percent: widget.food.carbs / totalMacros,
               ),
               MacrosWidgetCard(
                 width: widget.width,
                 height: widget.height,
-                grams: "50 g",
+                grams: "${widget.food.protein.toString()} g",
                 macros: "Proteines",
                 barColor: Colors.red,
+                percent: widget.food.protein / totalMacros,
               ),
               MacrosWidgetCard(
                 width: widget.width,
                 height: widget.height,
-                grams: "25 g",
+                grams: "${widget.food.fat.toString()} g",
                 macros: "Lipides",
                 barColor: Colors.amber,
+                percent: widget.food.fat / totalMacros,
               ),
             ],
           )
@@ -398,6 +383,7 @@ class MacrosWidgetCard extends StatelessWidget {
     required this.grams,
     required this.macros,
     required this.barColor,
+    required this.percent,
   });
 
   final double width;
@@ -405,6 +391,7 @@ class MacrosWidgetCard extends StatelessWidget {
   final String grams;
   final String macros;
   final Color barColor;
+  final double percent;
 
   @override
   Widget build(BuildContext context) {
@@ -431,7 +418,7 @@ class MacrosWidgetCard extends StatelessWidget {
                             animation: true,
                             lineHeight: 10,
                             animationDuration: 1000,
-                            percent: 0.8,
+                            percent: percent,
                             barRadius: const Radius.circular(20),
                             curve: Curves.bounceOut,
                             progressColor: barColor,

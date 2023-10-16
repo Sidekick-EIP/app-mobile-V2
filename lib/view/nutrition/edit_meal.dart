@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:sidekick_app/config/colors.dart';
+import 'package:sidekick_app/config/images.dart';
 import 'package:sidekick_app/config/text_style.dart';
 import 'package:sidekick_app/controller/home_controller.dart';
 import 'package:sidekick_app/controller/nutrition_controller.dart';
@@ -12,7 +13,8 @@ import 'package:sidekick_app/main.dart';
 import 'package:sidekick_app/models/nutrition.dart';
 
 class EditMeal extends StatefulWidget {
-  const EditMeal({Key? key}) : super(key: key);
+  const EditMeal({super.key, required this.food});
+  final Food food;
 
   @override
   State<EditMeal> createState() => _EditMealState();
@@ -91,7 +93,7 @@ class _EditMealState extends State<EditMeal> {
             future: futureNutrition,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return DisplayNutritionPage(width: width, height: height, nutritionData: snapshot.data!);
+                return DisplayNutritionPage(width: width, height: height, food: widget.food);
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');
               }
@@ -105,14 +107,15 @@ class _EditMealState extends State<EditMeal> {
 }
 
 class DisplayNutritionPage extends StatelessWidget {
-  const DisplayNutritionPage({super.key, required this.width, required this.height, required this.nutritionData});
+  const DisplayNutritionPage({super.key, required this.width, required this.height, required this.food});
 
   final double width;
   final double height;
-  final Nutrition nutritionData;
+  final Food food;
 
   @override
   Widget build(BuildContext context) {
+    int totalMacros = food.carbs + food.protein + food.fat;
     return Expanded(
       child: ListView(
         physics: const ClampingScrollPhysics(),
@@ -128,40 +131,43 @@ class DisplayNutritionPage extends StatelessWidget {
                   SizedBox(
                     width: width * 0.7,
                     height: height * 0.34,
-                    child: const Column(
+                    child: Column(
                       children: [
                         Image(
-                          image: NetworkImage('https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+                          image: NetworkImage(food.picture),
                         ),
                       ],
                     ),
                   )
                 ],
               ),
-              MealNameWidget(width: width, height: height),
+              MealNameWidget(width: width, height: height, food: food),
               MacrosCard(
                 width: width,
                 height: height,
                 macrosName: "Glucides",
-                image: "🥗",
-                macrosValue: "20g",
+                image: DefaultImages.carbs,
+                macrosValue: "${food.carbs.toString()}g",
                 progressColor: const Color.fromARGB(255, 98, 7, 255),
+                percent: food.carbs / totalMacros,
               ),
               MacrosCard(
                 width: width,
                 height: height,
                 macrosName: "Proteines",
-                image: "🍳",
-                macrosValue: "30g",
+                image: DefaultImages.proteins,
+                macrosValue: "${food.protein.toString()}g",
                 progressColor: Colors.red,
+                percent: food.protein / totalMacros,
               ),
               MacrosCard(
                 width: width,
                 height: height,
                 macrosName: "Lipides",
-                image: "🍙",
-                macrosValue: "50g",
+                image: DefaultImages.fat,
+                macrosValue: "${food.fat.toString()}g",
                 progressColor: Colors.amber,
+                percent: food.fat / totalMacros,
               ),
               WeightValues(width: width, height: height),
             ],
@@ -177,10 +183,12 @@ class MealNameWidget extends StatelessWidget {
     super.key,
     required this.width,
     required this.height,
+    required this.food,
   });
 
   final double width;
   final double height;
+  final Food food;
 
   @override
   Widget build(BuildContext context) {
@@ -198,22 +206,22 @@ class MealNameWidget extends StatelessWidget {
                 SizedBox(
                   width: width * 0.75,
                   height: height * 0.6,
-                  child: const Align(
+                  child: Align(
                     alignment: Alignment.bottomLeft,
                     child: Text(
-                      "Slice of pineapple",
-                      style: TextStyle(fontWeight: FontWeight.w800, fontSize: 20),
+                      food.name,
+                      style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
                     ),
                   ),
                 ),
                 SizedBox(
                   width: width * 0.15,
                   height: height * 0.06,
-                  child: const Align(
+                  child: Align(
                     alignment: Alignment.bottomRight,
                     child: Text(
-                      "100g",
-                      style: TextStyle(fontWeight: FontWeight.w800, fontSize: 20),
+                      "${food.weight.toString()}g",
+                      style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
                     ),
                   ),
                 ),
@@ -237,11 +245,11 @@ class MealNameWidget extends StatelessWidget {
                 SizedBox(
                   width: width * 0.15,
                   height: height * 0.06,
-                  child: const Align(
+                  child: Align(
                     alignment: Alignment.topRight,
                     child: Text(
-                      "457 Kcal",
-                      style: TextStyle(color: Colors.grey),
+                      "${food.calories} Kcal",
+                      style: const TextStyle(color: Colors.grey),
                     ),
                   ),
                 ),
@@ -263,6 +271,7 @@ class MacrosCard extends StatelessWidget {
     required this.image,
     required this.macrosValue,
     required this.progressColor,
+    required this.percent,
   });
 
   final double width;
@@ -271,6 +280,7 @@ class MacrosCard extends StatelessWidget {
   final String image;
   final String macrosValue;
   final Color progressColor;
+  final double percent;
 
   @override
   Widget build(BuildContext context) {
@@ -293,9 +303,10 @@ class MacrosCard extends StatelessWidget {
                 ),
                 child: Align(
                   alignment: Alignment.center,
-                  child: Text(
+                  child: Image.asset(
                     image,
-                    style: const TextStyle(fontSize: 25),
+                    width: width * 0.08,
+                    height: height * 0.04,
                   ),
                 ),
               ),
@@ -332,7 +343,7 @@ class MacrosCard extends StatelessWidget {
                       animation: true,
                       lineHeight: 7,
                       animationDuration: 1000,
-                      percent: 0.8,
+                      percent: percent,
                       barRadius: const Radius.circular(20),
                       curve: Curves.bounceOut,
                       progressColor: progressColor,

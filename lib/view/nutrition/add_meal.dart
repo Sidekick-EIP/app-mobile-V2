@@ -208,11 +208,11 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => const EditMeal(),
-          ),
-        );
+        // Navigator.of(context).push(
+        //   MaterialPageRoute(
+        //     builder: (context) => const EditMeal(),
+        //   ),
+        // );
       },
       child: Container(
         decoration: BoxDecoration(

@@ -46,6 +46,9 @@ dependencies:
   shared_preferences: ^2.2.1
   collection: ^1.17.2
   calendar_timeline: ^1.1.2
+  image_picker: ^1.0.4
+  path: ^1.8.3
+  http_parser: ^4.0.2
 
 dev_dependencies:
   flutter_test:

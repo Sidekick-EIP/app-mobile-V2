@@ -15,6 +15,10 @@ class UserController extends GetxController {
   String apiUrl = dotenv.env['API_BACK_URL'] ?? "";
   RxBool isLoading = false.obs;
 
+  List<bool> activityList = List<bool>.filled(30, false).obs;
+  List<bool> goalList = List<bool>.filled(4, false).obs;
+  List<bool> trainingList = List<bool>.filled(30, false).obs;
+
   Rx<User> user = User(
     avatar: RxString(
         'https://www.vincenthie.com/images/gallery/large/Iron-Man-Portrait.jpg'),

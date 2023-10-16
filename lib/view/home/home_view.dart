@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sidekick_app/controller/home_controller.dart';
 import 'package:sidekick_app/controller/user_controller.dart';
-import 'package:sidekick_app/utils/token_storage.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);

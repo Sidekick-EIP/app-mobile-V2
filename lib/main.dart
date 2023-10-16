@@ -95,9 +95,11 @@ class _MyAppState extends State<MyApp> {
             },
           ),
         ),
-        home: _accessToken != "" ? const TabScreen()
-            : isFirstTime! ? const OnBoardingScreen()
-            : const SignInScreen(),
+        home: _accessToken != ""
+            ? const TabScreen()
+            : isFirstTime!
+                ? const OnBoardingScreen()
+                : const SignInScreen(),
       );
     }
   }

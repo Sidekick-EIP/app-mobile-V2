@@ -85,12 +85,12 @@ class _SignInScreenState extends State<SignInScreen> {
         bool hasValidInfos = await checkUserInfos();
         if (hasValidInfos) {
           Get.offAll(
-                () => const TabScreen(),
+            () => const TabScreen(),
             transition: Transition.rightToLeft,
           );
         } else {
           Get.offAll(
-                () => const InfoScreen(),
+            () => const InfoScreen(),
             transition: Transition.rightToLeft,
           );
         }
@@ -118,109 +118,112 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ConstColors.secondaryColor,
-      body: Column(
+      body: Stack(
         children: [
-          Expanded(
-            child: ListView(
-              children: [
-                const SizedBox(height: 80),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: Column(
-                    children: [
-                      Image.asset(
-                        DefaultImages.sidekickLogo,
-                        width: 200,
-                        height: 200,
+          Column(
+            children: [
+              Expanded(
+                child: ListView(
+                  children: [
+                    const SizedBox(height: 80),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      child: Column(
+                        children: [
+                          Image.asset(
+                            DefaultImages.sidekickLogo,
+                            width: 200,
+                            height: 200,
+                          ),
+                          const SizedBox(height: 20),
+                          Text(
+                            "Connexion",
+                            style: pSemiBold20.copyWith(
+                              fontSize: 25,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          CustomTextField(
+                            text: "Email",
+                            textEditingController: emailController,
+                          ),
+                          const SizedBox(height: 15),
+                          CustomTextField(
+                            text: "Mot de passe",
+                            textEditingController: passwordController,
+                            isPassword: true,
+                          ),
+                          const SizedBox(height: 30),
+                          CustomButton(
+                            title: "Connexion",
+                            width: Get.width,
+                            onTap: () async {
+                              await signIn();
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                          InkWell(
+                            onTap: () {
+                              Get.to(
+                                () => const ResetPasswordScreen(),
+                                transition: Transition.rightToLeft,
+                              );
+                            },
+                            child: Text(
+                              "Mot de passe oublié ?",
+                              style: pSemiBold18.copyWith(
+                                fontSize: 11,
+                                color: ConstColors.lightBlackColor,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 20),
+                    ),
+                  ],
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  Get.to(
+                    () => const SignUpScreen(),
+                    transition: Transition.rightToLeft,
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 35),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
                       Text(
-                        "Connexion",
-                        style: pSemiBold20.copyWith(
-                          fontSize: 25,
+                        "Vous n'avez pas de compte ?  ",
+                        style: pRegular14.copyWith(
+                          fontSize: 13,
+                          color: ConstColors.lightBlackColor,
                         ),
                       ),
-                      const SizedBox(height: 20),
-                      CustomTextField(
-                        text: "Email",
-                        textEditingController: emailController,
-                      ),
-                      const SizedBox(height: 15),
-                      CustomTextField(
-                        text: "Mot de passe",
-                        textEditingController: passwordController,
-                        isPassword: true,
-                      ),
-                      const SizedBox(height: 30),
-                      CustomButton(
-                        title: "Connexion",
-                        width: Get.width,
-                        onTap: () async {
-                          await signIn();
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      InkWell(
-                        onTap: () {
-                          Get.to(
-                            () => const ResetPasswordScreen(),
-                            transition: Transition.rightToLeft,
-                          );
-                        },
-                        child: Text(
-                          "Mot de passe oublié ?",
-                          style: pSemiBold18.copyWith(
-                            fontSize: 11,
-                            color: ConstColors.lightBlackColor,
-                          ),
+                      Text(
+                        "Inscrivez-vous",
+                        style: pRegular14.copyWith(
+                          fontSize: 13,
+                          color: ConstColors.primaryColor,
                         ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 10),
-                if (isLoading)
-                  Positioned.fill(
-                    child: Container(
-                      color: ConstColors.secondaryColor,
-                      child: const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    ),
-                  ),
-              ],
-            ),
+              ),
+            ],
           ),
-          InkWell(
-            onTap: () {
-              Get.to(
-                () => const SignUpScreen(),
-                transition: Transition.rightToLeft,
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 35),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Vous n'avez pas de compte ?  ",
-                    style: pRegular14.copyWith(
-                      fontSize: 13,
-                      color: ConstColors.lightBlackColor,
-                    ),
-                  ),
-                  Text(
-                    "Inscrivez-vous",
-                    style: pRegular14.copyWith(
-                      fontSize: 13,
-                      color: ConstColors.primaryColor,
-                    ),
-                  ),
-                ],
+          if (isLoading)
+            Positioned.fill(
+              child: Container(
+                color: ConstColors.secondaryColor,
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
               ),
             ),
-          )
         ],
       ),
     );

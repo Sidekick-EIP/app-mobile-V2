@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
+import 'package:sidekick_app/controller/socket_controller.dart';
 import 'package:sidekick_app/models/user.dart';
 import 'package:sidekick_app/utils/token_storage.dart';
 import 'package:sidekick_app/utils/http_request.dart';
@@ -45,6 +46,11 @@ class UserController extends GetxController {
     if (response.statusCode == 200) {
       final Map<String, dynamic> body = jsonDecode(response.body);
       user.value = User.fromJson(body);
+      final socketController = Get.put(SocketController(), permanent: true);
+      socketController.initSocket(user.value.userId.value);
+      socketController.connectToSocket();
+      socketController.setOnMessage();
+      socketController.setOnMatching();
     } else if (response.statusCode == 500) {
       if (kDebugMode) {
         print("Error 500 from server");
@@ -119,5 +125,12 @@ class UserController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  @override
+  void onClose() {
+    final socketController = Get.put(SocketController(), permanent: true);
+    socketController.disconnectFromSocket();
+    super.onClose();
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../controller/socket_controller.dart';
 import '../../controller/user_controller.dart';
 
 class MessageView extends StatefulWidget {
@@ -12,6 +13,7 @@ class MessageView extends StatefulWidget {
 
 class _MessageViewState extends State<MessageView> {
   final userController = Get.put(UserController());
+  final socketController = Get.put(SocketController(), permanent: true);
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +26,12 @@ class _MessageViewState extends State<MessageView> {
               child: Obx(() => Text(
                   "Welcome ${userController.user.value.firstname}"
               )),
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  socketController.emitMessage("coucou");
+                },
+                child: const Text("Dire coucou")
             ),
           ],
         ),

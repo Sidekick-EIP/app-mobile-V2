@@ -175,7 +175,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
             setState(() {
               previousCategoryIndex = selectedCategoryIndex;
               selectedCategoryIndex = index;
-              widget.updatePeriod(setCategories[index]);
+              // widget.updatePeriod(setCategories[index]);
             });
           },
           child: AnimatedContainer(

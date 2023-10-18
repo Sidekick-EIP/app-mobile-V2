@@ -16,9 +16,16 @@ import 'package:sidekick_app/view/nutrition/edit_meal.dart';
 enum SampleItem { itemOne, itemTwo }
 
 class NutritionPeriod extends StatefulWidget {
-  const NutritionPeriod({Key? key, required this.date}) : super(key: key);
+  const NutritionPeriod({
+    Key? key,
+    required this.date,
+    required this.callbackPeriod,
+    required this.nutritionData,
+  }) : super(key: key);
 
   final String date;
+  final Function callbackPeriod;
+  final Nutrition nutritionData;
   @override
   State<NutritionPeriod> createState() => _NutritionPeriodState();
 }
@@ -71,6 +78,7 @@ class _NutritionPeriodState extends State<NutritionPeriod> {
                   child: IconButton(
                     icon: const Icon(Icons.arrow_back_rounded),
                     onPressed: () {
+                      // widget.callbackPeriod(widget.nutritionData);
                       Navigator.pop(context);
                     },
                   ),
@@ -121,7 +129,13 @@ class _NutritionPeriodState extends State<NutritionPeriod> {
             future: futureNutrition,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return MealViewBuilder(width: width, height: height, nutritionData: snapshot.data!, period: period);
+                return MealViewBuilder(
+                  width: width,
+                  height: height,
+                  nutritionData: snapshot.data!,
+                  period: period,
+                  callbackPeriod: widget.callbackPeriod,
+                );
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');
               }
@@ -161,7 +175,6 @@ class _CategoryWidgetState extends State<CategoryWidget> {
             setState(() {
               previousCategoryIndex = selectedCategoryIndex;
               selectedCategoryIndex = index;
-              // widget.period = setCategories[index];
               widget.updatePeriod(setCategories[index]);
             });
           },
@@ -183,12 +196,20 @@ class _CategoryWidgetState extends State<CategoryWidget> {
 }
 
 class MealViewBuilder extends StatefulWidget {
-  MealViewBuilder({super.key, required this.width, required this.height, required this.nutritionData, required this.period});
+  MealViewBuilder({
+    super.key,
+    required this.width,
+    required this.height,
+    required this.nutritionData,
+    required this.period,
+    required this.callbackPeriod,
+  });
 
   final double width;
   final double height;
   late Nutrition nutritionData;
   final String period;
+  final Function callbackPeriod;
 
   @override
   State<MealViewBuilder> createState() => _MealViewBuilderState();
@@ -198,6 +219,10 @@ class _MealViewBuilderState extends State<MealViewBuilder> {
   callback(Nutrition meals) {
     setState(() {
       widget.nutritionData = meals;
+      print(widget.nutritionData.calories);
+      print(meals.calories);
+      widget.callbackPeriod(widget.nutritionData);
+      print(widget.nutritionData.meals[widget.period]);
     });
   }
 
@@ -269,6 +294,8 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
 
   @override
   Widget build(BuildContext context) {
+    var kcalSplit = (widget.food.calories * (widget.food.weight / 100)).toString().split('.');
+
     int totalMacros = widget.food.carbs + widget.food.protein + widget.food.fat;
     return Container(
       decoration: BoxDecoration(
@@ -323,7 +350,7 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
                           width: widget.width * 0.55,
                           height: widget.height * 0.02,
                           child: Text(
-                            "${widget.food.calories} kcal • ${widget.food.weight} g",
+                            "${kcalSplit[0]} kcal • ${widget.food.weight} g",
                             style: const TextStyle(fontSize: 12, color: Colors.grey),
                           ),
                         )
@@ -375,7 +402,7 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
               MacrosWidgetCard(
                 width: widget.width,
                 height: widget.height,
-                grams: "${widget.food.carbs.toString()} g",
+                grams: (widget.food.carbs * (widget.food.weight / 100)).toString(),
                 macros: "Glucides",
                 barColor: const Color.fromARGB(255, 98, 7, 255),
                 percent: widget.food.carbs / totalMacros,
@@ -383,7 +410,7 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
               MacrosWidgetCard(
                 width: widget.width,
                 height: widget.height,
-                grams: "${widget.food.protein.toString()} g",
+                grams: (widget.food.protein * (widget.food.weight / 100)).toString(),
                 macros: "Proteines",
                 barColor: Colors.red,
                 percent: widget.food.protein / totalMacros,
@@ -391,7 +418,7 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
               MacrosWidgetCard(
                 width: widget.width,
                 height: widget.height,
-                grams: "${widget.food.fat.toString()} g",
+                grams: (widget.food.fat * (widget.food.weight / 100)).toString(),
                 macros: "Lipides",
                 barColor: Colors.amber,
                 percent: widget.food.fat / totalMacros,
@@ -424,6 +451,8 @@ class MacrosWidgetCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var macrosGramsSplit = grams.split('.');
+
     return Column(
       children: [
         SizedBox(
@@ -468,7 +497,7 @@ class MacrosWidgetCard extends StatelessWidget {
                       width: width * 0.16,
                       height: height * 0.025,
                       child: Text(
-                        grams,
+                        "${macrosGramsSplit[0]} g",
                         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                       ),
                     ),

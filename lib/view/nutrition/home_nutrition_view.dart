@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -111,13 +113,27 @@ class _NutritionViewState extends State<NutritionView> {
   }
 }
 
-class DisplayNutritionPage extends StatelessWidget {
-  const DisplayNutritionPage({super.key, required this.width, required this.height, required this.nutritionData, required this.date});
+class DisplayNutritionPage extends StatefulWidget {
+  DisplayNutritionPage({super.key, required this.width, required this.height, required this.nutritionData, required this.date});
 
   final double width;
   final double height;
-  final Nutrition nutritionData;
+  late Nutrition nutritionData;
   final String date;
+
+  @override
+  State<DisplayNutritionPage> createState() => _DisplayNutritionPageState();
+}
+
+class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
+  callbackPeriod(Nutrition meals) {
+    setState(() {
+      print("callbackkkk");
+      widget.nutritionData = meals;
+      print(widget.nutritionData.calories);
+      print(meals.calories);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -129,12 +145,7 @@ class DisplayNutritionPage extends StatelessWidget {
           Column(
             children: [
               Padding(
-                padding: EdgeInsets.only(
-                  left: width * 0.05,
-                  top: height * 0.01,
-                  right: width * 0.05,
-                  bottom: height * 0.01,
-                ),
+                padding: EdgeInsets.only(left: widget.width * 0.05, top: widget.height * 0.01, right: widget.width * 0.05, bottom: widget.height * 0.01),
                 child: Container(
                   height: 220,
                   padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 0),
@@ -157,7 +168,7 @@ class DisplayNutritionPage extends StatelessWidget {
                                 radius: 85,
                                 lineWidth: 12,
                                 animation: true,
-                                percent: nutritionData.carbs > 200 ? 1 : nutritionData.carbs / 200,
+                                percent: widget.nutritionData.carbs > 200 ? 1 : widget.nutritionData.carbs / 200,
                                 circularStrokeCap: CircularStrokeCap.round,
                                 progressColor: const Color.fromARGB(255, 98, 7, 255),
                                 backgroundColor: const Color.fromARGB(255, 207, 207, 207).withOpacity(0.2),
@@ -165,7 +176,7 @@ class DisplayNutritionPage extends StatelessWidget {
                                   radius: 65,
                                   lineWidth: 12,
                                   animation: true,
-                                  percent: nutritionData.protein > 129 ? 1 : nutritionData.protein / 129,
+                                  percent: widget.nutritionData.protein > 129 ? 1 : widget.nutritionData.protein / 129,
                                   circularStrokeCap: CircularStrokeCap.round,
                                   progressColor: Colors.red,
                                   backgroundColor: const Color.fromARGB(255, 207, 207, 207).withOpacity(0.2),
@@ -173,7 +184,7 @@ class DisplayNutritionPage extends StatelessWidget {
                                     radius: 45,
                                     lineWidth: 12,
                                     animation: true,
-                                    percent: nutritionData.fat > 50 ? 1 : nutritionData.fat / 50,
+                                    percent: widget.nutritionData.fat > 50 ? 1 : widget.nutritionData.fat / 50,
                                     circularStrokeCap: CircularStrokeCap.round,
                                     progressColor: Colors.amber,
                                     backgroundColor: const Color.fromARGB(255, 207, 207, 207).withOpacity(0.2),
@@ -187,14 +198,14 @@ class DisplayNutritionPage extends StatelessWidget {
                           ],
                         ),
                       ),
-                      SizedBox(width: width * 0.01),
+                      SizedBox(width: widget.width * 0.01),
                       Expanded(
                         flex: 3,
                         child: SizedBox(
                           child: Column(
                             children: [
                               SizedBox(
-                                height: height * 0.03,
+                                height: widget.height * 0.03,
                               ),
                               Expanded(
                                 child: Column(
@@ -209,7 +220,7 @@ class DisplayNutritionPage extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      "${nutritionData.carbs.toString()} / 200 g",
+                                      "${widget.nutritionData.carbs.toString()} / 200 g",
                                       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                                     ),
                                   ],
@@ -224,7 +235,7 @@ class DisplayNutritionPage extends StatelessWidget {
                                       style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.red),
                                     ),
                                     Text(
-                                      "${nutritionData.protein.toString()} / 129 g",
+                                      "${widget.nutritionData.protein.toString()} / 129 g",
                                       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                                     ),
                                   ],
@@ -239,7 +250,7 @@ class DisplayNutritionPage extends StatelessWidget {
                                       style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.amber),
                                     ),
                                     Text(
-                                      "${nutritionData.fat.toString()} / 50 g",
+                                      "${widget.nutritionData.fat.toString()} / 50 g",
                                       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                                     ),
                                   ],
@@ -261,8 +272,8 @@ class DisplayNutritionPage extends StatelessWidget {
                       child: Column(
                         children: [
                           Container(
-                            width: width,
-                            height: height * 0.26,
+                            width: widget.width,
+                            height: widget.height * 0.26,
                             decoration: const BoxDecoration(
                               color: Color.fromARGB(255, 243, 243, 243),
                               borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -285,11 +296,11 @@ class DisplayNutritionPage extends StatelessWidget {
                                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
                                           ),
                                           SizedBox(
-                                            width: width * 0.01,
+                                            width: widget.width * 0.01,
                                           ),
                                           Container(
-                                            width: width * 0.1,
-                                            height: height * 0.045,
+                                            width: widget.width * 0.1,
+                                            height: widget.height * 0.045,
                                             decoration: const BoxDecoration(
                                               color: Color.fromARGB(255, 118, 199, 140),
                                               borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -304,13 +315,13 @@ class DisplayNutritionPage extends StatelessWidget {
                                         ],
                                       ),
                                       SizedBox(
-                                        height: height * 0.02,
+                                        height: widget.height * 0.02,
                                       ),
                                       CircularPercentIndicator(
                                         radius: 60,
                                         lineWidth: 12,
                                         animation: true,
-                                        percent: nutritionData.calories > 2100 ? 0.0 : ((2100 - nutritionData.calories) / 2100),
+                                        percent: widget.nutritionData.calories > 2100 ? 0.0 : ((2100 - widget.nutritionData.calories) / 2100),
                                         circularStrokeCap: CircularStrokeCap.round,
                                         progressColor: const Color.fromARGB(255, 0, 193, 51),
                                         backgroundColor: const Color.fromARGB(255, 200, 200, 200).withOpacity(0.2),
@@ -318,7 +329,7 @@ class DisplayNutritionPage extends StatelessWidget {
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              (2100 - nutritionData.calories).toString(),
+                                              (2100 - widget.nutritionData.calories).toString(),
                                               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                                             ),
                                             const Text(
@@ -346,8 +357,8 @@ class DisplayNutritionPage extends StatelessWidget {
                       child: Column(
                         children: [
                           Container(
-                            width: width,
-                            height: height * 0.26,
+                            width: widget.width,
+                            height: widget.height * 0.26,
                             decoration: const BoxDecoration(
                               color: Color.fromARGB(255, 243, 243, 243),
                               borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -370,11 +381,11 @@ class DisplayNutritionPage extends StatelessWidget {
                                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
                                           ),
                                           SizedBox(
-                                            width: width * 0.01,
+                                            width: widget.width * 0.01,
                                           ),
                                           Container(
-                                            width: width * 0.1,
-                                            height: height * 0.045,
+                                            width: widget.width * 0.1,
+                                            height: widget.height * 0.045,
                                             decoration: const BoxDecoration(
                                               color: Color.fromARGB(255, 197, 116, 116),
                                               borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -389,7 +400,7 @@ class DisplayNutritionPage extends StatelessWidget {
                                         ],
                                       ),
                                       SizedBox(
-                                        height: height * 0.02,
+                                        height: widget.height * 0.02,
                                       ),
                                       CircularPercentIndicator(
                                         radius: 60,
@@ -430,17 +441,23 @@ class DisplayNutritionPage extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                height: height * 0.015,
+                height: widget.height * 0.015,
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: Row(
                   children: [
-                    SizedBox(width: width * 0.05),
+                    SizedBox(width: widget.width * 0.05),
                   ],
                 ),
               ),
-              TodaysMeals(width: width, height: height, nutritionData: nutritionData, date: date),
+              TodaysMeals(
+                width: widget.width,
+                height: widget.height,
+                nutritionData: widget.nutritionData,
+                date: widget.date,
+                callbackPeriod: callbackPeriod,
+              ),
             ],
           ),
         ],
@@ -449,27 +466,34 @@ class DisplayNutritionPage extends StatelessWidget {
   }
 }
 
-class TodaysMeals extends StatelessWidget {
+class TodaysMeals extends StatefulWidget {
   const TodaysMeals({
     super.key,
     required this.width,
     required this.height,
     required this.nutritionData,
     required this.date,
+    required this.callbackPeriod,
   });
 
   final double width;
   final double height;
   final Nutrition nutritionData;
   final String date;
+  final Function callbackPeriod;
 
+  @override
+  State<TodaysMeals> createState() => _TodaysMealsState();
+}
+
+class _TodaysMealsState extends State<TodaysMeals> {
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         SizedBox(
-          width: width * 0.85,
-          height: height * 0.06,
+          width: widget.width * 0.85,
+          height: widget.height * 0.06,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -481,7 +505,7 @@ class TodaysMeals extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => NutritionPeriod(date: date),
+                      builder: (context) => NutritionPeriod(date: widget.date, callbackPeriod: widget.callbackPeriod, nutritionData: widget.nutritionData),
                     ),
                   );
                 },
@@ -494,57 +518,57 @@ class TodaysMeals extends StatelessWidget {
           ),
         ),
         SizedBox(
-            width: width,
-            height: height * 0.5,
+            width: widget.width,
+            height: widget.height * 0.5,
             child: Column(
               children: [
                 MealPeriodCard(
-                  width: width,
-                  height: height,
+                  width: widget.width,
+                  height: widget.height,
                   color: Colors.green,
                   colorAccent: Colors.greenAccent,
                   mealPeriodName: "Petit déjeuner   ",
                   emojiImg: "🍳",
-                  nutritionData: nutritionData,
+                  nutritionData: widget.nutritionData,
                   period: "breakfast",
                 ),
                 SizedBox(
-                  height: height * 0.01,
+                  height: widget.height * 0.01,
                 ),
                 MealPeriodCard(
-                  width: width,
-                  height: height,
+                  width: widget.width,
+                  height: widget.height,
                   color: Colors.orange,
                   colorAccent: const Color.fromARGB(255, 255, 203, 136),
                   mealPeriodName: "Déjeuner   ",
                   emojiImg: "🍝",
-                  nutritionData: nutritionData,
+                  nutritionData: widget.nutritionData,
                   period: "lunch",
                 ),
                 SizedBox(
-                  height: height * 0.01,
+                  height: widget.height * 0.01,
                 ),
                 MealPeriodCard(
-                  width: width,
-                  height: height,
+                  width: widget.width,
+                  height: widget.height,
                   color: Colors.blue,
                   colorAccent: const Color.fromARGB(255, 159, 194, 255),
                   mealPeriodName: "Dinner   ",
                   emojiImg: "🥗",
-                  nutritionData: nutritionData,
+                  nutritionData: widget.nutritionData,
                   period: "dinners",
                 ),
                 SizedBox(
-                  height: height * 0.01,
+                  height: widget.height * 0.01,
                 ),
                 MealPeriodCard(
-                  width: width,
-                  height: height,
+                  width: widget.width,
+                  height: widget.height,
                   color: Colors.red,
                   colorAccent: const Color.fromARGB(255, 255, 147, 147),
                   mealPeriodName: "Snacks   ",
                   emojiImg: "🥪",
-                  nutritionData: nutritionData,
+                  nutritionData: widget.nutritionData,
                   period: "snacks",
                 ),
               ],
@@ -554,7 +578,7 @@ class TodaysMeals extends StatelessWidget {
   }
 }
 
-class MealPeriodCard extends StatelessWidget {
+class MealPeriodCard extends StatefulWidget {
   const MealPeriodCard(
       {super.key,
       required this.width,
@@ -576,34 +600,39 @@ class MealPeriodCard extends StatelessWidget {
   final String period;
 
   @override
+  State<MealPeriodCard> createState() => _MealPeriodCardState();
+}
+
+class _MealPeriodCardState extends State<MealPeriodCard> {
+  @override
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
         color: Color.fromARGB(255, 231, 231, 231),
         borderRadius: BorderRadius.all(Radius.circular(20)),
       ),
-      width: width * 0.85,
-      height: height * 0.1,
+      width: widget.width * 0.85,
+      height: widget.height * 0.1,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Container(
-            width: width * 0.15,
-            height: height * 0.07,
+            width: widget.width * 0.15,
+            height: widget.height * 0.07,
             decoration: BoxDecoration(
-              color: colorAccent,
+              color: widget.colorAccent,
               borderRadius: const BorderRadius.all(Radius.circular(20)),
             ),
             child: Center(
               child: Text(
-                emojiImg,
+                widget.emojiImg,
                 style: const TextStyle(fontSize: 35),
               ),
             ),
           ),
           SizedBox(
-            width: width * 0.5,
-            height: height * 0.1,
+            width: widget.width * 0.5,
+            height: widget.height * 0.1,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -611,37 +640,37 @@ class MealPeriodCard extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      mealPeriodName,
+                      widget.mealPeriodName,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 15,
                       ),
                     ),
                     Text(
-                      "${nutritionData.meals[period]!["calories"].toString()} Cal",
+                      "${widget.nutritionData.meals[widget.period]!["calories"].toString()} Cal",
                       style: TextStyle(
-                          color: color,
+                          color: widget.color,
                           height: 0.9,
                           fontWeight: FontWeight.w600,
                           fontSize: 10,
                           background: Paint()
                             ..strokeWidth = 12.0
-                            ..color = colorAccent
+                            ..color = widget.colorAccent
                             ..style = PaintingStyle.stroke
                             ..strokeJoin = StrokeJoin.round),
                     )
                   ],
                 ),
                 Text(
-                  "${nutritionData.meals[period]?["meals"]?.length.toString()} aliments ont été ajouté",
+                  "${widget.nutritionData.meals[widget.period]?["meals"]?.length.toString()} aliments ont été ajouté",
                   style: const TextStyle(fontSize: 12),
                 ),
               ],
             ),
           ),
           SizedBox(
-            width: width * 0.1,
-            height: height * 0.1,
+            width: widget.width * 0.1,
+            height: widget.height * 0.1,
             child: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

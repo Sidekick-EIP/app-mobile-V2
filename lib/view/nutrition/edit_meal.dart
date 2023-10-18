@@ -13,8 +13,15 @@ import 'package:sidekick_app/main.dart';
 import 'package:sidekick_app/models/nutrition.dart';
 
 class EditMeal extends StatefulWidget {
-  const EditMeal({super.key, required this.food});
+  const EditMeal({
+    super.key,
+    required this.food,
+    required this.callback,
+    required this.nutritionData,
+  });
   final Food food;
+  final Function callback;
+  final Nutrition nutritionData;
 
   @override
   State<EditMeal> createState() => _EditMealState();
@@ -31,13 +38,6 @@ class _EditMealState extends State<EditMeal> {
   void initState() {
     super.initState();
     futureNutrition = nutritionController.fetchNutrition("${getDate}Z");
-  }
-
-  void updateDate(String newDate) {
-    setState(() {
-      getDate = newDate;
-      futureNutrition = nutritionController.fetchNutrition("${getDate}Z");
-    });
   }
 
   @override
@@ -93,7 +93,13 @@ class _EditMealState extends State<EditMeal> {
             future: futureNutrition,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return DisplayNutritionPage(width: width, height: height, food: widget.food);
+                return DisplayNutritionPage(
+                  width: width,
+                  height: height,
+                  food: widget.food,
+                  callback: widget.callback,
+                  nutritionData: widget.nutritionData,
+                );
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');
               }
@@ -106,16 +112,36 @@ class _EditMealState extends State<EditMeal> {
   }
 }
 
-class DisplayNutritionPage extends StatelessWidget {
-  const DisplayNutritionPage({super.key, required this.width, required this.height, required this.food});
+class DisplayNutritionPage extends StatefulWidget {
+  const DisplayNutritionPage({
+    super.key,
+    required this.width,
+    required this.height,
+    required this.food,
+    required this.callback,
+    required this.nutritionData,
+  });
 
   final double width;
   final double height;
   final Food food;
+  final Function callback;
+  final Nutrition nutritionData;
+
+  @override
+  State<DisplayNutritionPage> createState() => _DisplayNutritionPageState();
+}
+
+class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
+  void updateWeight(int weight) {
+    setState(() {
+      widget.food.weight = weight;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    int totalMacros = food.carbs + food.protein + food.fat;
+    int totalMacros = widget.food.carbs + widget.food.protein + widget.food.fat;
     return Expanded(
       child: ListView(
         physics: const ClampingScrollPhysics(),
@@ -124,52 +150,63 @@ class DisplayNutritionPage extends StatelessWidget {
           Column(
             children: [
               SizedBox(
-                height: height * 0.03,
+                height: widget.height * 0.03,
               ),
               Column(
                 children: [
                   SizedBox(
-                    width: width * 0.7,
-                    height: height * 0.34,
+                    width: widget.width * 0.7,
+                    height: widget.height * 0.34,
                     child: Column(
                       children: [
-                        Image(
-                          image: NetworkImage(food.picture),
+                        SizedBox(
+                          width: widget.width * 0.7,
+                          height: widget.height * 0.34,
+                          child: Image(
+                            image: NetworkImage(widget.food.picture),
+                          ),
                         ),
                       ],
                     ),
                   )
                 ],
               ),
-              MealNameWidget(width: width, height: height, food: food),
+              MealNameWidget(width: widget.width, height: widget.height, food: widget.food),
               MacrosCard(
-                width: width,
-                height: height,
+                width: widget.width,
+                height: widget.height,
                 macrosName: "Glucides",
                 image: DefaultImages.carbs,
-                macrosValue: "${food.carbs.toString()}g",
+                macrosValue: "${(widget.food.carbs * (widget.food.weight / 100)).toString()}g",
                 progressColor: const Color.fromARGB(255, 98, 7, 255),
-                percent: food.carbs / totalMacros,
+                percent: widget.food.carbs / totalMacros,
               ),
               MacrosCard(
-                width: width,
-                height: height,
+                width: widget.width,
+                height: widget.height,
                 macrosName: "Proteines",
                 image: DefaultImages.proteins,
-                macrosValue: "${food.protein.toString()}g",
+                macrosValue: "${(widget.food.protein * (widget.food.weight / 100)).toString()}g",
                 progressColor: Colors.red,
-                percent: food.protein / totalMacros,
+                percent: widget.food.protein / totalMacros,
               ),
               MacrosCard(
-                width: width,
-                height: height,
+                width: widget.width,
+                height: widget.height,
                 macrosName: "Lipides",
                 image: DefaultImages.fat,
-                macrosValue: "${food.fat.toString()}g",
+                macrosValue: "${(widget.food.fat * (widget.food.weight / 100)).toString()}g",
                 progressColor: Colors.amber,
-                percent: food.fat / totalMacros,
+                percent: widget.food.fat / totalMacros,
               ),
-              WeightValues(width: width, height: height),
+              WeightValues(
+                width: widget.width,
+                height: widget.height,
+                foodWeight: widget.food.weight,
+                updateWeight: updateWeight,
+                callback: widget.callback,
+                nutritionData: widget.nutritionData,
+              ),
             ],
           ),
         ],
@@ -192,6 +229,8 @@ class MealNameWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var kcalSplit = (food.calories * (food.weight / 100)).toString().split('.');
+
     return SizedBox(
       width: width,
       height: height * 0.1,
@@ -235,7 +274,7 @@ class MealNameWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                  width: width * 0.75,
+                  width: width * 0.72,
                   height: height * 0.6,
                   child: const Text(
                     "Valeurs nutritionelles",
@@ -243,12 +282,12 @@ class MealNameWidget extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  width: width * 0.15,
+                  width: width * 0.18,
                   height: height * 0.06,
                   child: Align(
                     alignment: Alignment.topRight,
                     child: Text(
-                      "${food.calories} Kcal",
+                      "${kcalSplit[0]} Kcal",
                       style: const TextStyle(color: Colors.grey),
                     ),
                   ),
@@ -284,6 +323,8 @@ class MacrosCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var macrosSplit = macrosValue.split('.');
+
     return SizedBox(
       width: width,
       height: height * 0.08,
@@ -326,7 +367,7 @@ class MacrosCard extends StatelessWidget {
                       style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                     Text(
-                      macrosValue,
+                      "${macrosSplit[0]}g",
                       style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color.fromARGB(255, 120, 120, 120)),
                     ),
                   ],
@@ -359,26 +400,39 @@ class MacrosCard extends StatelessWidget {
   }
 }
 
-class WeightValues extends StatelessWidget {
-  const WeightValues({
+class WeightValues extends StatefulWidget {
+  WeightValues({
     super.key,
     required this.width,
     required this.height,
+    required this.foodWeight,
+    required this.updateWeight,
+    required this.callback,
+    required this.nutritionData,
   });
 
   final double width;
   final double height;
+  late int foodWeight;
+  final Function(int) updateWeight;
+  final Function callback;
+  final Nutrition nutritionData;
 
+  @override
+  State<WeightValues> createState() => _WeightValuesState();
+}
+
+class _WeightValuesState extends State<WeightValues> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        width: width,
-        height: height * 0.15,
+        width: widget.width,
+        height: widget.height * 0.15,
         child: Column(
           children: [
             SizedBox(
-              height: height * .13,
-              width: width * .95,
+              height: widget.height * .13,
+              width: widget.width * .95,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -387,8 +441,8 @@ class WeightValues extends StatelessWidget {
                         borderRadius: BorderRadius.circular(18),
                         color: const Color.fromARGB(255, 230, 230, 230),
                       ),
-                      width: width * .43,
-                      height: height * .07,
+                      width: widget.width * .43,
+                      height: widget.height * .07,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -397,8 +451,8 @@ class WeightValues extends StatelessWidget {
                               color: const Color.fromARGB(255, 255, 255, 255),
                               borderRadius: BorderRadius.circular(15),
                             ),
-                            width: width * .1,
-                            height: height * .057,
+                            width: widget.width * .1,
+                            height: widget.height * .057,
                             child: IconButton(
                               padding: const EdgeInsets.only(bottom: 13),
                               color: const Color.fromARGB(255, 0, 0, 0),
@@ -406,20 +460,16 @@ class WeightValues extends StatelessWidget {
                                 Icons.minimize,
                               ),
                               onPressed: () => {
-                                // if (widget.showResult.quantity > 10)
-                                //   {
-                                //     setState(() => {widget.showResult.quantity -= 10}),
-                                //     widget.quantityUpdater(widget.showResult.quantity)
-                                //   }
+                                if (widget.foodWeight > 10) {setState(() => widget.foodWeight -= 10), widget.updateWeight(widget.foodWeight)}
                               },
                             ),
                           ),
                           SizedBox(
-                            width: width * .12,
+                            width: widget.width * .12,
                             child: Text(
-                              "100 g",
+                              "${widget.foodWeight.toString()} g",
                               textAlign: TextAlign.center,
-                              style: TextStyle(fontWeight: FontWeight.bold, color: const Color.fromARGB(255, 0, 0, 0), fontSize: width * .04),
+                              style: TextStyle(fontWeight: FontWeight.bold, color: const Color.fromARGB(255, 0, 0, 0), fontSize: widget.width * .04),
                             ),
                           ),
                           Container(
@@ -427,27 +477,23 @@ class WeightValues extends StatelessWidget {
                               color: const Color.fromARGB(255, 255, 255, 255),
                               borderRadius: BorderRadius.circular(15),
                             ),
-                            width: width * .1,
-                            height: height * .057,
+                            width: widget.width * .1,
+                            height: widget.height * .057,
                             child: IconButton(
                               color: const Color.fromARGB(255, 0, 0, 0),
                               icon: const Icon(
                                 Icons.add,
                               ),
                               onPressed: () => {
-                                // if (widget.showResult.quantity < 990)
-                                //   {
-                                //     setState(() => {widget.showResult.quantity += 10}),
-                                //     widget.quantityUpdater(widget.showResult.quantity)
-                                //   }
+                                if (widget.foodWeight < 990) {setState(() => widget.foodWeight += 10), widget.updateWeight(widget.foodWeight)}
                               },
                             ),
                           ),
                         ],
                       )),
                   SizedBox(
-                    width: width * .4,
-                    height: height * .07,
+                    width: widget.width * .4,
+                    height: widget.height * .07,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color.fromRGBO(241, 137, 90, 1),
@@ -458,26 +504,27 @@ class WeightValues extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
+                        widget.callback(widget.nutritionData);
                         // widget.callback(widget.showResult.kcalories, widget.showResult.quantity, widget.index);
 
-                        var snackBar = const SnackBar(
-                          content: Text(" modifié"),
-                        );
-
                         // widget.showResult.kcalories * widget.showResult.quantity;
+
+                        var snackBar = const SnackBar(
+                          content: Text("Repas modifié"),
+                        );
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         Navigator.pop(context);
                       },
                       child: Text(
                         'Appliquer',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: width * .05, color: const Color.fromARGB(255, 255, 255, 255)),
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: widget.width * .05, color: const Color.fromARGB(255, 255, 255, 255)),
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: height * .02),
+            SizedBox(height: widget.height * .02),
           ],
         ));
   }

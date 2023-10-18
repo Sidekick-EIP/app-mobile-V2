@@ -182,39 +182,52 @@ class _CategoryWidgetState extends State<CategoryWidget> {
   }
 }
 
-class MealViewBuilder extends StatelessWidget {
-  const MealViewBuilder({super.key, required this.width, required this.height, required this.nutritionData, required this.period});
+class MealViewBuilder extends StatefulWidget {
+  MealViewBuilder({super.key, required this.width, required this.height, required this.nutritionData, required this.period});
 
   final double width;
   final double height;
-  final Nutrition nutritionData;
+  late Nutrition nutritionData;
   final String period;
+
+  @override
+  State<MealViewBuilder> createState() => _MealViewBuilderState();
+}
+
+class _MealViewBuilderState extends State<MealViewBuilder> {
+  callback(Nutrition meals) {
+    setState(() {
+      widget.nutritionData = meals;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: height * 0.75,
-      width: width,
+      height: widget.height * 0.75,
+      width: widget.width,
       child: ListView.builder(
-          itemCount: nutritionData.meals[period]!["meals"].length,
+          itemCount: widget.nutritionData.meals[widget.period]!["meals"].length,
           itemBuilder: (context, index) {
             return Column(
               children: [
                 SizedBox(
-                    width: width,
-                    height: height * 0.22,
+                    width: widget.width,
+                    height: widget.height * 0.22,
                     child: Column(
                       children: [
                         MealPeriodCard(
-                          width: width,
-                          height: height,
+                          width: widget.width,
+                          height: widget.height,
                           color: Colors.green,
                           colorAccent: Colors.greenAccent,
-                          food: nutritionData.meals[period]!["meals"][index],
+                          food: widget.nutritionData.meals[widget.period]!["meals"][index],
                           period: "breakfast",
+                          callback: callback,
+                          nutritionData: widget.nutritionData,
                         ),
                         Container(
-                          height: height * 0.01,
+                          height: widget.height * 0.01,
                         ),
                       ],
                     ))
@@ -226,7 +239,17 @@ class MealViewBuilder extends StatelessWidget {
 }
 
 class MealPeriodCard extends StatefulWidget {
-  const MealPeriodCard({super.key, required this.width, required this.height, required this.color, required this.colorAccent, required this.food, required this.period});
+  const MealPeriodCard({
+    super.key,
+    required this.width,
+    required this.height,
+    required this.color,
+    required this.colorAccent,
+    required this.food,
+    required this.period,
+    required this.callback,
+    required this.nutritionData,
+  });
 
   final double width;
   final double height;
@@ -234,6 +257,8 @@ class MealPeriodCard extends StatefulWidget {
   final Color colorAccent;
   final Food food;
   final String period;
+  final Function callback;
+  final Nutrition nutritionData;
 
   @override
   State<MealPeriodCard> createState() => _MealPeriodCardState();
@@ -329,7 +354,11 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
                     if (choice == 'Modifier') {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => EditMeal(food: widget.food),
+                          builder: (context) => EditMeal(
+                            food: widget.food,
+                            callback: widget.callback,
+                            nutritionData: widget.nutritionData,
+                          ),
                         ),
                       );
                     } else if (choice == 'Supprimer') {

@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -88,7 +87,6 @@ class _AccountScreenState extends State<AccountScreen> {
             duration: const Duration(seconds: 1));
       } else {
         if (kDebugMode) {
-          print(response.statusCode);
           print('Error uploading image: ${response.reasonPhrase}');
         }
       }

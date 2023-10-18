@@ -42,17 +42,18 @@ class UserController extends GetxController {
   ).obs;
 
   Rx<Partner> partner = Partner(
-      avatar: RxString('https://www.vincenthie.com/images/gallery/large/Iron-Man-Portrait.jpg'),
-      firstname: RxString('John'),
-      lastname: RxString('Doe'),
-      size: RxInt(185),
-      gender: RxString('MALE'),
-      description: RxString('Bonjour !'),
-      level: RxString('ADVANCED'),
-      activities:
+    avatar: RxString(
+        'https://www.vincenthie.com/images/gallery/large/Iron-Man-Portrait.jpg'),
+    firstname: RxString('John'),
+    lastname: RxString('Doe'),
+    size: RxInt(185),
+    gender: RxString('MALE'),
+    description: RxString('Bonjour !'),
+    level: RxString('ADVANCED'),
+    activities:
         ["SOCCER", "TENNIS"].map((activities) => RxString(activities)).toList(),
-      goal: RxString('STAY_IN_SHAPE'),
-      birthDate: Rx<DateTime>(DateTime.parse("1990-05-12")),
+    goal: RxString('STAY_IN_SHAPE'),
+    birthDate: Rx<DateTime>(DateTime.parse("1990-05-12")),
   ).obs;
 
   Future<void> fetchUserFromBack() async {
@@ -144,7 +145,10 @@ class UserController extends GetxController {
     super.onReady();
     try {
       isLoading.value = true;
+
+      // Fetch user data
       await fetchUserFromBack();
+
       if (user.value.sidekickId != null) {
         await fetchSidekickFromBack();
       }

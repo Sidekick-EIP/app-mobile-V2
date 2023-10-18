@@ -34,7 +34,7 @@ class _FilterViewState extends State<FilterView> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Filters",
+                  "Mon sidekick",
                   style: pSemiBold18.copyWith(),
                 ),
                 InkWell(

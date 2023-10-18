@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sidekick_app/view/profile/activity/activity_screen.dart';
@@ -7,6 +9,7 @@ import '../../config/colors.dart';
 import '../../config/images.dart';
 import '../../config/text_style.dart';
 import '../../controller/home_controller.dart';
+import '../../controller/preference_controller.dart';
 import '../../controller/user_controller.dart';
 import '../../utils/calculate_age.dart';
 import '../../widget/custom_button.dart';
@@ -25,6 +28,13 @@ class ProfileView extends StatefulWidget {
 class _ProfileViewState extends State<ProfileView> {
   final homeController = Get.put(HomeController());
   final userController = Get.find<UserController>();
+  final preferenceController = Get.find<PreferenceController>();
+
+  @override
+  void initState() {
+    super.initState();
+    userController.fetchUserFromBack();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -257,13 +267,41 @@ class _ProfileViewState extends State<ProfileView> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             row(
-                              "Préférences",
+                              "Notification",
                               "",
                               () {},
-                              const Icon(
-                                Icons.arrow_forward_ios,
-                                color: Color(0xffA9B2BA),
-                                size: 16,
+                              SizedBox(
+                                height: 20,
+                                child: Obx(
+                                  () => CupertinoSwitch(
+                                    value: preferenceController
+                                        .preference.value.notifications.value,
+                                    activeColor: ConstColors.primaryColor,
+                                    onChanged: (v) async {
+                                      preferenceController
+                                          .changeNotifications(v);
+                                      try {
+                                        await preferenceController
+                                            .updatePreference();
+                                        Get.snackbar('Succès',
+                                            'Notifications mis à jour avec succès!',
+                                            snackPosition: SnackPosition.BOTTOM,
+                                            backgroundColor: Colors.green,
+                                            colorText: Colors.white,
+                                            duration:
+                                                const Duration(seconds: 1));
+                                      } catch (e) {
+                                        Get.snackbar('Erreur',
+                                            'Erreur lors de la mise à jour des notifications!',
+                                            snackPosition: SnackPosition.BOTTOM,
+                                            backgroundColor: Colors.red,
+                                            colorText: Colors.white,
+                                            duration:
+                                                const Duration(seconds: 1));
+                                      }
+                                    },
+                                  ),
+                                ),
                               ),
                             ),
                             const SizedBox(height: 10),

@@ -14,37 +14,30 @@ class TrainingView extends StatefulWidget {
 }
 
 String getMuscleGroupe(String muscle) {
-  if (muscle == "CHEST") {
-    return ("poitrine");
+  switch (muscle) {
+    case "CHEST":
+      return "poitrine";
+    case "BACK":
+      return "dos";
+    case "CARDIO":
+      return "cardio";
+    case "CALF":
+      return "mollet";
+    case "BICEPS":
+      return "biceps";
+    case "LEGS":
+      return "jambes";
+    case "TRICEPS":
+      return "triceps";
+    case "SHOULDERS":
+      return "épaules";
+    case "GLUTES":
+      return "fessiers";
+    case "ABS":
+      return "abdos";
+    default:
+      return muscle;
   }
-  if (muscle == "BACK") {
-    return "dos";
-  }
-  if (muscle == "CARDIO") {
-    return "cardio";
-  }
-  if (muscle == "CALF") {
-    return "mollet";
-  }
-  if (muscle == "BICEPS") {
-    return "biceps";
-  }
-  if (muscle == "LEGS") {
-    return "jambes";
-  }
-  if (muscle == "TRICEPS") {
-    return "triceps";
-  }
-  if (muscle == "SHOULDERS") {
-    return "épaules";
-  }
-  if (muscle == "GLUTES") {
-    return "fessiers";
-  }
-  if (muscle == "ABS") {
-    return "abdos";
-  }
-  return muscle;
 }
 
 class _TrainingViewState extends State<TrainingView> {
@@ -66,8 +59,8 @@ class _TrainingViewState extends State<TrainingView> {
           ),
         ),
       ),
-      body: GetX<WorkoutController>(
-        builder: (_) {return Padding(
+      body: GetX<WorkoutController>(builder: (_) {
+        return Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,8 +94,7 @@ class _TrainingViewState extends State<TrainingView> {
                               color: page == 0
                                   ? ConstColors.primaryColor
                                   : Colors.transparent,
-                              borderRadius:
-                                  BorderRadius.circular(15.41),
+                              borderRadius: BorderRadius.circular(15.41),
                             ),
                             child: Center(
                               child: Text(
@@ -110,8 +102,8 @@ class _TrainingViewState extends State<TrainingView> {
                                 style: pSemiBold18.copyWith(
                                   fontSize: 11.56,
                                   color: page == 0
-                                          ? ConstColors.secondaryColor
-                                          : ConstColors.blackColor,
+                                      ? ConstColors.secondaryColor
+                                      : ConstColors.blackColor,
                                 ),
                               ),
                             ),
@@ -130,8 +122,7 @@ class _TrainingViewState extends State<TrainingView> {
                               color: page == 1
                                   ? ConstColors.primaryColor
                                   : Colors.transparent,
-                              borderRadius:
-                                  BorderRadius.circular(15.41),
+                              borderRadius: BorderRadius.circular(15.41),
                             ),
                             child: Center(
                               child: Text(
@@ -139,8 +130,8 @@ class _TrainingViewState extends State<TrainingView> {
                                 style: pSemiBold18.copyWith(
                                   fontSize: 11.56,
                                   color: page == 1
-                                          ? ConstColors.secondaryColor
-                                          : ConstColors.blackColor,
+                                      ? ConstColors.secondaryColor
+                                      : ConstColors.blackColor,
                                 ),
                               ),
                             ),
@@ -152,85 +143,105 @@ class _TrainingViewState extends State<TrainingView> {
                 ),
               ),
               const SizedBox(height: 20),
-              page == 0 ? (workoutController.workout == [] ? const CircularProgressIndicator() : Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(5),
-                  itemCount: workoutController.workout.length,
-                  itemBuilder: (context, x) {
-                    return Column(children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            DateFormat('dd MMM y').format(DateTime.parse(workoutController.workout[x][0].date)),
-                            style: pRegular14.copyWith(
-                              fontSize: 11.55,
-                              color: ConstColors.lightBlackColor,
-                            ),
-                          ),
-                          Text(
-                            workoutController.workout[x].length == 1 ? "${workoutController.workout[x].length} workout" : "${workoutController.workout[x].length} workouts",
-                            style: pRegular14.copyWith(
-                              fontSize: 11.55,
-                              color: ConstColors.lightBlackColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      SizedBox(
-                        height: (95 * (workoutController.workout[x].length)).toDouble(),
-                        child: ListView.builder(
-                          shrinkWrap: false,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: workoutController.workout[x].length,
-                          itemBuilder: (context, y) {
-                            return InkWell(
-                              onTap: () {
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.only(bottom: 10),
-                                child: workoutCard(
-                                  workoutController.workout[x][y].name,
-                                  "${workoutController.workout[x][y].duration} min",
-                                  workoutController.workout[x][y].thumbnail,
-                                  DateTime.parse(workoutController.workout[x][y].date).isBefore(DateTime.now())
-                                ),
-                              ),
-                            );
-                          }
-                        ),
-                      )
-                    ]);
-                  }
-                ),
-              )) : (workoutController.exercise == [] ? const CircularProgressIndicator() : Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(5),
-                  itemCount: workoutController.exercise.length,
-                  itemBuilder: (context, elem) {
-                    return Column(children: [
-                      InkWell(
-                        onTap: () {
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 10),
-                          child: workoutCard(
-                            workoutController.exercise[elem].name,
-                            getMuscleGroupe(workoutController.exercise[elem].muscleGroup),
-                            workoutController.exercise[elem].thumbnail,
-                            false
-                          ),
-                        ),
-                      )
-                    ]);
-                  }
-                ),
-              )),
+              page == 0
+                  ? (workoutController.workout == []
+                      ? const CircularProgressIndicator()
+                      : Expanded(
+                          child: ListView.builder(
+                              padding: const EdgeInsets.all(5),
+                              itemCount: workoutController.workout.length,
+                              itemBuilder: (context, x) {
+                                return Column(children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        DateFormat('dd MMM y').format(
+                                            DateTime.parse(workoutController
+                                                .workout[x][0].date)),
+                                        style: pRegular14.copyWith(
+                                          fontSize: 11.55,
+                                          color: ConstColors.lightBlackColor,
+                                        ),
+                                      ),
+                                      Text(
+                                        workoutController.workout[x].length == 1
+                                            ? "${workoutController.workout[x].length} workout"
+                                            : "${workoutController.workout[x].length} workouts",
+                                        style: pRegular14.copyWith(
+                                          fontSize: 11.55,
+                                          color: ConstColors.lightBlackColor,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 20),
+                                  SizedBox(
+                                    height: (95 *
+                                            (workoutController
+                                                .workout[x].length))
+                                        .toDouble(),
+                                    child: ListView.builder(
+                                        shrinkWrap: false,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        itemCount:
+                                            workoutController.workout[x].length,
+                                        itemBuilder: (context, y) {
+                                          return InkWell(
+                                            onTap: () {},
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 10),
+                                              child: workoutCard(
+                                                  workoutController
+                                                      .workout[x][y].name,
+                                                  "${workoutController.workout[x][y].duration} min",
+                                                  workoutController
+                                                      .workout[x][y].thumbnail,
+                                                  DateTime.parse(
+                                                          workoutController
+                                                              .workout[x][y]
+                                                              .date)
+                                                      .isBefore(
+                                                          DateTime.now())),
+                                            ),
+                                          );
+                                        }),
+                                  )
+                                ]);
+                              }),
+                        ))
+                  : (workoutController.exercise == []
+                      ? const CircularProgressIndicator()
+                      : Expanded(
+                          child: ListView.builder(
+                              padding: const EdgeInsets.all(5),
+                              itemCount: workoutController.exercise.length,
+                              itemBuilder: (context, elem) {
+                                return Column(children: [
+                                  InkWell(
+                                    onTap: () {},
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 10),
+                                      child: workoutCard(
+                                          workoutController.exercise[elem].name,
+                                          getMuscleGroupe(workoutController
+                                              .exercise[elem].muscleGroup),
+                                          workoutController
+                                              .exercise[elem].thumbnail,
+                                          false),
+                                    ),
+                                  )
+                                ]);
+                              }),
+                        )),
             ],
           ),
-        );}
-      ),
+        );
+      }),
     );
   }
 }
@@ -289,7 +300,8 @@ Widget workoutCard(String text1, String text2, String image, bool passed) {
           const SizedBox(width: 5),
           CircleAvatar(
             radius: 9,
-            backgroundColor: passed ? ConstColors.primaryColor : Colors.transparent,
+            backgroundColor:
+                passed ? ConstColors.primaryColor : Colors.transparent,
             child: const Icon(
               Icons.check,
               color: ConstColors.secondaryColor,

@@ -1,6 +1,5 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:sidekick_app/controller/messages_controller.dart';
 import 'package:sidekick_app/controller/user_controller.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;

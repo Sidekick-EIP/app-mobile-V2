@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:sidekick_app/controller/home_controller.dart';
 import 'package:sidekick_app/controller/user_controller.dart';
 
+import '../../controller/preference_controller.dart';
+
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
 
@@ -13,6 +15,7 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   final homeController = Get.put(HomeController());
   final userController = Get.put(UserController(), permanent: true);
+  final preferenceController = Get.put(PreferenceController(), permanent: true);
 
   @override
   Widget build(BuildContext context) {

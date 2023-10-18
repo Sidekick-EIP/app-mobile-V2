@@ -8,11 +8,9 @@ import 'package:http/http.dart' as http;
 
 import '../models/preference.dart';
 import '../utils/token_storage.dart';
-import '../utils/user_storage.dart';
 
 class PreferenceController extends GetxController {
   String apiUrl = dotenv.env['API_BACK_URL'] ?? "";
-  final UserStorage _userStorage = UserStorage();
   final TokenStorage tokenStorage = TokenStorage();
 
   Rx<Preference> preference = Preference(
@@ -21,32 +19,11 @@ class PreferenceController extends GetxController {
     sounds: RxBool(false),
   ).obs;
 
-  void changeDarkMode(bool value) {
-    preference.value.isDarkMode.value = value;
-  }
-
-  void changeNotifications(bool value) {
-    preference.value.notifications.value = value;
-  }
-
-  void changeSounds(bool value) {
-    preference.value.sounds.value = value;
-  }
-
-  void reset() {
-    preference.value = Preference(
-      isDarkMode: RxBool(false),
-      notifications: RxBool(false),
-      sounds: RxBool(false),
-    );
-  }
-
   Future<void> fetchPreferenceFromBack() async {
     final response = await HttpRequest.mainGet('/preferences/');
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> body = jsonDecode(response.body);
-      print(body);
       preference.value = Preference.fromJson(body);
     } else if (response.statusCode == 500) {
       if (kDebugMode) {
@@ -68,6 +45,8 @@ class PreferenceController extends GetxController {
       "notifications": preference.value.notifications.value,
     };
 
+    print(body);
+
     final response = await http.post(
       Uri.parse('$apiUrl/preferences/'),
       headers: {
@@ -78,8 +57,9 @@ class PreferenceController extends GetxController {
     );
 
     if (response.statusCode == 201) {
-      final Map<String, dynamic> body = jsonDecode(response.body);
-      preference.value = Preference.fromJson(body);
+      if (kDebugMode) {
+        print("Preference updated");
+      }
     } else if (response.statusCode == 500) {
       if (kDebugMode) {
         print("Error 500 from server");

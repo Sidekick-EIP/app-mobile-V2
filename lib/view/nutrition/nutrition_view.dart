@@ -13,14 +13,14 @@ import 'package:sidekick_app/controller/user_controller.dart';
 import 'package:sidekick_app/models/nutrition.dart';
 import 'package:sidekick_app/view/nutrition/nutrition_period.dart';
 
-class HomeNutritionView extends StatefulWidget {
-  const HomeNutritionView({Key? key}) : super(key: key);
+class NutritionView extends StatefulWidget {
+  const NutritionView({Key? key}) : super(key: key);
 
   @override
-  State<HomeNutritionView> createState() => _HomeNutritionViewState();
+  State<NutritionView> createState() => _NutritionViewState();
 }
 
-class _HomeNutritionViewState extends State<HomeNutritionView> {
+class _NutritionViewState extends State<NutritionView> {
   late Future<Nutrition> futureNutrition;
   final userController = Get.find<UserController>();
 

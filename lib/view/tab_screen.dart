@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:sidekick_app/view/message/message_view.dart';
-import 'package:sidekick_app/view/nutrition/home_nutrition_view.dart';
+import 'package:sidekick_app/view/nutrition/nutrition_view.dart';
 import 'package:sidekick_app/view/nutrition/nutrition_view.dart';
 import 'package:sidekick_app/view/profile/profile_view.dart';
 import 'package:sidekick_app/view/training/training_view.dart';
@@ -111,7 +111,7 @@ class _TabScreenState extends State<TabScreen> {
                   : homeController.flag.value == 2
                       ? const TrainingView()
                       : homeController.flag.value == 3
-                          ? const HomeNutritionView()
+                          ? const NutritionView()
                           : const ProfileView()),
     );
   }

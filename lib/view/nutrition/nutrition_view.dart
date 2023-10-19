@@ -86,8 +86,8 @@ class _NutritionViewState extends State<NutritionView> {
                     lastDate: DateTime(2025, 11, 20),
                     onDateSelected: (date) => updateDate(date.toIso8601String()),
                     leftMargin: 20,
-                    monthColor: Colors.blueGrey,
-                    dayColor: Colors.teal[200],
+                    monthColor: const Color.fromARGB(255, 56, 56, 56),
+                    dayColor: const Color.fromARGB(255, 0, 0, 0),
                     activeDayColor: Colors.white,
                     activeBackgroundDayColor: const Color.fromRGBO(242, 93, 41, 1),
                     dotsColor: const Color(0xFF333A47),
@@ -150,7 +150,7 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                   height: 220,
                   padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 0),
                   decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 243, 243, 243),
+                    color: const Color.fromARGB(255, 255, 255, 255),
                     borderRadius: BorderRadius.circular(24),
                   ),
                   child: Row(
@@ -211,12 +211,11 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
+                                    Text(
                                       "Glucides",
-                                      style: TextStyle(
+                                      style: pSemiBold20.copyWith(
                                         fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(255, 98, 7, 255),
+                                        color: const Color.fromARGB(255, 98, 7, 255),
                                       ),
                                     ),
                                     Text(
@@ -230,9 +229,12 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
+                                    Text(
                                       "Proteines",
-                                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.red),
+                                      style: pSemiBold20.copyWith(
+                                        fontSize: 14,
+                                        color: Colors.red,
+                                      ),
                                     ),
                                     Text(
                                       "${widget.nutritionData.protein.toString()} / 129 g",
@@ -245,9 +247,12 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
+                                    Text(
                                       "Lipides",
-                                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.amber),
+                                      style: pSemiBold20.copyWith(
+                                        fontSize: 14,
+                                        color: Colors.amber,
+                                      ),
                                     ),
                                     Text(
                                       "${widget.nutritionData.fat.toString()} / 50 g",
@@ -275,7 +280,7 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                             width: widget.width,
                             height: widget.height * 0.26,
                             decoration: const BoxDecoration(
-                              color: Color.fromARGB(255, 243, 243, 243),
+                              color: Color.fromARGB(255, 255, 255, 255),
                               borderRadius: BorderRadius.all(Radius.circular(20)),
                             ),
                             child: Stack(
@@ -291,9 +296,9 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                         children: [
-                                          const Text(
-                                            "Restants",
-                                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                                          Text(
+                                            "Restantes",
+                                            style: pSemiBold18.copyWith(fontSize: 17),
                                           ),
                                           SizedBox(
                                             width: widget.width * 0.01,
@@ -330,15 +335,13 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                                           children: [
                                             Text(
                                               (2100 - widget.nutritionData.calories).toString(),
-                                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                                            ),
-                                            const Text(
-                                              "KCal",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.grey,
+                                              style: pSemiBold20.copyWith(
                                                 fontSize: 20,
                                               ),
+                                            ),
+                                            Text(
+                                              "KCal",
+                                              style: pRegular14.copyWith(fontSize: 16, color: Colors.grey),
                                             )
                                           ],
                                         ),
@@ -360,7 +363,7 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                             width: widget.width,
                             height: widget.height * 0.26,
                             decoration: const BoxDecoration(
-                              color: Color.fromARGB(255, 243, 243, 243),
+                              color: Color.fromARGB(255, 255, 255, 255),
                               borderRadius: BorderRadius.all(Radius.circular(20)),
                             ),
                             child: Stack(
@@ -376,9 +379,9 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                         children: [
-                                          const Text(
+                                          Text(
                                             "Brulées",
-                                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                                            style: pSemiBold18.copyWith(fontSize: 17),
                                           ),
                                           SizedBox(
                                             width: widget.width * 0.01,
@@ -410,20 +413,18 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                                         circularStrokeCap: CircularStrokeCap.round,
                                         progressColor: const Color.fromARGB(255, 241, 56, 42),
                                         backgroundColor: const Color.fromARGB(255, 180, 180, 180).withOpacity(0.2),
-                                        center: const Column(
+                                        center: Column(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             Text(
                                               "300",
-                                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                                              style: pSemiBold20.copyWith(
+                                                fontSize: 20,
+                                              ),
                                             ),
                                             Text(
                                               "KCal",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.grey,
-                                                fontSize: 20,
-                                              ),
+                                              style: pRegular14.copyWith(fontSize: 16, color: Colors.grey),
                                             )
                                           ],
                                         ),
@@ -497,9 +498,9 @@ class _TodaysMealsState extends State<TodaysMeals> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 "Repas du jour",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                style: pSemiBold20.copyWith(fontSize: 18),
               ),
               InkWell(
                 onTap: () {
@@ -513,9 +514,18 @@ class _TodaysMealsState extends State<TodaysMeals> {
                     ),
                   );
                 },
-                child: const Text(
-                  "Voir tous les repas >",
-                  style: TextStyle(color: Colors.purple),
+                child: Row(
+                  children: [
+                    Text(
+                      "Voir tous les repas ",
+                      style: pRegular14.copyWith(fontSize: 12, color: ConstColors.primaryColor),
+                    ),
+                    const Icon(
+                      Icons.arrow_forward_ios,
+                      color: Color.fromRGBO(242, 93, 41, 1),
+                      size: 14,
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -612,7 +622,7 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        color: Color.fromARGB(255, 231, 231, 231),
+        color: Color.fromARGB(255, 255, 255, 255),
         borderRadius: BorderRadius.all(Radius.circular(20)),
       ),
       width: widget.width * 0.85,
@@ -645,10 +655,7 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
                   children: [
                     Text(
                       widget.mealPeriodName,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                      ),
+                      style: pSemiBold18.copyWith(fontSize: 16),
                     ),
                     Text(
                       "${widget.nutritionData.meals[widget.period]!["calories"].toString()} Cal",
@@ -666,8 +673,12 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
                   ],
                 ),
                 Text(
-                  "${widget.nutritionData.meals[widget.period]?["meals"]?.length.toString()} aliments ont été ajouté",
-                  style: const TextStyle(fontSize: 12),
+                  widget.nutritionData.meals[widget.period]?["meals"]?.length == 1
+                      ? "${widget.nutritionData.meals[widget.period]?["meals"]?.length.toString()} aliment a été ajouté"
+                      : widget.nutritionData.meals[widget.period]?["meals"]?.length == 0
+                          ? "Aucun aliment n'a été ajouté"
+                          : "${widget.nutritionData.meals[widget.period]?["meals"]?.length.toString()} aliments ont été ajouté",
+                  style: pRegular14.copyWith(fontSize: 12, color: Colors.grey),
                 ),
               ],
             ),
@@ -678,9 +689,10 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
             child: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  ">",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  color: Color(0xffA9B2BA),
+                  size: 16,
                 ),
               ],
             ),

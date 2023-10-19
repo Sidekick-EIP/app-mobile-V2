@@ -13,14 +13,14 @@ import 'package:sidekick_app/controller/user_controller.dart';
 import 'package:sidekick_app/models/nutrition.dart';
 import 'package:sidekick_app/view/nutrition/nutrition_period.dart';
 
-class NutritionView extends StatefulWidget {
-  const NutritionView({Key? key}) : super(key: key);
+class HomeNutritionView extends StatefulWidget {
+  const HomeNutritionView({Key? key}) : super(key: key);
 
   @override
-  State<NutritionView> createState() => _NutritionViewState();
+  State<HomeNutritionView> createState() => _HomeNutritionViewState();
 }
 
-class _NutritionViewState extends State<NutritionView> {
+class _HomeNutritionViewState extends State<HomeNutritionView> {
   late Future<Nutrition> futureNutrition;
   final userController = Get.find<UserController>();
 
@@ -505,7 +505,11 @@ class _TodaysMealsState extends State<TodaysMeals> {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => NutritionPeriod(date: widget.date, callbackPeriod: widget.callbackPeriod, nutritionData: widget.nutritionData),
+                      builder: (context) => NutritionPeriod(
+                        date: widget.date,
+                        nutritionData: widget.nutritionData,
+                        callbackPeriod: widget.callbackPeriod,
+                      ),
                     ),
                   );
                 },

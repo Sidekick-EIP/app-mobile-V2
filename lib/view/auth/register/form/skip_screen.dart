@@ -91,7 +91,7 @@ class _SkipScreenState extends State<SkipScreen> {
         break;
       case 7:
         if (authController.activityList.every((element) => !element)) {
-          return "Veuillez choisir un niveau d'activité.";
+          return "Veuillez choisir au moins une activitée.";
         }
         break;
       default:

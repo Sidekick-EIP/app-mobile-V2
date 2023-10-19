@@ -1,11 +1,7 @@
-import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:sidekick_app/config/colors.dart';
-import 'package:sidekick_app/config/text_style.dart';
-import 'package:sidekick_app/controller/home_controller.dart';
+
 import 'package:sidekick_app/controller/nutrition_controller.dart';
 import 'package:sidekick_app/controller/user_controller.dart';
 import 'package:sidekick_app/main.dart';
@@ -54,66 +50,57 @@ class _NutritionPeriodState extends State<NutritionPeriod> {
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
+
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(color: Colors.black, icon: const Icon(Icons.arrow_back), onPressed: () => Get.back()),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0, // Remove shadow
+        actions: [
+          InkWell(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const AddMeal(),
+                ),
+              );
+            },
+            child: Container(
+              width: width * 0.22,
+              height: height * 0.05,
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 198, 198, 198),
+                borderRadius: BorderRadius.circular(24),
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Icon(
+                    Icons.add,
+                    size: 28.0,
+                  ),
+                  Icon(
+                    Icons.wysiwyg,
+                    size: 28.0,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(
+            width: width * 0.03,
+          )
+        ],
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: height * 0.08),
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
+          const Padding(
+            padding: EdgeInsets.only(left: 20, right: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Container(
-                  width: width * 0.11,
-                  height: height * 0.05,
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 255, 255, 255),
-                    borderRadius: const BorderRadius.all(Radius.circular(40)),
-                    border: Border.all(
-                      color: const Color.fromARGB(255, 200, 200, 200),
-                    ),
-                  ),
-                  child: IconButton(
-                    icon: const Icon(Icons.arrow_back_rounded),
-                    onPressed: () {
-                      // widget.callbackPeriod(widget.nutritionData);
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const AddMeal(),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    width: width * 0.22,
-                    height: height * 0.05,
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 198, 198, 198),
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Icon(
-                          Icons.add,
-                          size: 28.0,
-                        ),
-                        Icon(
-                          Icons.wysiwyg,
-                          size: 28.0,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+              children: [],
             ),
           ),
           SizedBox(height: height * 0.01),
@@ -175,7 +162,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
             setState(() {
               previousCategoryIndex = selectedCategoryIndex;
               selectedCategoryIndex = index;
-              // widget.updatePeriod(setCategories[index]);
+              widget.updatePeriod(setCategories[index]);
             });
           },
           child: AnimatedContainer(
@@ -219,47 +206,71 @@ class _MealViewBuilderState extends State<MealViewBuilder> {
   callback(Nutrition meals) {
     setState(() {
       widget.nutritionData = meals;
-      print(widget.nutritionData.calories);
-      print(meals.calories);
-      widget.callbackPeriod(widget.nutritionData);
-      print(widget.nutritionData.meals[widget.period]);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: widget.height * 0.75,
-      width: widget.width,
-      child: ListView.builder(
-          itemCount: widget.nutritionData.meals[widget.period]!["meals"].length,
-          itemBuilder: (context, index) {
-            return Column(
-              children: [
-                SizedBox(
-                    width: widget.width,
-                    height: widget.height * 0.22,
-                    child: Column(
-                      children: [
-                        MealPeriodCard(
+    return widget.nutritionData.meals[widget.period]!["meals"].length == 0
+        ? Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: widget.width,
+                height: widget.height * 0.4,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Pas d'aliment pour ce repas...",
+                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: widget.width * widget.height * 0.00005),
+                      ),
+                      SizedBox(
+                        height: widget.height * 0.05,
+                      ),
+                      const Text(
+                        "🍴",
+                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 70),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          )
+        : SizedBox(
+            height: widget.height * 0.75,
+            width: widget.width,
+            child: ListView.builder(
+                itemCount: widget.nutritionData.meals[widget.period]!["meals"].length,
+                itemBuilder: (context, index) {
+                  return Column(
+                    children: [
+                      SizedBox(
                           width: widget.width,
-                          height: widget.height,
-                          color: Colors.green,
-                          colorAccent: Colors.greenAccent,
-                          food: widget.nutritionData.meals[widget.period]!["meals"][index],
-                          period: "breakfast",
-                          callback: callback,
-                          nutritionData: widget.nutritionData,
-                        ),
-                        Container(
-                          height: widget.height * 0.01,
-                        ),
-                      ],
-                    ))
-              ],
-            );
-          }),
-    );
+                          height: widget.height * 0.22,
+                          child: Column(
+                            children: [
+                              MealPeriodCard(
+                                width: widget.width,
+                                height: widget.height,
+                                color: Colors.green,
+                                colorAccent: Colors.greenAccent,
+                                food: widget.nutritionData.meals[widget.period]!["meals"][index],
+                                period: "breakfast",
+                                callback: callback,
+                                nutritionData: widget.nutritionData,
+                              ),
+                              Container(
+                                height: widget.height * 0.01,
+                              ),
+                            ],
+                          ))
+                    ],
+                  );
+                }),
+          );
   }
 }
 

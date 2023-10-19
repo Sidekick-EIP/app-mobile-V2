@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sidekick_app/view/profile/activity/activity_screen.dart';
+import 'package:sidekick_app/view/profile/training/training_screen.dart';
 
 import '../../config/colors.dart';
 import '../../config/images.dart';
@@ -11,6 +13,7 @@ import '../../widget/custom_button.dart';
 import '../auth/signin_screen.dart';
 import 'account_screen.dart';
 import 'filter_view.dart';
+import 'goal/goal_screen.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({Key? key}) : super(key: key);
@@ -44,15 +47,17 @@ class _ProfileViewState extends State<ProfileView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Center(
-                      child: Container(
-                        height: 87,
-                        width: 87,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: NetworkImage(
-                                userController.user.value.avatar.value),
+                      child: Obx(
+                        () => Container(
+                          height: 87,
+                          width: 87,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: NetworkImage(
+                                  userController.user.value.avatar.value),
+                            ),
                           ),
                         ),
                       ),
@@ -136,6 +141,66 @@ class _ProfileViewState extends State<ProfileView> {
                               () {
                                 Get.to(
                                   () => const AccountScreen(),
+                                  transition: Transition.rightToLeft,
+                                );
+                              },
+                              const Icon(
+                                Icons.arrow_forward_ios,
+                                color: Color(0xffA9B2BA),
+                                size: 16,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            const Divider(
+                              color: Color(0xffA9B2BA),
+                            ),
+                            const SizedBox(height: 10),
+                            row(
+                              "Objectifs",
+                              "",
+                              () {
+                                Get.to(
+                                  () => const GoalScreen(),
+                                  transition: Transition.rightToLeft,
+                                );
+                              },
+                              const Icon(
+                                Icons.arrow_forward_ios,
+                                color: Color(0xffA9B2BA),
+                                size: 16,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            const Divider(
+                              color: Color(0xffA9B2BA),
+                            ),
+                            const SizedBox(height: 10),
+                            row(
+                              "Niveau d'entrainement",
+                              "",
+                              () {
+                                Get.to(
+                                  () => const TrainingScreen(),
+                                  transition: Transition.rightToLeft,
+                                );
+                              },
+                              const Icon(
+                                Icons.arrow_forward_ios,
+                                color: Color(0xffA9B2BA),
+                                size: 16,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            const Divider(
+                              color: Color(0xffA9B2BA),
+                            ),
+                            const SizedBox(height: 10),
+                            row(
+                              "Activités favorites",
+                              "",
+                              () {
+                                Get.to(
+                                  () => const ActivityScreen(),
                                   transition: Transition.rightToLeft,
                                 );
                               },

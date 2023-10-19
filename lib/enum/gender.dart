@@ -1,5 +1,5 @@
 enum Gender {
-  MALE,
   FEMALE,
+  MALE,
   PREFER_NOT_TO_SAY,
 }

@@ -95,7 +95,7 @@ class User {
       gender: RxString(json['gender'] ?? ""),
       description: RxString(json['description'] ?? ""),
       level: RxString(json['level'] ?? ""),
-      activities: (json['activities'] as List<String>?)
+      activities: (json['activities'] as List<dynamic>?)
               ?.map((activity) => RxString(activity))
               .toList() ??
           [],

@@ -23,6 +23,13 @@ class _HomeViewState extends State<HomeView> {
   final preferenceController = Get.put(PreferenceController(), permanent: true);
 
   @override
+  void initState() {
+    super.initState();
+    preferenceController.fetchPreferenceFromBack();
+    userController.fetchUserFromBack();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: GetX<HomeController>(

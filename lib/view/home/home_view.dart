@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:sidekick_app/controller/home_controller.dart';
 import 'package:sidekick_app/controller/user_controller.dart';
 
+import '../../controller/preference_controller.dart';
 import '../../config/colors.dart';
 import '../../config/images.dart';
 import '../../config/text_style.dart';
@@ -19,21 +20,11 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   final homeController = Get.put(HomeController());
   final userController = Get.put(UserController(), permanent: true);
+  final preferenceController = Get.put(PreferenceController(), permanent: true);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Accueil'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              homeController.logout();
-            },
-          )
-        ],
-      ),
       body: GetX<HomeController>(
         init: HomeController(),
         builder: (builder) {
@@ -45,15 +36,9 @@ class _HomeViewState extends State<HomeView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
-                      height:
-                      MediaQuery
-                          .of(context)
-                          .padding
-                          .top + 20),
+                  SizedBox(height: MediaQuery.of(context).padding.top + 20),
                   Row(
-                    mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         "Bonjour ${userController.user.value.firstname.value}",
@@ -69,8 +54,7 @@ class _HomeViewState extends State<HomeView> {
                           height: 38.5,
                           width: 38.5,
                           decoration: BoxDecoration(
-                            borderRadius:
-                            BorderRadius.circular(7.7),
+                            borderRadius: BorderRadius.circular(7.7),
                             border: Border.all(
                               color: const Color(0xffE5E9EF),
                               width: 1.5,
@@ -97,8 +81,7 @@ class _HomeViewState extends State<HomeView> {
                       physics: const ClampingScrollPhysics(),
                       children: [
                         Column(
-                          crossAxisAlignment:
-                          CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(height: 30),
                             SizedBox(
@@ -113,8 +96,7 @@ class _HomeViewState extends State<HomeView> {
                         ),
                         const SizedBox(height: 30),
                         Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
                               "Catégorie",
@@ -130,8 +112,7 @@ class _HomeViewState extends State<HomeView> {
                                 "Voir tout",
                                 style: pSemiBold18.copyWith(
                                   fontSize: 14.44,
-                                  color:
-                                  ConstColors.lightBlackColor,
+                                  color: ConstColors.lightBlackColor,
                                 ),
                               ),
                             ),
@@ -140,21 +121,18 @@ class _HomeViewState extends State<HomeView> {
                         const SizedBox(height: 20),
                         Row(
                           children: [
-                            categoryCard(
-                                DefaultImages.h7, "Cardio"),
+                            categoryCard(DefaultImages.h7, "Cardio"),
                             const SizedBox(width: 14),
                             categoryCard(DefaultImages.h8, "Yoga"),
                             const SizedBox(width: 14),
-                            categoryCard(
-                                DefaultImages.h9, "Stretch"),
+                            categoryCard(DefaultImages.h9, "Stretch"),
                             const SizedBox(width: 14),
                             categoryCard(DefaultImages.h10, "Gym"),
                           ],
                         ),
                         const SizedBox(height: 20),
                         Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
                               "Entraînements pour vous",
@@ -170,8 +148,7 @@ class _HomeViewState extends State<HomeView> {
                                 "Voir tout",
                                 style: pSemiBold18.copyWith(
                                   fontSize: 14.44,
-                                  color:
-                                  ConstColors.lightBlackColor,
+                                  color: ConstColors.lightBlackColor,
                                 ),
                               ),
                             ),
@@ -184,55 +161,44 @@ class _HomeViewState extends State<HomeView> {
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: 3,
-                            itemBuilder:
-                                (BuildContext context, int index) {
+                            itemBuilder: (BuildContext context, int index) {
                               return Padding(
-                                padding: const EdgeInsets.only(
-                                    right: 16),
+                                padding: const EdgeInsets.only(right: 16),
                                 child: SizedBox(
                                   height: 207.89,
                                   width: 230.99,
                                   child: Column(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Stack(
-                                        alignment:
-                                        Alignment.topRight,
+                                        alignment: Alignment.topRight,
                                         children: [
                                           Container(
                                             height: 153.99,
                                             width: 230.99,
-                                            decoration:
-                                            BoxDecoration(
-                                              image:
-                                              DecorationImage(
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(
                                                 image: AssetImage(
                                                   index == 1
-                                                      ? DefaultImages
-                                                      .h2
-                                                      : DefaultImages
-                                                      .h1,
+                                                      ? DefaultImages.h2
+                                                      : DefaultImages.h1,
                                                 ),
                                                 fit: BoxFit.fill,
                                               ),
                                             ),
                                           ),
                                           const Padding(
-                                            padding:
-                                            EdgeInsets.only(
-                                                top: 20,
-                                                right: 20),
+                                            padding: EdgeInsets.only(
+                                                top: 20, right: 20),
                                             child: Icon(
                                               Icons.favorite,
-                                              color: ConstColors
-                                                  .secondaryColor,
+                                              color: ConstColors.secondaryColor,
                                             ),
                                           )
                                         ],
                                       ),
-                                      const Expanded(
-                                          child: SizedBox()),
+                                      const Expanded(child: SizedBox()),
                                       Text(
                                         index == 1
                                             ? "Full body stretching"
@@ -246,20 +212,17 @@ class _HomeViewState extends State<HomeView> {
                                         children: [
                                           Text(
                                             "Débutant",
-                                            style: pSemiBold18
-                                                .copyWith(
+                                            style: pSemiBold18.copyWith(
                                               fontSize: 11.55,
-                                              color: ConstColors
-                                                  .primaryColor,
+                                              color: ConstColors.primaryColor,
                                             ),
                                           ),
                                           Text(
                                             "  •  42 min",
-                                            style: pSemiBold18
-                                                .copyWith(
+                                            style: pSemiBold18.copyWith(
                                               fontSize: 11.55,
-                                              color: ConstColors
-                                                  .lightBlackColor,
+                                              color:
+                                                  ConstColors.lightBlackColor,
                                             ),
                                           ),
                                         ],
@@ -273,8 +236,7 @@ class _HomeViewState extends State<HomeView> {
                         ),
                         const SizedBox(height: 30),
                         Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
                               "Exercices",
@@ -290,8 +252,7 @@ class _HomeViewState extends State<HomeView> {
                                 "Voir tout",
                                 style: pSemiBold18.copyWith(
                                   fontSize: 14.44,
-                                  color:
-                                  ConstColors.lightBlackColor,
+                                  color: ConstColors.lightBlackColor,
                                 ),
                               ),
                             ),
@@ -301,27 +262,22 @@ class _HomeViewState extends State<HomeView> {
                         ListView.builder(
                           shrinkWrap: true,
                           itemCount: 4,
-                          physics:
-                          const NeverScrollableScrollPhysics(),
-                          itemBuilder:
-                              (BuildContext context, int index) {
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (BuildContext context, int index) {
                             return Padding(
-                              padding:
-                              const EdgeInsets.only(bottom: 15),
+                              padding: const EdgeInsets.only(bottom: 15),
                               child: Container(
                                 height: 77,
                                 width: Get.width,
                                 decoration: BoxDecoration(
-                                  borderRadius:
-                                  BorderRadius.circular(7.7),
+                                  borderRadius: BorderRadius.circular(7.7),
                                   border: Border.all(
                                     color: const Color(0xffE5E9EF),
                                     width: 1.5,
                                   ),
                                 ),
                                 child: Padding(
-                                  padding:
-                                  const EdgeInsets.all(6.0),
+                                  padding: const EdgeInsets.all(6.0),
                                   child: Row(
                                     children: [
                                       Container(
@@ -333,13 +289,10 @@ class _HomeViewState extends State<HomeView> {
                                               index == 0
                                                   ? DefaultImages.h3
                                                   : index == 1
-                                                  ? DefaultImages
-                                                  .h4
-                                                  : index == 2
-                                                  ? DefaultImages
-                                                  .h5
-                                                  : DefaultImages
-                                                  .h6,
+                                                      ? DefaultImages.h4
+                                                      : index == 2
+                                                          ? DefaultImages.h5
+                                                          : DefaultImages.h6,
                                             ),
                                           ),
                                         ),
@@ -347,43 +300,37 @@ class _HomeViewState extends State<HomeView> {
                                       const SizedBox(width: 14),
                                       Column(
                                         mainAxisAlignment:
-                                        MainAxisAlignment
-                                            .center,
+                                            MainAxisAlignment.center,
                                         crossAxisAlignment:
-                                        CrossAxisAlignment
-                                            .start,
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             index == 0
                                                 ? "Front and Back Lunge"
                                                 : index == 1
-                                                ? "Side Plank"
-                                                : index == 1
-                                                ? "Arm circles"
-                                                : "Sumo Squat",
-                                            style: pSemiBold18
-                                                .copyWith(
+                                                    ? "Side Plank"
+                                                    : index == 1
+                                                        ? "Arm circles"
+                                                        : "Sumo Squat",
+                                            style: pSemiBold18.copyWith(
                                               fontSize: 15.4,
                                             ),
                                           ),
                                           const SizedBox(height: 8),
                                           Text(
                                             "0:30",
-                                            style:
-                                            pRegular14.copyWith(
+                                            style: pRegular14.copyWith(
                                               fontSize: 13.47,
-                                              color: ConstColors
-                                                  .lightBlackColor,
+                                              color:
+                                                  ConstColors.lightBlackColor,
                                             ),
                                           ),
                                         ],
                                       ),
-                                      const Expanded(
-                                          child: SizedBox()),
+                                      const Expanded(child: SizedBox()),
                                       Padding(
                                         padding:
-                                        const EdgeInsets.only(
-                                            right: 14),
+                                            const EdgeInsets.only(right: 14),
                                         child: SizedBox(
                                           height: 19.25,
                                           width: 19.25,
@@ -408,8 +355,8 @@ class _HomeViewState extends State<HomeView> {
               ),
             );
           }
-        }
-      )
+        },
+      ),
     );
   }
 }

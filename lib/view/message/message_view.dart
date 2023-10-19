@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -36,27 +34,26 @@ class _MessageViewState extends State<MessageView> {
 
     socketController.emitMessage(message.text);
     socketController.emitWriting(false);
-    Get.find<MessageController>().addMessage(message.text, userController.user.value.userId.value, userController.user.value.avatar.value);
+    Get.find<MessageController>().addMessage(
+        message.text,
+        userController.user.value.userId.value,
+        userController.user.value.avatar.value);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: GetX<MessageController>(
-        builder: (_) {
-          return Chat(
-            messages: userController.user.value.userId.toString() == 'ID' ?
-            [] :
-            Get.find<MessageController>().messages.value,
-            onEndReachedThreshold: 1,
-            onSendPressed: _handleSendPressed,
-            showUserAvatars: true,
-            user: types.User(id: userController.user.value.userId.value),
-            inputOptions: InputOptions(onTextChanged: _handleTextChanged),
-            scrollPhysics: const BouncingScrollPhysics(),
-          );
-        }
-      )
-    );
+    return Scaffold(body: GetX<MessageController>(builder: (_) {
+      return Chat(
+        messages: userController.user.value.userId.toString() == 'ID'
+            ? []
+            : Get.find<MessageController>().messages.value,
+        onEndReachedThreshold: 1,
+        onSendPressed: _handleSendPressed,
+        showUserAvatars: true,
+        user: types.User(id: userController.user.value.userId.value),
+        inputOptions: InputOptions(onTextChanged: _handleTextChanged),
+        scrollPhysics: const BouncingScrollPhysics(),
+      );
+    }));
   }
 }

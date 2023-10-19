@@ -31,11 +31,11 @@ class Partner {
       lastname: RxString(json['lastname'] ?? ""),
       size: RxInt(json['size'] ?? 0),
       gender: RxString(json['gender'] ?? ""),
-      description: RxString(json['description'] ?? ""),
+      description: RxString(json['bio'] ?? ""),
       goal: RxString(json['goal'] ?? ""),
       level: RxString(json['level'] ?? ""),
       activities: (json['activities'] as List<dynamic>?)
-          ?.map((activity) => RxString(activity as String))
+          ?.map((activity) => RxString(activity))
           .toList() ??
           [],
       birthDate: Rx<DateTime>(json['birth_date'] != null

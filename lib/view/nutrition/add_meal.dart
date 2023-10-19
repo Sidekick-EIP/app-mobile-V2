@@ -69,9 +69,7 @@ class _AddMealState extends State<AddMeal> {
                   ),
                   child: IconButton(
                     icon: const Icon(Icons.arrow_back_rounded),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
+                    onPressed: () => Get.back(),
                   ),
                 ),
               ],
@@ -208,10 +206,9 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        // Navigator.of(context).push(
-        //   MaterialPageRoute(
-        //     builder: (context) => const EditMeal(),
-        //   ),
+        // Get.to(
+        //   () => EditMeal(),
+        //   transition: Transition.rightToLeft,
         // );
       },
       child: Container(

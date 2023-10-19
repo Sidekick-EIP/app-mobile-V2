@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 import 'package:sidekick_app/controller/nutrition_controller.dart';
@@ -53,16 +54,19 @@ class _NutritionPeriodState extends State<NutritionPeriod> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(color: Colors.black, icon: const Icon(Icons.arrow_back), onPressed: () => Get.back()),
+        leading: IconButton(
+          color: Colors.black,
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Get.back(),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0.0, // Remove shadow
         actions: [
           InkWell(
             onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const AddMeal(),
-                ),
+              Get.to(
+                () => const AddMeal(),
+                transition: Transition.rightToLeft,
               );
             },
             child: Container(
@@ -390,17 +394,16 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
                   ],
                   onSelected: (String choice) {
                     if (choice == 'Modifier') {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => EditMeal(
-                            food: widget.food,
-                            callback: widget.callback,
-                            nutritionData: widget.nutritionData,
-                          ),
+                      Get.to(
+                        EditMeal(
+                          food: widget.food,
+                          callback: widget.callback,
+                          nutritionData: widget.nutritionData,
                         ),
+                        transition: Transition.rightToLeft,
                       );
                     } else if (choice == 'Supprimer') {
-                      print('Delete chosen');
+                      // print('Delete chosen');
                     }
                   },
                 ),

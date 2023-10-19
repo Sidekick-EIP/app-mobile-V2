@@ -2,10 +2,12 @@ import 'dart:developer';
 
 import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:sidekick_app/config/colors.dart';
+import 'package:sidekick_app/config/images.dart';
 import 'package:sidekick_app/config/text_style.dart';
 import 'package:sidekick_app/controller/home_controller.dart';
 import 'package:sidekick_app/controller/nutrition_controller.dart';
@@ -51,18 +53,11 @@ class _NutritionViewState extends State<NutritionView> {
         SizedBox(height: MediaQuery.of(context).padding.top + 20),
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Bonjour ${userController.user.value.firstname}",
-                style: pSemiBold20.copyWith(
-                  fontSize: 12,
-                ),
-              ),
-              Text(
-                "Bon Appétit !",
+                "Nutrition",
                 style: pSemiBold20.copyWith(
                   fontSize: 24,
                 ),
@@ -504,14 +499,13 @@ class _TodaysMealsState extends State<TodaysMeals> {
               ),
               InkWell(
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => NutritionPeriod(
-                        date: widget.date,
-                        nutritionData: widget.nutritionData,
-                        callbackPeriod: widget.callbackPeriod,
-                      ),
+                  Get.to(
+                    () => NutritionPeriod(
+                      date: widget.date,
+                      nutritionData: widget.nutritionData,
+                      callbackPeriod: widget.callbackPeriod,
                     ),
+                    transition: Transition.rightToLeft,
                   );
                 },
                 child: Row(

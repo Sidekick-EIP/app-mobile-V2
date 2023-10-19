@@ -68,7 +68,8 @@ class _EditMealState extends State<EditMeal> {
                   child: IconButton(
                     icon: const Icon(Icons.arrow_back_rounded),
                     onPressed: () {
-                      Navigator.pop(context);
+                      Get.back;
+                      // Navigator.pop(context);
                     },
                   ),
                 ),
@@ -513,7 +514,7 @@ class _WeightValuesState extends State<WeightValues> {
                           content: Text("Repas modifié"),
                         );
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                        Navigator.pop(context);
+                        Get.back();
                       },
                       child: Text(
                         'Appliquer',

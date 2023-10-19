@@ -495,7 +495,7 @@ class _TodaysMealsState extends State<TodaysMeals> {
             children: [
               Text(
                 "Repas du jour",
-                style: pSemiBold20.copyWith(fontSize: 18),
+                style: pSemiBold20.copyWith(fontSize: 20),
               ),
               InkWell(
                 onTap: () {
@@ -642,7 +642,7 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
             width: widget.width * 0.5,
             height: widget.height * 0.1,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(

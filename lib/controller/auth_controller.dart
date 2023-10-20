@@ -28,7 +28,7 @@ class AuthController extends GetxController {
     description.value = value;
   }
 
-  RxString height = RxString("168");
-  RxString weight = RxString("55");
-  RxString goalWeight = RxString("60");
+  RxString height = RxString("178");
+  RxString weight = RxString("80");
+  RxString goalWeight = RxString("75");
 }

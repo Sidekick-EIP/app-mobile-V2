@@ -46,6 +46,13 @@ class _TrainingViewState extends State<TrainingView> {
   final workoutController = Get.put(WorkoutController(), permanent: true);
 
   @override
+  void initState() {
+    super.initState();
+    workoutController.getAllWorkouts();
+    workoutController.getAllExercices();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -167,8 +174,8 @@ class _TrainingViewState extends State<TrainingView> {
                                       ),
                                       Text(
                                         workoutController.workout[x].length == 1
-                                            ? "${workoutController.workout[x].length} workout"
-                                            : "${workoutController.workout[x].length} workouts",
+                                            ? "${workoutController.workout[x].length} exercice"
+                                            : "${workoutController.workout[x].length} exercices",
                                         style: pRegular14.copyWith(
                                           fontSize: 11.55,
                                           color: ConstColors.lightBlackColor,

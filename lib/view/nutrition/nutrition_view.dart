@@ -86,7 +86,7 @@ class _NutritionViewState extends State<NutritionView> {
                     activeDayColor: Colors.white,
                     activeBackgroundDayColor: const Color.fromRGBO(242, 93, 41, 1),
                     dotsColor: const Color(0xFF333A47),
-                    locale: 'en_ISO',
+                    locale: 'fr',
                   ));
             },
           ),

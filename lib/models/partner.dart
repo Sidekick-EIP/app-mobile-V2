@@ -1,49 +1,55 @@
+import 'package:get/get.dart';
+
 class Partner {
-  //TEMP Wait for back route to be updated
-  late String avatar;
-  final String firstname;
-  final String lastname;
-  final String username;
-  final String description;
-  late String level;
+  RxString avatar;
+  RxString firstname;
+  RxString lastname;
+  RxInt size;
+  RxString gender;
+  RxString description;
+  RxString level;
+  List<RxString> activities;
+  RxString goal;
+  Rx<DateTime> birthDate;
 
   Partner(
       {required this.avatar,
         required this.firstname,
         required this.lastname,
-        required this.username,
+        required this.size,
+        required this.gender,
         required this.description,
-        required this.level});
+        required this.level,
+        required this.activities,
+        required this.goal,
+        required this.birthDate});
 
-  Partner copy(
-      {String? firstname,
-        String? avatar,
-        String? lastname,
-        String? username,
-        String? description,
-        String? level}) =>
-      Partner(
-          avatar: avatar ?? this.avatar,
-          firstname: firstname ?? this.firstname,
-          lastname: lastname ?? this.lastname,
-          username: username ?? this.username,
-          description: description ?? this.description,
-          level: level ?? this.level);
+  static Partner fromJson(Map<String, dynamic> json) {
+    return Partner(
+      avatar: RxString(json['avatar'] ?? ""),
+      firstname: RxString(json['firstname'] ?? ""),
+      lastname: RxString(json['lastname'] ?? ""),
+      size: RxInt(json['size'] ?? 0),
+      gender: RxString(json['gender'] ?? ""),
+      description: RxString(json['bio'] ?? ""),
+      goal: RxString(json['goal'] ?? ""),
+      level: RxString(json['level'] ?? ""),
+      activities: (json['activities'] as List<dynamic>?)
+          ?.map((activity) => RxString(activity))
+          .toList() ??
+          [],
+      birthDate: Rx<DateTime>(json['birth_date'] != null
+          ? DateTime.parse(json['birth_date'])
+          : DateTime.now()),
+    );
+  }
 
-  static Partner fromJson(Map<String, dynamic> json) => Partner(
-      avatar: json['avatar'],
-      firstname: json['firstname'],
-      lastname: json['lastname'],
-      username: json['username'],
-      description: json['bio'],
-      level: json['level']);
-
+  //TODO To complete
   Map<String, dynamic> toJson() => {
-    'avatar': avatar,
-    'firstname': firstname,
-    'lastname': lastname,
-    'username': username,
-    'bio': description,
-    'level': level
+    'avatar': avatar.value,
+    'firstname': firstname.value,
+    'lastname': lastname.value,
+    'bio': description.value,
+    'level': level.value
   };
 }

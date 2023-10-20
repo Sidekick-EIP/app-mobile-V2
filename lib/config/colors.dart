@@ -5,4 +5,5 @@ class ConstColors {
   static const Color secondaryColor = Color(0xffFFFFFF);
   static const Color blackColor = Color(0xff0A0615);
   static const Color lightBlackColor = Color(0xff404B52);
+  static const Color lightGreyColor = Color(0xff8F8F8F);
 }

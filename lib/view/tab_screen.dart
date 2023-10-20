@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:sidekick_app/view/message/message_view.dart';
-import 'package:sidekick_app/view/nutrition/home_nutrition_view.dart';
+import 'package:sidekick_app/view/nutrition/nutrition_view.dart';
+import 'package:sidekick_app/view/nutrition/nutrition_view.dart';
 import 'package:sidekick_app/view/profile/profile_view.dart';
 import 'package:sidekick_app/view/training/training_view.dart';
 

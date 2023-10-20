@@ -13,6 +13,9 @@ class EditableFieldScreen extends StatefulWidget {
   final String fieldLabel;
   final Rx<dynamic> fieldObservable;
   final String suffixText;
+  final int minLines;
+  final int maxLines;
+  final double height;
 
   const EditableFieldScreen({
     Key? key,
@@ -20,6 +23,9 @@ class EditableFieldScreen extends StatefulWidget {
     required this.fieldLabel,
     required this.fieldObservable,
     this.suffixText = "",
+    this.minLines = 1,
+    this.maxLines = 1,
+    this.height = 52,
   }) : super(key: key);
 
   @override
@@ -155,6 +161,9 @@ class _EditableFieldScreenState extends State<EditableFieldScreen> {
                       ),
                       const SizedBox(height: 20),
                       CustomTextField(
+                        minLines: widget.minLines,
+                        maxLines: widget.maxLines,
+                        height: widget.height,
                         text: widget.fieldLabel,
                         textEditingController: controller,
                         keyboardType: widget.fieldObservable is RxInt
@@ -171,6 +180,11 @@ class _EditableFieldScreenState extends State<EditableFieldScreen> {
                               DateFormat format = DateFormat("dd/MM/yyyy");
                               try {
                                 DateTime parsedBirthDate = format.parse(value);
+                                parsedBirthDate = parsedBirthDate
+                                    .add(Duration(
+                                        hours: parsedBirthDate
+                                            .timeZoneOffset.inHours))
+                                    .toUtc();
                                 widget.fieldObservable.value = parsedBirthDate;
                               } catch (e) {
                                 if (kDebugMode) {

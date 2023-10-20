@@ -1,16 +1,21 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sidekick_app/view/profile/activity/activity_screen.dart';
+import 'package:sidekick_app/view/profile/training/training_screen.dart';
 
 import '../../config/colors.dart';
 import '../../config/images.dart';
 import '../../config/text_style.dart';
 import '../../controller/home_controller.dart';
+import '../../controller/preference_controller.dart';
 import '../../controller/user_controller.dart';
 import '../../utils/calculate_age.dart';
 import '../../widget/custom_button.dart';
 import '../auth/signin_screen.dart';
 import 'account_screen.dart';
-import 'filter_view.dart';
+import 'sidekick_view.dart';
+import 'goal/goal_screen.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({Key? key}) : super(key: key);
@@ -22,6 +27,13 @@ class ProfileView extends StatefulWidget {
 class _ProfileViewState extends State<ProfileView> {
   final homeController = Get.put(HomeController());
   final userController = Get.find<UserController>();
+  final preferenceController = Get.find<PreferenceController>();
+
+  @override
+  void initState() {
+    super.initState();
+    userController.fetchUserFromBack();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,15 +56,17 @@ class _ProfileViewState extends State<ProfileView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Center(
-                      child: Container(
-                        height: 87,
-                        width: 87,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: NetworkImage(
-                                userController.user.value.avatar.value),
+                      child: Obx(
+                        () => Container(
+                          height: 87,
+                          width: 87,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: NetworkImage(
+                                  userController.user.value.avatar.value),
+                            ),
                           ),
                         ),
                       ),
@@ -109,7 +123,7 @@ class _ProfileViewState extends State<ProfileView> {
                           ),
                           builder: (v) => const FractionallySizedBox(
                             heightFactor: 0.9,
-                            child: FilterView(),
+                            child: SidekickView(),
                           ),
                         );
                       },
@@ -136,6 +150,66 @@ class _ProfileViewState extends State<ProfileView> {
                               () {
                                 Get.to(
                                   () => const AccountScreen(),
+                                  transition: Transition.rightToLeft,
+                                );
+                              },
+                              const Icon(
+                                Icons.arrow_forward_ios,
+                                color: Color(0xffA9B2BA),
+                                size: 16,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            const Divider(
+                              color: Color(0xffA9B2BA),
+                            ),
+                            const SizedBox(height: 10),
+                            row(
+                              "Objectifs",
+                              "",
+                              () {
+                                Get.to(
+                                  () => const GoalScreen(),
+                                  transition: Transition.rightToLeft,
+                                );
+                              },
+                              const Icon(
+                                Icons.arrow_forward_ios,
+                                color: Color(0xffA9B2BA),
+                                size: 16,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            const Divider(
+                              color: Color(0xffA9B2BA),
+                            ),
+                            const SizedBox(height: 10),
+                            row(
+                              "Niveau d'entrainement",
+                              "",
+                              () {
+                                Get.to(
+                                  () => const TrainingScreen(),
+                                  transition: Transition.rightToLeft,
+                                );
+                              },
+                              const Icon(
+                                Icons.arrow_forward_ios,
+                                color: Color(0xffA9B2BA),
+                                size: 16,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            const Divider(
+                              color: Color(0xffA9B2BA),
+                            ),
+                            const SizedBox(height: 10),
+                            row(
+                              "Activités favorites",
+                              "",
+                              () {
+                                Get.to(
+                                  () => const ActivityScreen(),
                                   transition: Transition.rightToLeft,
                                 );
                               },
@@ -192,13 +266,84 @@ class _ProfileViewState extends State<ProfileView> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             row(
-                              "Préférences",
+                              "Autoriser les mails",
                               "",
                               () {},
-                              const Icon(
-                                Icons.arrow_forward_ios,
-                                color: Color(0xffA9B2BA),
-                                size: 16,
+                              SizedBox(
+                                height: 20,
+                                child: Obx(
+                                  () => CupertinoSwitch(
+                                    value: preferenceController
+                                        .preference.value.notifications.value,
+                                    activeColor: ConstColors.primaryColor,
+                                    onChanged: (v) async {
+                                      preferenceController.preference.value
+                                          .notifications.value = v;
+                                      try {
+                                        await preferenceController
+                                            .updatePreference();
+                                        Get.snackbar('Succès',
+                                            'Mails mis à jour avec succès!',
+                                            snackPosition: SnackPosition.BOTTOM,
+                                            backgroundColor: Colors.green,
+                                            colorText: Colors.white,
+                                            duration:
+                                                const Duration(seconds: 1));
+                                      } catch (e) {
+                                        Get.snackbar('Erreur',
+                                            'Erreur lors de la mise à jour des mails!',
+                                            snackPosition: SnackPosition.BOTTOM,
+                                            backgroundColor: Colors.red,
+                                            colorText: Colors.white,
+                                            duration:
+                                                const Duration(seconds: 1));
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            const Divider(
+                              color: Color(0xffA9B2BA),
+                            ),
+                            const SizedBox(height: 10),
+                            row(
+                              "Autoriser les notifications",
+                              "",
+                                  () {},
+                              SizedBox(
+                                height: 20,
+                                child: Obx(
+                                      () => CupertinoSwitch(
+                                    value: preferenceController
+                                        .preference.value.sounds.value,
+                                    activeColor: ConstColors.primaryColor,
+                                    onChanged: (v) async {
+                                      preferenceController.preference.value
+                                          .sounds.value = v;
+                                      try {
+                                        await preferenceController
+                                            .updatePreference();
+                                        Get.snackbar('Succès',
+                                            'Notifications mis à jour avec succès!',
+                                            snackPosition: SnackPosition.BOTTOM,
+                                            backgroundColor: Colors.green,
+                                            colorText: Colors.white,
+                                            duration:
+                                            const Duration(seconds: 1));
+                                      } catch (e) {
+                                        Get.snackbar('Erreur',
+                                            'Erreur lors de la mise à jour des notifications!',
+                                            snackPosition: SnackPosition.BOTTOM,
+                                            backgroundColor: Colors.red,
+                                            colorText: Colors.white,
+                                            duration:
+                                            const Duration(seconds: 1));
+                                      }
+                                    },
+                                  ),
+                                ),
                               ),
                             ),
                             const SizedBox(height: 10),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:sidekick_app/utils/http_request.dart';
 import 'package:sidekick_app/view/auth/register/info_screen.dart';
 import 'package:sidekick_app/view/auth/reset_password_screen.dart';
 import 'package:sidekick_app/view/auth/register/signup_screen.dart';
@@ -33,15 +34,7 @@ class _SignInScreenState extends State<SignInScreen> {
   final TokenStorage tokenStorage = TokenStorage();
 
   Future<bool> checkUserInfos() async {
-    String? accessToken = await tokenStorage.getAccessToken();
-
-    final response = await http.get(
-      Uri.parse("$apiUrl/user_infos/"),
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Authorization": "Bearer $accessToken"
-      },
-    );
+    final response = await HttpRequest.mainGet("/user_infos/");
 
     return response.statusCode == 200;
   }
@@ -67,13 +60,13 @@ class _SignInScreenState extends State<SignInScreen> {
     });
 
     try {
-      final response = await http.post(
-        Uri.parse("$apiUrl/auth/login"),
-        headers: {"Content-Type": "application/x-www-form-urlencoded"},
-        body: {
+      final response = await HttpRequest.mainPost(
+        "/auth/login",
+        {
           "email": emailController.text,
           "password": passwordController.text,
         },
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
       );
 
       if (response.statusCode == 201) {

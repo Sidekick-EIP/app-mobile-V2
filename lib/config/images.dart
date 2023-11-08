@@ -104,4 +104,5 @@ class DefaultImages {
   static const String carbs = 'assets/images/carbs.png';
   static const String fat = 'assets/images/fat.png';
   static const String editPicker = 'assets/images/edit_picker.svg';
+  static const String sidekickHome = 'assets/images/home_sidekick.png';
 }

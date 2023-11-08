@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -23,8 +24,12 @@ class PreferenceController extends GetxController {
     final response = await HttpRequest.mainGet('/preferences/');
 
     if (response.statusCode == 200) {
-      final Map<String, String> body = jsonDecode(response.body);
-      preference.value = Preference.fromJson(body);
+      final List<dynamic> preferencesList = jsonDecode(response.body);
+      if (preferencesList.isNotEmpty) {
+        final Map<String, dynamic> preferenceMap =
+            preferencesList[0] as Map<String, dynamic>;
+        preference.value = Preference.fromJson(preferenceMap);
+      }
     } else if (response.statusCode == 500) {
       if (kDebugMode) {
         print("Error 500 from server");
@@ -44,7 +49,6 @@ class PreferenceController extends GetxController {
       "sounds": preference.value.sounds.value,
       "notifications": preference.value.notifications.value,
     };
-
 
     final response = await http.post(
       Uri.parse('$apiUrl/preferences/'),

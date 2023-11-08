@@ -96,7 +96,7 @@ class _HomeViewState extends State<HomeView> {
                               height: 207.89,
                               width: Get.width,
                               child: Image.asset(
-                                DefaultImages.banner,
+                                DefaultImages.sidekickHome,
                                 fit: BoxFit.fill,
                               ),
                             ),
@@ -209,7 +209,7 @@ class _HomeViewState extends State<HomeView> {
                                       const Expanded(child: SizedBox()),
                                       Text(
                                         index == 1
-                                            ? "Full body stretching"
+                                            ? "Haut du corps"
                                             : "Bas du corps",
                                         style: pSemiBold18.copyWith(
                                           fontSize: 15.4,
@@ -314,7 +314,7 @@ class _HomeViewState extends State<HomeView> {
                                         children: [
                                           Text(
                                             index == 0
-                                                ? "Front and Back Lunge"
+                                                ? "Fente avant et fente arrière"
                                                 : index == 1
                                                     ? "Side Plank"
                                                     : index == 1

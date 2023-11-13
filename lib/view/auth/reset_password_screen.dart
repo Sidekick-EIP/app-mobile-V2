@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:sidekick_app/utils/http_request.dart';
 import 'package:sidekick_app/view/auth/register/signup_screen.dart';
 
 import '../../config/colors.dart';
@@ -38,13 +39,12 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       isLoading = true; // Commence le chargement
     });
 
-    final response = await http.post(
-      Uri.parse("$apiUrl/auth/forgotPassword"),
-      headers: {"Content-Type": "application/x-www-form-urlencoded"},
-      body: {
-        "email": emailPasswordController.text,
-      },
-    );
+    final response = await HttpRequest.mainPost(
+      "/auth/forgotPassword",
+      {"email": emailPasswordController.text}, 
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+    });
 
     if (response.statusCode == 201) {
       Get.snackbar("Succès", "Un email de réinitialisation a été envoyé",

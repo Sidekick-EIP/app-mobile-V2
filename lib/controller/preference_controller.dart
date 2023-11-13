@@ -23,7 +23,7 @@ class PreferenceController extends GetxController {
     final response = await HttpRequest.mainGet('/preferences/');
 
     if (response.statusCode == 200) {
-      final Map<String, String> body = jsonDecode(response.body);
+      final Map<String, dynamic> body = jsonDecode(response.body);
       preference.value = Preference.fromJson(body);
     } else if (response.statusCode == 500) {
       if (kDebugMode) {
@@ -45,15 +45,7 @@ class PreferenceController extends GetxController {
       "notifications": preference.value.notifications.value,
     };
 
-
-    final response = await http.post(
-      Uri.parse('$apiUrl/preferences/'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $accessToken',
-      },
-      body: jsonEncode(body),
-    );
+    final response = await HttpRequest.mainPost("/preferences/", jsonEncode(body));
 
     if (response.statusCode == 201) {
       if (kDebugMode) {

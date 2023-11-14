@@ -23,7 +23,7 @@ class PreferenceController extends GetxController {
     final response = await HttpRequest.mainGet('/preferences/');
 
     if (response.statusCode == 200) {
-      final Map<String, String> body = jsonDecode(response.body);
+      final Map<String, bool> body = jsonDecode(response.body);
       preference.value = Preference.fromJson(body);
     } else if (response.statusCode == 500) {
       if (kDebugMode) {

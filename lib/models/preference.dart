@@ -11,10 +11,10 @@ class Preference {
     required this.sounds,
   });
 
-  Preference.fromJson(Map<String, dynamic> json) {
-    isDarkMode = RxBool(json['darkMode'] ?? false);
-    notifications = RxBool(json['notifications'] ?? false);
-    sounds = RxBool(json['sounds'] ?? false);
+  Preference.fromJson(Map<String, bool> json) {
+    isDarkMode = RxBool(json['darkMode'] as bool);
+    notifications = RxBool(json['notifications'] as bool);
+    sounds = RxBool(json['sounds'] as bool);
   }
 
   Map<String, dynamic> toJson() => {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
+import 'package:sidekick_app/utils/http_request.dart';
 import 'package:sidekick_app/view/auth/signin_screen.dart';
 import 'package:http/http.dart' as http;
 
@@ -25,15 +26,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool isLoading = false;
 
   Future<bool> registerUser(String email, String password) async {
-    final String apiUrl = "${dotenv.env['API_BACK_URL']}/auth/register";
-
-    final response = await http.post(
-      Uri.parse(apiUrl),
-      headers: {"Content-Type": "application/x-www-form-urlencoded"},
-      body: {
-        'email': email,
-        'password': password,
+    final response = await HttpRequest.mainPost(
+      "/auth/register",
+      {
+        "email": email,
+        "password": password,
       },
+      headers: {"Content-Type": "application/x-www-form-urlencoded"},
     );
 
     if (response.statusCode == 201) {

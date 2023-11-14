@@ -111,14 +111,8 @@ class UserController extends GetxController {
           user.value.activities.map((activity) => activity.value).toList(),
     };
 
-    final response = await http.put(
-      Uri.parse('$apiUrl/user_infos/update'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $accessToken',
-      },
-      body: jsonEncode(body),
-    );
+    final response =
+        await HttpRequest.mainPut("/user_infos/update", jsonEncode(body));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> body = jsonDecode(response.body);

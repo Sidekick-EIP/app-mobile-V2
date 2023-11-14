@@ -17,7 +17,7 @@ class Preference {
     sounds = RxBool(json['sounds'] as bool);
   }
 
-  Map<String, dynamic> toJson() => {
+  Map<String, bool> toJson() => {
     'darkMode': isDarkMode.value,
     'notifications': notifications.value,
     'sounds': sounds.value,

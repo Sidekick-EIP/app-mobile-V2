@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:sidekick_app/utils/http_request.dart';
 import 'package:sidekick_app/view/auth/signin_screen.dart';
-import 'package:http/http.dart' as http;
 
 import '../../../config/colors.dart';
 import '../../../config/text_style.dart';
@@ -143,7 +141,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: InkWell(
               onTap: () {
                 Get.offAll(
-                    () => const SignInScreen(),
+                  () => const SignInScreen(),
                   transition: Transition.rightToLeft,
                 );
               },

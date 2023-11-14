@@ -40,60 +40,79 @@ class HttpRequest {
   }
 
   static Future mainPost(String url, body,
-      {Map<String, String> headers = const {
-        'Content-Type': 'application/json'
-      }}) async {
+      {Map<String, String>? headers}) async {
     final userController = Get.put(UserController(), permanent: true);
     final TokenStorage tokenStorage = TokenStorage();
     var accessToken = await tokenStorage.getAccessToken() ?? "";
-    var refreshToken = await tokenStorage.getAccessToken() ?? "";
+    var refreshToken = await tokenStorage.getRefreshToken() ?? "";
 
-    if (accessToken != "") {
-      headers["Authorization"] = 'Bearer $accessToken';
-      final response = await simplePost(url, headers, body);
-      if (response.statusCode == 401) {
-        final response = await refreshTokens(
+    Map<String, String> mutableHeaders =
+        headers != null ? Map<String, String>.from(headers) : {};
+    if (headers == null) {
+      mutableHeaders['Content-Type'] = 'application/json';
+    }
+
+    if (accessToken.isNotEmpty) {
+      mutableHeaders["Authorization"] = 'Bearer $accessToken';
+      final response = await simplePost(url, mutableHeaders, body);
+
+      if (response.statusCode == 401 && refreshToken.isNotEmpty) {
+        final refreshResponse = await refreshTokens(
             userController.user.value.email.value, refreshToken);
-        if (response.statusCode == 201) {
-          Map<String, dynamic> decodedResponse = jsonDecode(response.body);
+
+        if (refreshResponse.statusCode == 201) {
+          Map<String, dynamic> decodedResponse =
+              jsonDecode(refreshResponse.body);
           await tokenStorage.storeAccessToken(decodedResponse['access_token']);
           await tokenStorage
               .storeRefreshToken(decodedResponse['refresh_token']);
-          return await simplePost(url, headers, body);
+
+          mutableHeaders["Authorization"] =
+              'Bearer ${decodedResponse['access_token']}';
+          return await simplePost(url, mutableHeaders, body);
         }
       }
-      return (response);
+      return response;
     } else {
-      return await simplePost(url, headers, body);
+      return await simplePost(url, mutableHeaders, body);
     }
   }
 
   static Future mainPut(String url, body,
-      {Map<String, String> headers = const {
-        'Content-Type': 'application/json'
-      }}) async {
+      {Map<String, String>? headers}) async {
     final userController = Get.put(UserController(), permanent: true);
     final TokenStorage tokenStorage = TokenStorage();
     var accessToken = await tokenStorage.getAccessToken() ?? "";
-    var refreshToken = await tokenStorage.getAccessToken() ?? "";
+    var refreshToken = await tokenStorage.getRefreshToken() ?? "";
 
-    if (accessToken != "") {
-      headers["Authorization"] = 'Bearer $accessToken';
-      final response = await simplePut(url, headers, body);
-      if (response.statusCode == 401) {
-        final response = await refreshTokens(
+    Map<String, String> mutableHeaders =
+        headers != null ? Map<String, String>.from(headers) : {};
+    if (headers == null) {
+      mutableHeaders['Content-Type'] = 'application/json';
+    }
+
+    if (accessToken.isNotEmpty) {
+      mutableHeaders["Authorization"] = 'Bearer $accessToken';
+      final response = await simplePut(url, mutableHeaders, body);
+
+      if (response.statusCode == 401 && refreshToken.isNotEmpty) {
+        final refreshResponse = await refreshTokens(
             userController.user.value.email.value, refreshToken);
-        if (response.statusCode == 201) {
-          Map<String, dynamic> decodedResponse = jsonDecode(response.body);
+        if (refreshResponse.statusCode == 201) {
+          Map<String, dynamic> decodedResponse =
+              jsonDecode(refreshResponse.body);
           await tokenStorage.storeAccessToken(decodedResponse['access_token']);
           await tokenStorage
               .storeRefreshToken(decodedResponse['refresh_token']);
-          return await simplePut(url, headers, body);
+
+          mutableHeaders["Authorization"] =
+              'Bearer ${decodedResponse['access_token']}';
+          return await simplePut(url, mutableHeaders, body);
         }
       }
-      return (response);
+      return response;
     } else {
-      return await simplePut(url, headers, body);
+      return await simplePut(url, mutableHeaders, body);
     }
   }
 
@@ -191,7 +210,6 @@ class HttpRequest {
       var request = http.MultipartRequest(
           'POST', Uri.parse(dotenv.env['API_BACK_URL']! + url));
 
-      // Check if file exists
       var file = File(filepath);
       if (!await file.exists()) {
         print('File does not exist at path: $filepath');

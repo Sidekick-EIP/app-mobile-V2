@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sidekick_app/utils/http_request.dart';
 import 'package:sidekick_app/view/auth/register/info_screen.dart';
 import 'package:sidekick_app/view/auth/reset_password_screen.dart';
@@ -29,6 +29,23 @@ class _SignInScreenState extends State<SignInScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    loadLoginInfo();
+  }
+
+  Future<void> loadLoginInfo() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String email = prefs.getString('email') ?? '';
+    final String password = prefs.getString('password') ?? '';
+
+    setState(() {
+      emailController.text = email;
+      passwordController.text = password;
+    });
+  }
 
   String apiUrl = dotenv.env['API_BACK_URL'] ?? "";
   final TokenStorage tokenStorage = TokenStorage();
@@ -60,13 +77,16 @@ class _SignInScreenState extends State<SignInScreen> {
     });
 
     try {
+      Map<String, String> headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+      };
       final response = await HttpRequest.mainPost(
         "/auth/login",
         {
           "email": emailController.text,
           "password": passwordController.text,
         },
-        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        headers: headers,
       );
 
       if (response.statusCode == 201) {
@@ -74,7 +94,6 @@ class _SignInScreenState extends State<SignInScreen> {
         await tokenStorage.storeAccessToken(decodedResponse['access_token']);
         await tokenStorage.storeRefreshToken(decodedResponse['refresh_token']);
 
-        // 2. Vérification des informations de l'utilisateur après une connexion réussie
         bool hasValidInfos = await checkUserInfos();
         if (hasValidInfos) {
           Get.offAll(
@@ -105,6 +124,10 @@ class _SignInScreenState extends State<SignInScreen> {
         isLoading = false;
       });
     }
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('email', emailController.text);
+    await prefs.setString('password', passwordController.text);
   }
 
   @override

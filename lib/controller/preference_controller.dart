@@ -24,7 +24,10 @@ class PreferenceController extends GetxController {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> body = jsonDecode(response.body);
-      preference.value = Preference.fromJson(body);
+
+      preference.value.isDarkMode.value = body['darkMode'];
+      preference.value.notifications.value = body['notifications'];
+      preference.value.sounds.value = body['sounds'];
     } else if (response.statusCode == 500) {
       if (kDebugMode) {
         print("Error 500 from server");
@@ -39,22 +42,13 @@ class PreferenceController extends GetxController {
       return;
     }
 
-    Map<String, dynamic> body = {
+    Map<String, bool> body = {
       "darkMode": preference.value.isDarkMode.value,
       "sounds": preference.value.sounds.value,
       "notifications": preference.value.notifications.value,
     };
 
-    print(body);
-
-    final response = await http.post(
-      Uri.parse('$apiUrl/preferences/'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $accessToken',
-      },
-      body: jsonEncode(body),
-    );
+    final response = await HttpRequest.mainPost("/preferences/", jsonEncode(body));
 
     if (response.statusCode == 201) {
       if (kDebugMode) {

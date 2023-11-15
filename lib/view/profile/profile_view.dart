@@ -290,6 +290,7 @@ class _ProfileViewState extends State<ProfileView> {
                                             duration:
                                                 const Duration(seconds: 1));
                                       } catch (e) {
+                                        print(e);
                                         Get.snackbar('Erreur',
                                             'Erreur lors de la mise à jour des mails!',
                                             snackPosition: SnackPosition.BOTTOM,
@@ -333,6 +334,7 @@ class _ProfileViewState extends State<ProfileView> {
                                             duration:
                                             const Duration(seconds: 1));
                                       } catch (e) {
+                                        print(e);
                                         Get.snackbar('Erreur',
                                             'Erreur lors de la mise à jour des notifications!',
                                             snackPosition: SnackPosition.BOTTOM,

@@ -27,6 +27,7 @@ class _HomeViewState extends State<HomeView> {
     super.initState();
     preferenceController.fetchPreferenceFromBack();
     userController.fetchUserFromBack();
+    userController.fetchSidekickFromBack();
   }
 
   @override
@@ -95,7 +96,7 @@ class _HomeViewState extends State<HomeView> {
                               height: 207.89,
                               width: Get.width,
                               child: Image.asset(
-                                DefaultImages.banner,
+                                DefaultImages.sidekickBanner,
                                 fit: BoxFit.fill,
                               ),
                             ),

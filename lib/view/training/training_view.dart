@@ -87,7 +87,6 @@ class _TrainingViewState extends State<TrainingView> {
                       ),
                     ],
                   ),
-<<<<<<< HEAD
                   child: Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: Row(
@@ -114,43 +113,6 @@ class _TrainingViewState extends State<TrainingView> {
                                     color: page == 0
                                         ? ConstColors.secondaryColor
                                         : ConstColors.blackColor,
-=======
-                ),
-              ),
-              const SizedBox(height: 20),
-              page == 0
-                  ? (workoutController.workout == []
-                      ? const CircularProgressIndicator()
-                      : Expanded(
-                          child: ListView.builder(
-                              padding: const EdgeInsets.all(5),
-                              itemCount: workoutController.workout.length,
-                              itemBuilder: (context, x) {
-                                return Column(children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        DateFormat('dd MMM y').format(
-                                            DateTime.parse(workoutController
-                                                .workout[x][0].date)),
-                                        style: pRegular14.copyWith(
-                                          fontSize: 11.55,
-                                          color: ConstColors.lightBlackColor,
-                                        ),
-                                      ),
-                                      Text(
-                                        workoutController.workout[x].length == 1
-                                            ? "${workoutController.workout[x].length} exercice"
-                                            : "${workoutController.workout[x].length} exercices",
-                                        style: pRegular14.copyWith(
-                                          fontSize: 11.55,
-                                          color: ConstColors.lightBlackColor,
-                                        ),
-                                      ),
-                                    ],
->>>>>>> 1705bcee243ac851bee72bdee3c5e8566a7890f9
                                   ),
                                 ),
                               ),

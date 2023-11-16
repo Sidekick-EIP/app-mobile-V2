@@ -68,8 +68,7 @@ class _EditMealState extends State<EditMeal> {
                   child: IconButton(
                     icon: const Icon(Icons.arrow_back_rounded),
                     onPressed: () {
-                      Get.back;
-                      // Navigator.pop(context);
+                      Get.back();
                     },
                   ),
                 ),

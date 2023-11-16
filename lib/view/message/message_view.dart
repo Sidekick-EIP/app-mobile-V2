@@ -8,6 +8,7 @@ import 'package:sidekick_app/controller/messages_controller.dart';
 import '../../config/text_style.dart';
 import '../../controller/socket_controller.dart';
 import '../../controller/user_controller.dart';
+import '../profile/sidekick_view.dart';
 
 class MessageView extends StatefulWidget {
   const MessageView({Key? key}) : super(key: key);
@@ -52,9 +53,27 @@ class _MessageViewState extends State<MessageView> {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             children: [
-              CircleAvatar(
-                backgroundImage: NetworkImage(userController.partner.value.avatar.value),
-                radius: 15,
+              InkWell(
+                onTap: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30),
+                      ),
+                    ),
+                    builder: (v) => const FractionallySizedBox(
+                      heightFactor: 0.9,
+                      child: SidekickView(),
+                    ),
+                  );
+                },
+                child: CircleAvatar(
+                  backgroundImage: NetworkImage(userController.partner.value.avatar.value),
+                  radius: 15,
+                ),
               ),
               const SizedBox(width: 20),
               Text(

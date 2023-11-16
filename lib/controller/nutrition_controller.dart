@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:sidekick_app/models/nutrition.dart';
+import 'package:sidekick_app/utils/http_request.dart';
 import '../utils/token_storage.dart';
 
 class NutritionController {
@@ -12,14 +13,7 @@ class NutritionController {
 
   Future<Nutrition> fetchNutrition(String date) async {
     isLoading.value = true;
-    String? accessToken = await tokenStorage.getAccessToken();
-
-    final response = await http.get(
-      Uri.parse('$apiUrl/nutrition/findByDay/?day=$date'),
-      headers: {
-        'Authorization': 'Bearer $accessToken',
-      },
-    );
+    final response = await HttpRequest.mainGet("/nutrition/findByDay/?day=$date");
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> body = jsonDecode(response.body);

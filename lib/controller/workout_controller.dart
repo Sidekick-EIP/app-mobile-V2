@@ -48,6 +48,19 @@ class WorkoutController extends GetxController {
     }
   }
 
+  Future<void> getSpecificExercises(String exo) async {
+    final response = await HttpRequest.mainGet("/exercises-library/muscle/?muscle=$exo");
+
+    if (response.statusCode == 200) {
+      var body = jsonDecode(response.body);
+      List<Exercise> exercises =
+          List<Exercise>.from(body.map((e) => Exercise.fromJSON(e)));
+      exercise.value = exercises;
+    } else {
+      throw Exception('Failed to get exercises');
+    }
+  }
+
   @override
   void onReady() async {
     super.onReady();

@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:sidekick_app/controller/socket_controller.dart';
 import 'package:sidekick_app/models/partner.dart';
@@ -9,13 +8,12 @@ import 'package:sidekick_app/models/user.dart';
 import 'package:sidekick_app/utils/token_storage.dart';
 import 'package:sidekick_app/utils/http_request.dart';
 import 'package:sidekick_app/utils/user_storage.dart';
-import 'package:http/http.dart' as http;
 
 class UserController extends GetxController {
   final UserStorage _userStorage = UserStorage();
   final TokenStorage tokenStorage = TokenStorage();
-  String apiUrl = dotenv.env['API_BACK_URL'] ?? "";
   RxBool isLoading = false.obs;
+  RxBool isSidekickLoading = false.obs;
 
   List<bool> activityList = List<bool>.filled(30, false).obs;
   List<bool> goalList = List<bool>.filled(4, false).obs;
@@ -39,6 +37,7 @@ class UserController extends GetxController {
         ["SOCCER", "TENNIS"].map((activities) => RxString(activities)).toList(),
     goal: RxString('STAY_IN_SHAPE'),
     birthDate: Rx<DateTime>(DateTime.parse("1990-05-12")),
+    location: RxString('Paris'),
   ).obs;
 
   Rx<Partner> partner = Partner(
@@ -54,6 +53,7 @@ class UserController extends GetxController {
         ["SOCCER", "TENNIS"].map((activities) => RxString(activities)).toList(),
     goal: RxString('STAY_IN_SHAPE'),
     birthDate: Rx<DateTime>(DateTime.parse("1990-05-12")),
+    location: RxString('Paris'),
   ).obs;
 
   Future<void> fetchUserFromBack() async {
@@ -75,11 +75,14 @@ class UserController extends GetxController {
     if (response.statusCode == 200) {
       final Map<String, dynamic> body = jsonDecode(response.body);
       partner.value = Partner.fromJson(body);
+      isSidekickLoading.value = true;
     } else if (response.statusCode == 404) {
+      isSidekickLoading.value = false;
       if (kDebugMode) {
         print("The user doesn't have a sidekick.");
       }
-    } else if (response.statusCode == 500) {
+    } else {
+      isSidekickLoading.value = false;
       if (kDebugMode) {
         print("Error 500 from server");
       }
@@ -109,6 +112,7 @@ class UserController extends GetxController {
       "level": user.value.level.value,
       "activities":
           user.value.activities.map((activity) => activity.value).toList(),
+      "location": user.value.location.value,
     };
 
     final response =

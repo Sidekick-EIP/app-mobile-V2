@@ -33,7 +33,7 @@ class _MessageViewState extends State<MessageView> {
 
   void _handleSendPressed(types.PartialText message) {
     final socketController = Get.put(SocketController(), permanent: true);
-    final userController = Get.put(UserController());
+    final userController = Get.find<UserController>();
 
     socketController.emitMessage(message.text);
     socketController.emitWriting(false);

@@ -17,6 +17,7 @@ class User {
   List<RxString> activities;
   RxString goal;
   Rx<DateTime> birthDate;
+  RxString location;
 
   User({
     required this.avatar,
@@ -35,6 +36,7 @@ class User {
     required this.activities,
     required this.goal,
     required this.birthDate,
+    required this.location,
   });
 
   void changeAvatarPath(String path) {
@@ -58,6 +60,7 @@ class User {
     List<RxString>? activities,
     RxString? goal,
     Rx<DateTime>? birthDate,
+    RxString? location,
   }) {
     return User(
       avatar: avatar ?? this.avatar,
@@ -76,6 +79,7 @@ class User {
       activities: activities ?? this.activities,
       goal: goal ?? this.goal,
       birthDate: birthDate ?? this.birthDate,
+      location: location ?? this.location,
     );
   }
 
@@ -103,6 +107,7 @@ class User {
       birthDate: Rx<DateTime>(json['birth_date'] != null
           ? DateTime.parse(json['birth_date'])
           : DateTime.now()),
+      location: RxString(json['location'] ?? ""),
     );
   }
 
@@ -124,6 +129,7 @@ class User {
       'activities': activities,
       'goal': goal,
       'birth_date': birthDate,
+      'location': location,
     };
   }
 }

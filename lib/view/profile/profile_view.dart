@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sidekick_app/view/profile/activity/activity_screen.dart';
+import 'package:sidekick_app/view/profile/report/report_sidekick_screen.dart';
 import 'package:sidekick_app/view/profile/training/training_screen.dart';
 
 import '../../config/colors.dart';
@@ -312,17 +313,17 @@ class _ProfileViewState extends State<ProfileView> {
                             row(
                               "Autoriser les notifications",
                               "",
-                                  () {},
+                              () {},
                               SizedBox(
                                 height: 20,
                                 child: Obx(
-                                      () => CupertinoSwitch(
+                                  () => CupertinoSwitch(
                                     value: preferenceController
                                         .preference.value.sounds.value,
                                     activeColor: ConstColors.primaryColor,
                                     onChanged: (v) async {
-                                      preferenceController.preference.value
-                                          .sounds.value = v;
+                                      preferenceController
+                                          .preference.value.sounds.value = v;
                                       try {
                                         await preferenceController
                                             .updatePreference();
@@ -332,7 +333,7 @@ class _ProfileViewState extends State<ProfileView> {
                                             backgroundColor: Colors.green,
                                             colorText: Colors.white,
                                             duration:
-                                            const Duration(seconds: 1));
+                                                const Duration(seconds: 1));
                                       } catch (e) {
                                         print(e);
                                         Get.snackbar('Erreur',
@@ -341,11 +342,29 @@ class _ProfileViewState extends State<ProfileView> {
                                             backgroundColor: Colors.red,
                                             colorText: Colors.white,
                                             duration:
-                                            const Duration(seconds: 1));
+                                                const Duration(seconds: 1));
                                       }
                                     },
                                   ),
                                 ),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            const Divider(
+                              color: Color(0xffA9B2BA),
+                            ),
+                            const SizedBox(height: 10),
+                            row(
+                              "Signaler le sidekick",
+                              "",
+                              () {
+                                Get.to(() => const ReportSidekickScreen(),
+                                    transition: Transition.rightToLeft);
+                              },
+                              const Icon(
+                                Icons.arrow_forward_ios,
+                                color: Color(0xffA9B2BA),
+                                size: 16,
                               ),
                             ),
                             const SizedBox(height: 10),

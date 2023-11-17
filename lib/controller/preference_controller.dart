@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:sidekick_app/utils/http_request.dart';
-import 'package:http/http.dart' as http;
 
 import '../models/preference.dart';
 import '../utils/token_storage.dart';

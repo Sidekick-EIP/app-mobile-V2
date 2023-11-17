@@ -28,6 +28,7 @@ class DefaultImages {
   static const String home = 'assets/images/home.svg';
   static const String message = 'assets/images/message.svg';
   static const String nutrition = 'assets/images/nutrition.svg';
+  static const String nutritionOutlined = 'assets/images/nutrition_outlined.svg';
   static const String user = 'assets/images/user.svg';
   static const String search = 'assets/images/Shape.svg';
   static const String error = 'assets/images/feather_info.svg';
@@ -104,4 +105,11 @@ class DefaultImages {
   static const String carbs = 'assets/images/carbs.png';
   static const String fat = 'assets/images/fat.png';
   static const String editPicker = 'assets/images/edit_picker.svg';
+  static const String sidekickBanner = 'assets/images/sidekick_banner.png';
+  static const String homeOutlined = 'assets/images/home_outlined.svg';
+  static const String profileOutlined = 'assets/images/profile_outlined.svg';
+  static const String goal1RemoveBg = 'assets/images/goal1-removebg-preview.png';
+  static const String goal2RemoveBg = 'assets/images/goal2-removebg-preview.png';
+  static const String goal3RemoveBg = 'assets/images/goal3-removebg-preview.png';
+  static const String goal4RemoveBg = 'assets/images/goal4-removebg-preview.png';
 }

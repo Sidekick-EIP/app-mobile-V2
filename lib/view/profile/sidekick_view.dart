@@ -37,13 +37,13 @@ class _SidekickViewState extends State<SidekickView> {
   String getGoalImage(String goal) {
     switch (goal) {
       case "LOSE_WEIGHT":
-        return DefaultImages.goal1;
+        return DefaultImages.goal1RemoveBg;
       case "STAY_IN_SHAPE":
-        return DefaultImages.goal2;
+        return DefaultImages.goal2RemoveBg;
       case "GAIN_MUSCLE_MASS":
-        return DefaultImages.goal3;
+        return DefaultImages.goal3RemoveBg;
       default:
-        return DefaultImages.goal4;
+        return DefaultImages.goal4RemoveBg;
     }
   }
 
@@ -91,261 +91,330 @@ class _SidekickViewState extends State<SidekickView> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: Get.height,
-      width: Get.width,
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30),
-          topRight: Radius.circular(30),
-        ),
-      ),
-      child: Column(
-        children: [
-          const SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return !userController.isSidekickLoading.value
+        ? Container(
+            height: Get.height,
+            width: Get.width,
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30),
+                topRight: Radius.circular(30),
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  "Mon sidekick",
-                  style: pSemiBold18.copyWith(),
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Icon(
-                    Icons.close,
-                    color: ConstColors.blackColor,
-                    size: 30,
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Icon(
+                          Icons.close,
+                          color: ConstColors.blackColor,
+                          size: 30,
+                        ),
+                      ),
+                    ],
                   ),
+                ),
+                const SizedBox(height: 30),
+                Text(
+                  "Vous y êtes presque !",
+                  style: pSemiBold20.copyWith(
+                    fontSize: 25,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                Container(
+                  height: 300,
+                  width: 300,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(
+                        DefaultImages.ps1,
+                      ),
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                ),
+                Text(
+                  "Vous n'avez pas encore de sidekick !",
+                  style: pRegular14.copyWith(
+                    fontSize: 15,
+                    height: 1.4,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),
-          ),
-          const SizedBox(height: 30),
-          Expanded(
-            child: ListView(
+          )
+        : Container(
+            height: Get.height,
+            width: Get.width,
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30),
+                topRight: Radius.circular(30),
+              ),
+            ),
+            child: Column(
               children: [
+                const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Center(
-                        child: Obx(
-                          () => Container(
-                            height: 87,
-                            width: 87,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: NetworkImage(
-                                    userController.partner.value.avatar.value),
+                      Text(
+                        "Mon sidekick",
+                        style: pSemiBold18.copyWith(),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Icon(
+                          Icons.close,
+                          color: ConstColors.blackColor,
+                          size: 30,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 30),
+                Expanded(
+                  child: ListView(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Center(
+                              child: Obx(
+                                () => Container(
+                                  height: 87,
+                                  width: 87,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: NetworkImage(userController
+                                          .partner.value.avatar.value),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Center(
-                        child: Obx(
-                          () => Text(
-                            "${userController.partner.value.firstname} ${userController.partner.value.lastname}",
-                            style: pSemiBold18.copyWith(
-                              fontSize: 19.27,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 30),
-                      Row(
-                        children: [
-                          Obx(
-                            () => card(
-                                userController.partner.value.gender.value ==
-                                        "MALE"
-                                    ? DefaultImages.m1
-                                    : DefaultImages.p1,
-                                "${userController.partner.value.size} cm"),
-                          ),
-                          const SizedBox(width: 16),
-                          Obx(
-                            () => card(DefaultImages.p3,
-                                "${calculateAge(userController.partner.value.birthDate.value)} ans"),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      Text(
-                        "Description",
-                        style: pSemiBold18.copyWith(
-                          fontSize: 19.25,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Container(
-                        height: 156,
-                        width: Get.width,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(23),
-                          color: ConstColors.secondaryColor,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: Text(
-                            userController.partner.value.description.value,
-                            style: pSemiBold18.copyWith(
-                              fontSize: 13,
-                              color: ConstColors.lightBlackColor,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      Text(
-                        "Mes objectifs",
-                        style: pSemiBold18.copyWith(
-                          fontSize: 19.25,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 15),
-                        child: Container(
-                          height: 84,
-                          width: Get.width,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(7.7),
-                            border: Border.all(
-                              color: const Color(0xffE5E9EF),
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 5, right: 5),
-                            child: Row(
-                              children: [
-                                Image.asset(getGoalImage(
-                                    userController.partner.value.goal.value)),
-                                const SizedBox(width: 15),
-                                Text(
-                                  getGoalText(
-                                      userController.partner.value.goal.value),
+                            const SizedBox(height: 10),
+                            Center(
+                              child: Obx(
+                                () => Text(
+                                  "${userController.partner.value.firstname} ${userController.partner.value.lastname}",
                                   style: pSemiBold18.copyWith(
-                                    fontSize: 15,
+                                    fontSize: 19.27,
                                   ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 30),
+                            Row(
+                              children: [
+                                Obx(
+                                  () => card(
+                                      userController
+                                                  .partner.value.gender.value ==
+                                              "MALE"
+                                          ? DefaultImages.m1
+                                          : DefaultImages.p1,
+                                      "${userController.partner.value.size} cm"),
+                                ),
+                                const SizedBox(width: 16),
+                                Obx(
+                                  () => card(DefaultImages.p3,
+                                      "${calculateAge(userController.partner.value.birthDate.value)} ans"),
                                 ),
                               ],
                             ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 84,
-                        width: Get.width,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(7.7),
-                          border: Border.all(
-                            color: const Color(0xffE5E9EF),
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 20, right: 20),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                getTrainingTitle(
-                                    userController.partner.value.level.value),
-                                style: pSemiBold18.copyWith(
-                                  fontSize: 15,
+                            const SizedBox(height: 20),
+                            Text(
+                              "Description",
+                              style: pSemiBold18.copyWith(
+                                fontSize: 19.25,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            Container(
+                              height: 156,
+                              width: Get.width,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(23),
+                                border: Border.all(
+                                  color: const Color(0xffE5E9EF),
+                                  width: 2.0,
                                 ),
                               ),
-                              const SizedBox(height: 5),
-                              Text(
-                                getTrainingDescription(
-                                    userController.partner.value.level.value),
-                                style: pRegular14.copyWith(
-                                  fontSize: 13,
-                                  color: ConstColors.lightBlackColor,
+                              child: Padding(
+                                padding: const EdgeInsets.all(20),
+                                child: Text(
+                                  userController
+                                      .partner.value.description.value,
+                                  style: pSemiBold18.copyWith(
+                                    fontSize: 13,
+                                    color: ConstColors.lightBlackColor,
+                                  ),
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                            const SizedBox(height: 20),
+                            Text(
+                              "Mes objectifs",
+                              style: pSemiBold18.copyWith(
+                                fontSize: 19.25,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 15),
+                              child: Container(
+                                height: 84,
+                                width: Get.width,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(7.7),
+                                  border: Border.all(
+                                    color: const Color(0xffE5E9EF),
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 5, right: 5),
+                                  child: Row(
+                                    children: [
+                                      Image.asset(getGoalImage(userController
+                                          .partner.value.goal.value)),
+                                      const SizedBox(width: 15),
+                                      Text(
+                                        getGoalText(userController
+                                            .partner.value.goal.value),
+                                        style: pSemiBold18.copyWith(
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              height: 84,
+                              width: Get.width,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7.7),
+                                border: Border.all(
+                                  color: const Color(0xffE5E9EF),
+                                ),
+                              ),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 20, right: 20),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      getTrainingTitle(userController
+                                          .partner.value.level.value),
+                                      style: pSemiBold18.copyWith(
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Text(
+                                      getTrainingDescription(userController
+                                          .partner.value.level.value),
+                                      style: pRegular14.copyWith(
+                                        fontSize: 13,
+                                        color: ConstColors.lightBlackColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            Text(
+                              "Mes activités",
+                              style: pSemiBold18.copyWith(
+                                fontSize: 19.25,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            GridView.builder(
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                mainAxisSpacing: 14,
+                                crossAxisSpacing: 14,
+                              ),
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: activityList.length <= 9
+                                  ? activityList.length
+                                  : 9,
+                              itemBuilder: (BuildContext context, int index) {
+                                return categoryCard(
+                                    DefaultImages.a0, activityList[index]);
+                              },
+                            )
+                          ],
                         ),
                       ),
-                      const SizedBox(height: 20),
-                      Text(
-                        "Mes activités",
-                        style: pSemiBold18.copyWith(
-                          fontSize: 19.25,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          mainAxisSpacing: 14,
-                          crossAxisSpacing: 14,
-                        ),
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount:
-                            activityList.length <= 9 ? activityList.length : 9,
-                        itemBuilder: (BuildContext context, int index) {
-                          return categoryCard(
-                              DefaultImages.a0, activityList[index]);
-                        },
-                      )
                     ],
                   ),
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
+          );
   }
 }
 
 Widget categoryCard(String image, String text) {
-  return Expanded(
-    child: Container(
-      height: 77,
-      width: 77,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(7.7),
-        border: Border.all(
-          color: const Color(0xffE5E9EF),
-          width: 1.5,
+  return Container(
+    height: 77,
+    width: 77,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(7.7),
+      border: Border.all(
+        color: const Color(0xffE5E9EF),
+        width: 1.5,
+      ),
+    ),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          height: 23,
+          width: 23,
+          child: Image.asset(
+            image,
+            fit: BoxFit.fill,
+          ),
         ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: 23,
-            width: 23,
-            child: Image.asset(
-              image,
-              fit: BoxFit.fill,
-            ),
+        const SizedBox(height: 8),
+        Text(
+          text,
+          style: pSemiBold18.copyWith(
+            fontSize: 13.47,
           ),
-          const SizedBox(height: 8),
-          Text(
-            text,
-            style: pSemiBold18.copyWith(
-              fontSize: 13.47,
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     ),
   );
 }

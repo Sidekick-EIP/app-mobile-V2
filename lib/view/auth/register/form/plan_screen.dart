@@ -3,10 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:sidekick_app/config/colors.dart';
 import 'package:sidekick_app/controller/auth_controller.dart';
 import 'package:sidekick_app/utils/getter/selected_activities.dart';
@@ -75,6 +73,7 @@ class _PlanScreenState extends State<PlanScreen> {
       "activities": getSelectedActivities(authController.activityList)
           .map((activity) => enumToString(activity))
           .toList(),
+      "location": authController.city.value,
     };
 
     try {

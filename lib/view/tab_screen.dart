@@ -54,7 +54,7 @@ class _TabScreenState extends State<TabScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               card(
-                DefaultImages.home,
+                DefaultImages.homeOutlined,
                 "Accueil",
                 homeController.flag.value == 0 ? ConstColors.primaryColor : const Color(0xff9299A3),
                 homeController.flag.value == 0 ? ConstColors.primaryColor : const Color(0xff9299A3),
@@ -81,7 +81,7 @@ class _TabScreenState extends State<TabScreen> {
                 },
               ),
               card(
-                DefaultImages.nutrition,
+                DefaultImages.nutritionOutlined,
                 "Nutrition",
                 homeController.flag.value == 3 ? ConstColors.primaryColor : const Color(0xff9299A3),
                 homeController.flag.value == 3 ? ConstColors.primaryColor : const Color(0xff9299A3),
@@ -90,7 +90,7 @@ class _TabScreenState extends State<TabScreen> {
                 },
               ),
               card(
-                DefaultImages.user,
+                DefaultImages.profileOutlined,
                 "Profile",
                 homeController.flag.value == 4 ? ConstColors.primaryColor : const Color(0xff9299A3),
                 homeController.flag.value == 4 ? ConstColors.primaryColor : const Color(0xff9299A3),

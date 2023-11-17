@@ -47,35 +47,22 @@ class _AddMealState extends State<AddMeal> {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Ajouter un aliment',
+          style: TextStyle(color: Colors.black),
+        ),
+        leading: IconButton(
+          color: Colors.black,
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Get.back(),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0, // Remove shadow
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: height * 0.08),
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Container(
-                  width: width * 0.11,
-                  height: height * 0.05,
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 255, 255, 255),
-                    borderRadius: const BorderRadius.all(Radius.circular(40)),
-                    border: Border.all(
-                      color: const Color.fromARGB(255, 200, 200, 200),
-                    ),
-                  ),
-                  child: IconButton(
-                    icon: const Icon(Icons.arrow_back_rounded),
-                    onPressed: () => Get.back(),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: height * 0.01),
           FutureBuilder<Nutrition>(
             future: futureNutrition,
             builder: (context, snapshot) {
@@ -109,10 +96,10 @@ class DisplayNutritionPage extends StatelessWidget {
         children: [
           Column(
             children: [
-              SizedBox(
-                height: height * 0.03,
-              ),
-              const SearchWidget(),
+              // SizedBox(
+              //   height: height * 0.03,
+              // ),
+              SearchWidget(width: width),
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: Row(
@@ -146,9 +133,6 @@ class TodaysMeals extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(
-          height: height * 0.05,
-        ),
         SizedBox(
             width: width,
             height: height * 0.7,
@@ -213,7 +197,10 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
       },
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(width: 1.6, color: const Color.fromARGB(66, 128, 128, 128)),
+          border: Border.all(
+            width: 1,
+            color: const Color.fromARGB(66, 128, 128, 128),
+          ),
           color: const Color.fromARGB(255, 255, 255, 255),
           borderRadius: const BorderRadius.all(Radius.circular(20)),
         ),
@@ -396,18 +383,70 @@ class MacrosWidgetCard extends StatelessWidget {
 }
 
 class SearchWidget extends StatefulWidget {
-  const SearchWidget({super.key});
+  const SearchWidget({super.key, required this.width});
+  final double width;
 
   @override
   _SearchWidgetState createState() => _SearchWidgetState();
 }
 
 class _SearchWidgetState extends State<SearchWidget> {
+  final TextEditingController searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return const Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [],
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Column(
+        children: <Widget>[
+          CustomSearchBar(
+              controller: searchController,
+              onSearch: (value) {
+                print('Search for: $value');
+              },
+              width: widget.width),
+        ],
+      ),
+    );
+  }
+}
+
+class CustomSearchBar extends StatelessWidget {
+  const CustomSearchBar({
+    Key? key,
+    required this.controller,
+    required this.onSearch,
+    this.hintText = 'Chercher un aliment...',
+    required this.width,
+  }) : super(key: key);
+
+  final TextEditingController controller;
+  final Function(String) onSearch;
+  final String hintText;
+  final double width;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width * 0.9,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(
+          color: const Color.fromARGB(66, 128, 128, 128),
+          width: 1,
+        ),
+      ),
+      child: TextField(
+        controller: controller,
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: const TextStyle(color: Colors.grey),
+          icon: const Icon(Icons.search, color: Colors.grey),
+          border: InputBorder.none,
+        ),
+        onSubmitted: onSearch,
+      ),
     );
   }
 }

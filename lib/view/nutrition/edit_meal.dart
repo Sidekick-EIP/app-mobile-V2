@@ -45,50 +45,22 @@ class _EditMealState extends State<EditMeal> {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Detail',
+          style: TextStyle(color: Colors.black),
+        ),
+        leading: IconButton(
+          color: Colors.black,
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Get.back(),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0, // Remove shadow
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: height * 0.08),
-          Padding(
-            padding: const EdgeInsets.only(left: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: width * 0.11,
-                  height: height * 0.05,
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 255, 255, 255),
-                    borderRadius: const BorderRadius.all(Radius.circular(40)),
-                    border: Border.all(
-                      color: const Color.fromARGB(255, 200, 200, 200),
-                    ),
-                  ),
-                  child: IconButton(
-                    icon: const Icon(Icons.arrow_back_rounded),
-                    onPressed: () {
-                      Get.back();
-                    },
-                  ),
-                ),
-                SizedBox(
-                  width: width * 0.7,
-                  height: height * 0.05,
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Détail",
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: height * 0.01),
           FutureBuilder<Nutrition>(
             future: futureNutrition,
             builder: (context, snapshot) {
@@ -426,106 +398,106 @@ class _WeightValuesState extends State<WeightValues> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        width: widget.width,
-        height: widget.height * 0.15,
-        child: Column(
-          children: [
-            SizedBox(
-              height: widget.height * .13,
-              width: widget.width * .95,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(18),
-                        color: const Color.fromARGB(255, 230, 230, 230),
-                      ),
-                      width: widget.width * .43,
-                      height: widget.height * .07,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 255, 255, 255),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            width: widget.width * .1,
-                            height: widget.height * .057,
-                            child: IconButton(
-                              padding: const EdgeInsets.only(bottom: 13),
-                              color: const Color.fromARGB(255, 0, 0, 0),
-                              icon: const Icon(
-                                Icons.minimize,
-                              ),
-                              onPressed: () => {
-                                if (widget.foodWeight > 10) {setState(() => widget.foodWeight -= 10), widget.updateWeight(widget.foodWeight)}
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            width: widget.width * .12,
-                            child: Text(
-                              "${widget.foodWeight.toString()} g",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontWeight: FontWeight.bold, color: const Color.fromARGB(255, 0, 0, 0), fontSize: widget.width * .04),
-                            ),
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 255, 255, 255),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            width: widget.width * .1,
-                            height: widget.height * .057,
-                            child: IconButton(
-                              color: const Color.fromARGB(255, 0, 0, 0),
-                              icon: const Icon(
-                                Icons.add,
-                              ),
-                              onPressed: () => {
-                                if (widget.foodWeight < 990) {setState(() => widget.foodWeight += 10), widget.updateWeight(widget.foodWeight)}
-                              },
-                            ),
-                          ),
-                        ],
-                      )),
-                  SizedBox(
-                    width: widget.width * .4,
+      width: widget.width,
+      height: widget.height * 0.15,
+      child: Column(
+        children: [
+          SizedBox(
+            height: widget.height * .13,
+            width: widget.width * .95,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(18),
+                      color: const Color.fromARGB(255, 230, 230, 230),
+                    ),
+                    width: widget.width * .43,
                     height: widget.height * .07,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromRGBO(241, 137, 90, 1),
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(18),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 255, 255, 255),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          width: widget.width * .1,
+                          height: widget.height * .057,
+                          child: IconButton(
+                            padding: const EdgeInsets.only(bottom: 13),
+                            color: const Color.fromARGB(255, 0, 0, 0),
+                            icon: const Icon(
+                              Icons.minimize,
+                            ),
+                            onPressed: () => {
+                              if (widget.foodWeight > 10) {setState(() => widget.foodWeight -= 10), widget.updateWeight(widget.foodWeight)}
+                            },
                           ),
                         ),
-                      ),
-                      onPressed: () {
-                        widget.callback(widget.nutritionData);
-                        // widget.callback(widget.showResult.kcalories, widget.showResult.quantity, widget.index);
-
-                        // widget.showResult.kcalories * widget.showResult.quantity;
-
-                        var snackBar = const SnackBar(
-                          content: Text("Repas modifié"),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                        Get.back();
-                      },
-                      child: Text(
-                        'Appliquer',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: widget.width * .05, color: const Color.fromARGB(255, 255, 255, 255)),
+                        SizedBox(
+                          width: widget.width * .12,
+                          child: Text(
+                            "${widget.foodWeight.toString()} g",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontWeight: FontWeight.bold, color: const Color.fromARGB(255, 0, 0, 0), fontSize: widget.width * .04),
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 255, 255, 255),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          width: widget.width * .1,
+                          height: widget.height * .057,
+                          child: IconButton(
+                            color: const Color.fromARGB(255, 0, 0, 0),
+                            icon: const Icon(
+                              Icons.add,
+                            ),
+                            onPressed: () => {
+                              if (widget.foodWeight < 990) {setState(() => widget.foodWeight += 10), widget.updateWeight(widget.foodWeight)}
+                            },
+                          ),
+                        ),
+                      ],
+                    )),
+                SizedBox(
+                  width: widget.width * .4,
+                  height: widget.height * .07,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromRGBO(241, 137, 90, 1),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(18),
+                        ),
                       ),
                     ),
+                    onPressed: () {
+                      widget.callback(widget.nutritionData);
+                      // widget.callback(widget.showResult.kcalories, widget.showResult.quantity, widget.index);
+                      // widget.showResult.kcalories * widget.showResult.quantity;
+
+                      var snackBar = const SnackBar(
+                        content: Text("Repas modifié"),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      Get.back();
+                    },
+                    child: Text(
+                      'Appliquer',
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: widget.width * .05, color: const Color.fromARGB(255, 255, 255, 255)),
+                    ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            SizedBox(height: widget.height * .02),
-          ],
-        ));
+          ),
+          SizedBox(height: widget.height * .02),
+        ],
+      ),
+    );
   }
 }

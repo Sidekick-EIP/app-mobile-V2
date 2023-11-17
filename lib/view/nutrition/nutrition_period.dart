@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:sidekick_app/config/colors.dart';
 
 import 'package:sidekick_app/controller/nutrition_controller.dart';
 import 'package:sidekick_app/controller/user_controller.dart';
@@ -13,16 +14,18 @@ import 'package:sidekick_app/view/nutrition/edit_meal.dart';
 enum SampleItem { itemOne, itemTwo }
 
 class NutritionPeriod extends StatefulWidget {
-  const NutritionPeriod({
+  NutritionPeriod({
     Key? key,
     required this.date,
     required this.callbackPeriod,
     required this.nutritionData,
+    required this.period,
   }) : super(key: key);
 
   final String date;
   final Function callbackPeriod;
   final Nutrition nutritionData;
+  String period;
   @override
   State<NutritionPeriod> createState() => _NutritionPeriodState();
 }
@@ -30,7 +33,6 @@ class NutritionPeriod extends StatefulWidget {
 class _NutritionPeriodState extends State<NutritionPeriod> {
   late Future<Nutrition> futureNutrition;
 
-  String period = "breakfast";
   int getId = 0;
 
   final nutritionController = Get.put(NutritionController(), permanent: true);
@@ -43,7 +45,7 @@ class _NutritionPeriodState extends State<NutritionPeriod> {
 
   void updatePeriod(String newPeriod) {
     setState(() {
-      period = newPeriod;
+      widget.period = newPeriod;
     });
   }
 
@@ -70,21 +72,17 @@ class _NutritionPeriodState extends State<NutritionPeriod> {
               );
             },
             child: Container(
-              width: width * 0.22,
+              width: width * 0.13,
               height: height * 0.05,
               decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 198, 198, 198),
-                borderRadius: BorderRadius.circular(24),
+                color: ConstColors.primaryColor,
+                borderRadius: BorderRadius.circular(30),
               ),
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Icon(
                     Icons.add,
-                    size: 28.0,
-                  ),
-                  Icon(
-                    Icons.wysiwyg,
                     size: 28.0,
                   ),
                 ],
@@ -112,8 +110,10 @@ class _NutritionPeriodState extends State<NutritionPeriod> {
             height: height * 0.03,
           ),
           CategoryWidget(
-            period: period,
+            period: widget.period,
             updatePeriod: updatePeriod,
+            width: width,
+            height: height,
           ),
           SizedBox(height: height * 0.01),
           FutureBuilder<Nutrition>(
@@ -124,7 +124,7 @@ class _NutritionPeriodState extends State<NutritionPeriod> {
                   width: width,
                   height: height,
                   nutritionData: snapshot.data!,
-                  period: period,
+                  period: widget.period,
                   callbackPeriod: widget.callbackPeriod,
                 );
               } else if (snapshot.hasError) {
@@ -140,9 +140,17 @@ class _NutritionPeriodState extends State<NutritionPeriod> {
 }
 
 class CategoryWidget extends StatefulWidget {
-  CategoryWidget({super.key, required this.period, required this.updatePeriod});
+  const CategoryWidget({
+    super.key,
+    required this.period,
+    required this.updatePeriod,
+    required this.width,
+    required this.height,
+  });
 
-  late String period;
+  final double width;
+  final double height;
+  final String period;
   final Function(String) updatePeriod;
 
   @override
@@ -150,38 +158,75 @@ class CategoryWidget extends StatefulWidget {
 }
 
 class _CategoryWidgetState extends State<CategoryWidget> {
-  int selectedCategoryIndex = 0;
-
-  List<String> categories = ['Petit déjeuner', 'Déjeuner', 'Dinner', 'Snacks'];
+  late int selectedCategoryIndex;
+  List<String> categories = ['Petit déjeuner', 'Déjeuner', 'Dinner', 'Collation'];
   List<String> setCategories = ['breakfast', 'lunch', 'dinners', 'snacks'];
-  int previousCategoryIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    setSelectedCategoryIndex();
+  }
+
+  void setSelectedCategoryIndex() {
+    switch (widget.period) {
+      case "breakfast":
+        selectedCategoryIndex = 0;
+        break;
+      case "lunch":
+        selectedCategoryIndex = 1;
+        break;
+      case "dinners":
+        selectedCategoryIndex = 2;
+        break;
+      case "snacks":
+        selectedCategoryIndex = 3;
+        break;
+      default:
+        selectedCategoryIndex = 0;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(categories.length, (index) {
-        return InkWell(
-          onTap: () {
-            setState(() {
-              previousCategoryIndex = selectedCategoryIndex;
-              selectedCategoryIndex = index;
-              widget.updatePeriod(setCategories[index]);
-            });
-          },
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            padding: const EdgeInsets.all(12.0),
-            color: index == selectedCategoryIndex ? const Color.fromRGBO(242, 93, 41, 1) : Colors.grey,
-            child: Text(
-              categories[index],
-              style: const TextStyle(
-                color: Colors.white,
+    return Center(
+      child: Container(
+        width: widget.width * 0.96,
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 255, 255, 255),
+          borderRadius: BorderRadius.circular(15.41),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(categories.length, (index) {
+            return InkWell(
+              onTap: () {
+                setState(() {
+                  selectedCategoryIndex = index;
+                  widget.updatePeriod(setCategories[index]);
+                });
+              },
+              child: Container(
+                width: widget.width * 0.24,
+                height: widget.height * 0.04,
+                decoration: BoxDecoration(
+                  color: selectedCategoryIndex == index ? ConstColors.primaryColor : Colors.transparent,
+                  borderRadius: BorderRadius.circular(15.41),
+                ),
+                child: Center(
+                  child: Text(
+                    categories[index],
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: selectedCategoryIndex == index ? ConstColors.secondaryColor : ConstColors.blackColor,
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ),
-        );
-      }),
+            );
+          }),
+        ),
+      ),
     );
   }
 }
@@ -260,7 +305,6 @@ class _MealViewBuilderState extends State<MealViewBuilder> {
                                 width: widget.width,
                                 height: widget.height,
                                 color: Colors.green,
-                                colorAccent: Colors.greenAccent,
                                 food: widget.nutritionData.meals[widget.period]!["meals"][index],
                                 period: "breakfast",
                                 callback: callback,
@@ -284,7 +328,6 @@ class MealPeriodCard extends StatefulWidget {
     required this.width,
     required this.height,
     required this.color,
-    required this.colorAccent,
     required this.food,
     required this.period,
     required this.callback,
@@ -294,7 +337,6 @@ class MealPeriodCard extends StatefulWidget {
   final double width;
   final double height;
   final Color color;
-  final Color colorAccent;
   final Food food;
   final String period;
   final Function callback;
@@ -314,7 +356,10 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
     int totalMacros = widget.food.carbs + widget.food.protein + widget.food.fat;
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(width: 1.6, color: const Color.fromARGB(66, 128, 128, 128)),
+        border: Border.all(
+          width: 1,
+          color: const Color.fromARGB(66, 128, 128, 128),
+        ),
         color: const Color.fromARGB(255, 255, 255, 255),
         borderRadius: const BorderRadius.all(Radius.circular(20)),
       ),
@@ -327,18 +372,17 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Container(
+              SizedBox(
                 width: widget.width * 0.15,
                 height: widget.height * 0.07,
-                decoration: BoxDecoration(
-                  color: widget.colorAccent,
-                  borderRadius: const BorderRadius.all(Radius.circular(20)),
-                ),
                 child: Center(
-                  child: Image(
-                    image: NetworkImage(widget.food.picture),
-                    width: widget.width * 0.1,
-                    height: widget.height * 0.1,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12.0),
+                    child: Image(
+                      image: NetworkImage(widget.food.picture),
+                      width: widget.width * 0.15,
+                      height: widget.height * 0.15,
+                    ),
                   ),
                 ),
               ),
@@ -378,7 +422,7 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
                 width: widget.width * 0.11,
                 height: widget.height * 0.05,
                 decoration: const BoxDecoration(
-                  color: Color.fromARGB(255, 205, 205, 205),
+                  color: Color.fromARGB(255, 255, 255, 255),
                   borderRadius: BorderRadius.all(Radius.circular(40)),
                 ),
                 child: PopupMenuButton<String>(

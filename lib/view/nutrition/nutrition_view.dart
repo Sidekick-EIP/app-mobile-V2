@@ -264,6 +264,9 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                   ),
                 ),
               ),
+              SizedBox(
+                height: widget.height * 0.008,
+              ),
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: Row(
@@ -273,7 +276,7 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                         children: [
                           Container(
                             width: widget.width,
-                            height: widget.height * 0.26,
+                            height: widget.height * 0.22,
                             decoration: const BoxDecoration(
                               color: Color.fromARGB(255, 255, 255, 255),
                               borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -283,7 +286,7 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                                 Positioned(
                                   left: 0,
                                   right: 0,
-                                  bottom: 0,
+                                  bottom: 5,
                                   top: 0,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -302,7 +305,7 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                                             width: widget.width * 0.1,
                                             height: widget.height * 0.045,
                                             decoration: const BoxDecoration(
-                                              color: Color.fromARGB(255, 118, 199, 140),
+                                              color: Colors.greenAccent,
                                               borderRadius: BorderRadius.all(Radius.circular(10)),
                                             ),
                                             child: const Center(
@@ -323,7 +326,7 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                                         animation: true,
                                         percent: widget.nutritionData.calories > 2100 ? 0.0 : ((2100 - widget.nutritionData.calories) / 2100),
                                         circularStrokeCap: CircularStrokeCap.round,
-                                        progressColor: const Color.fromARGB(255, 0, 193, 51),
+                                        progressColor: Colors.greenAccent,
                                         backgroundColor: const Color.fromARGB(255, 200, 200, 200).withOpacity(0.2),
                                         center: Column(
                                           mainAxisAlignment: MainAxisAlignment.center,
@@ -356,7 +359,7 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                         children: [
                           Container(
                             width: widget.width,
-                            height: widget.height * 0.26,
+                            height: widget.height * 0.22,
                             decoration: const BoxDecoration(
                               color: Color.fromARGB(255, 255, 255, 255),
                               borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -366,7 +369,7 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                                 Positioned(
                                   left: 0,
                                   right: 0,
-                                  bottom: 0,
+                                  bottom: 5,
                                   top: 0,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -385,7 +388,7 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                                             width: widget.width * 0.1,
                                             height: widget.height * 0.045,
                                             decoration: const BoxDecoration(
-                                              color: Color.fromARGB(255, 197, 116, 116),
+                                              color: Color.fromARGB(255, 255, 147, 147),
                                               borderRadius: BorderRadius.all(Radius.circular(10)),
                                             ),
                                             child: const Center(
@@ -406,7 +409,7 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                                         animation: true,
                                         percent: 0.3,
                                         circularStrokeCap: CircularStrokeCap.round,
-                                        progressColor: const Color.fromARGB(255, 241, 56, 42),
+                                        progressColor: const Color.fromARGB(255, 255, 147, 147),
                                         backgroundColor: const Color.fromARGB(255, 180, 180, 180).withOpacity(0.2),
                                         center: Column(
                                           mainAxisAlignment: MainAxisAlignment.center,
@@ -504,6 +507,7 @@ class _TodaysMealsState extends State<TodaysMeals> {
                       date: widget.date,
                       nutritionData: widget.nutritionData,
                       callbackPeriod: widget.callbackPeriod,
+                      period: "breakfast",
                     ),
                     transition: Transition.rightToLeft,
                   );
@@ -533,12 +537,14 @@ class _TodaysMealsState extends State<TodaysMeals> {
                 MealPeriodCard(
                   width: widget.width,
                   height: widget.height,
-                  color: Colors.green,
-                  colorAccent: Colors.greenAccent,
+                  color: const Color.fromRGBO(34, 73, 34, 1),
+                  colorAccent: const Color.fromARGB(255, 198, 251, 225),
                   mealPeriodName: "Petit déjeuner   ",
                   emojiImg: "🍳",
                   nutritionData: widget.nutritionData,
                   period: "breakfast",
+                  date: widget.date,
+                  callbackPeriod: widget.callbackPeriod,
                 ),
                 SizedBox(
                   height: widget.height * 0.01,
@@ -546,12 +552,14 @@ class _TodaysMealsState extends State<TodaysMeals> {
                 MealPeriodCard(
                   width: widget.width,
                   height: widget.height,
-                  color: Colors.orange,
-                  colorAccent: const Color.fromARGB(255, 255, 203, 136),
+                  color: const Color.fromRGBO(87, 87, 87, 1),
+                  colorAccent: const Color.fromARGB(255, 255, 223, 182),
                   mealPeriodName: "Déjeuner   ",
                   emojiImg: "🍝",
                   nutritionData: widget.nutritionData,
                   period: "lunch",
+                  date: widget.date,
+                  callbackPeriod: widget.callbackPeriod,
                 ),
                 SizedBox(
                   height: widget.height * 0.01,
@@ -559,12 +567,14 @@ class _TodaysMealsState extends State<TodaysMeals> {
                 MealPeriodCard(
                   width: widget.width,
                   height: widget.height,
-                  color: Colors.blue,
-                  colorAccent: const Color.fromARGB(255, 159, 194, 255),
+                  color: const Color.fromRGBO(6, 50, 86, 1),
+                  colorAccent: const Color.fromARGB(255, 199, 220, 255),
                   mealPeriodName: "Dinner   ",
                   emojiImg: "🥗",
                   nutritionData: widget.nutritionData,
                   period: "dinners",
+                  date: widget.date,
+                  callbackPeriod: widget.callbackPeriod,
                 ),
                 SizedBox(
                   height: widget.height * 0.01,
@@ -572,12 +582,14 @@ class _TodaysMealsState extends State<TodaysMeals> {
                 MealPeriodCard(
                   width: widget.width,
                   height: widget.height,
-                  color: Colors.red,
-                  colorAccent: const Color.fromARGB(255, 255, 147, 147),
-                  mealPeriodName: "Snacks   ",
-                  emojiImg: "🥪",
+                  color: const Color.fromRGBO(75, 10, 6, 1),
+                  colorAccent: const Color.fromARGB(255, 255, 208, 208),
+                  mealPeriodName: "Collation   ",
+                  emojiImg: "🍓",
                   nutritionData: widget.nutritionData,
                   period: "snacks",
+                  date: widget.date,
+                  callbackPeriod: widget.callbackPeriod,
                 ),
               ],
             ))
@@ -587,16 +599,19 @@ class _TodaysMealsState extends State<TodaysMeals> {
 }
 
 class MealPeriodCard extends StatefulWidget {
-  const MealPeriodCard(
-      {super.key,
-      required this.width,
-      required this.height,
-      required this.color,
-      required this.colorAccent,
-      required this.mealPeriodName,
-      required this.emojiImg,
-      required this.nutritionData,
-      required this.period});
+  const MealPeriodCard({
+    super.key,
+    required this.width,
+    required this.height,
+    required this.color,
+    required this.colorAccent,
+    required this.mealPeriodName,
+    required this.emojiImg,
+    required this.nutritionData,
+    required this.period,
+    required this.date,
+    required this.callbackPeriod,
+  });
 
   final double width;
   final double height;
@@ -606,6 +621,8 @@ class MealPeriodCard extends StatefulWidget {
   final String emojiImg;
   final Nutrition nutritionData;
   final String period;
+  final String date;
+  final Function callbackPeriod;
 
   @override
   State<MealPeriodCard> createState() => _MealPeriodCardState();
@@ -614,84 +631,97 @@ class MealPeriodCard extends StatefulWidget {
 class _MealPeriodCardState extends State<MealPeriodCard> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: Color.fromARGB(255, 255, 255, 255),
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-      ),
-      width: widget.width * 0.85,
-      height: widget.height * 0.1,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Container(
-            width: widget.width * 0.15,
-            height: widget.height * 0.07,
-            decoration: BoxDecoration(
-              color: widget.colorAccent,
-              borderRadius: const BorderRadius.all(Radius.circular(20)),
-            ),
-            child: Center(
-              child: Text(
-                widget.emojiImg,
-                style: const TextStyle(fontSize: 35),
+    return InkWell(
+      onTap: () {
+        Get.to(
+          () => NutritionPeriod(
+            date: widget.date,
+            nutritionData: widget.nutritionData,
+            callbackPeriod: widget.callbackPeriod,
+            period: widget.period,
+          ),
+          transition: Transition.rightToLeft,
+        );
+      },
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Color.fromARGB(255, 255, 255, 255),
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+        ),
+        width: widget.width * 0.9,
+        height: widget.height * 0.1,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Container(
+              width: widget.width * 0.15,
+              height: widget.height * 0.07,
+              decoration: BoxDecoration(
+                color: widget.colorAccent,
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
+              ),
+              child: Center(
+                child: Text(
+                  widget.emojiImg,
+                  style: const TextStyle(fontSize: 35),
+                ),
               ),
             ),
-          ),
-          SizedBox(
-            width: widget.width * 0.5,
-            height: widget.height * 0.1,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      widget.mealPeriodName,
-                      style: pSemiBold18.copyWith(fontSize: 16),
-                    ),
-                    Text(
-                      "${widget.nutritionData.meals[widget.period]!["calories"].toString()} Cal",
-                      style: TextStyle(
-                          color: widget.color,
-                          height: 0.9,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 10,
-                          background: Paint()
-                            ..strokeWidth = 12.0
-                            ..color = widget.colorAccent
-                            ..style = PaintingStyle.stroke
-                            ..strokeJoin = StrokeJoin.round),
-                    )
-                  ],
-                ),
-                Text(
-                  widget.nutritionData.meals[widget.period]?["meals"]?.length == 1
-                      ? "${widget.nutritionData.meals[widget.period]?["meals"]?.length.toString()} aliment a été ajouté"
-                      : widget.nutritionData.meals[widget.period]?["meals"]?.length == 0
-                          ? "Aucun aliment n'a été ajouté"
-                          : "${widget.nutritionData.meals[widget.period]?["meals"]?.length.toString()} aliments ont été ajouté",
-                  style: pRegular14.copyWith(fontSize: 12, color: Colors.grey),
-                ),
-              ],
+            SizedBox(
+              width: widget.width * 0.5,
+              height: widget.height * 0.1,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        widget.mealPeriodName,
+                        style: pSemiBold18.copyWith(fontSize: 16),
+                      ),
+                      Text(
+                        "${widget.nutritionData.meals[widget.period]!["calories"].toString()} Cal",
+                        style: TextStyle(
+                            color: widget.color,
+                            height: 0.9,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 10,
+                            background: Paint()
+                              ..strokeWidth = 12.0
+                              ..color = widget.colorAccent
+                              ..style = PaintingStyle.stroke
+                              ..strokeJoin = StrokeJoin.round),
+                      )
+                    ],
+                  ),
+                  Text(
+                    widget.nutritionData.meals[widget.period]?["meals"]?.length == 1
+                        ? "${widget.nutritionData.meals[widget.period]?["meals"]?.length.toString()} aliment a été ajouté"
+                        : widget.nutritionData.meals[widget.period]?["meals"]?.length == 0
+                            ? "Aucun aliment n'a été ajouté"
+                            : "${widget.nutritionData.meals[widget.period]?["meals"]?.length.toString()} aliments ont été ajouté",
+                    style: pRegular14.copyWith(fontSize: 12, color: Colors.grey),
+                  ),
+                ],
+              ),
             ),
-          ),
-          SizedBox(
-            width: widget.width * 0.1,
-            height: widget.height * 0.1,
-            child: const Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.arrow_forward_ios,
-                  color: Color(0xffA9B2BA),
-                  size: 16,
-                ),
-              ],
+            SizedBox(
+              width: widget.width * 0.1,
+              height: widget.height * 0.1,
+              child: const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: Color(0xffA9B2BA),
+                    size: 16,
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

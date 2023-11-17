@@ -80,10 +80,7 @@ packages:
       sha256: ee67cb0715911d28db6bf4af1026078bd6f0128b07a5f66fb2ed94ec6783c09a
       url: "https://pub.dev"
     source: hosted
-<<<<<<< HEAD
     version: "1.18.0"
-=======
-    version: "1.17.2"
   convert:
     dependency: transitive
     description:
@@ -92,7 +89,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.1"
->>>>>>> 76223ccd11401f76169edd89044690cc5a38b7ba
   cross_file:
     dependency: transitive
     description:
@@ -275,7 +271,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
-=======
   flutter_launcher_icons:
     dependency: "direct main"
     description:
@@ -284,7 +279,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.13.1"
->>>>>>> 76223ccd11401f76169edd89044690cc5a38b7ba
   flutter_link_previewer:
     dependency: transitive
     description:
@@ -703,7 +697,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.6"
-<<<<<<< HEAD
   pointer_interceptor:
     dependency: transitive
     description:
@@ -712,7 +705,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.9.3+7"
-=======
   pointycastle:
     dependency: transitive
     description:

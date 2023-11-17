@@ -1,13 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:sidekick_app/config/colors.dart';
 import 'package:sidekick_app/config/text_style.dart';
 import 'package:sidekick_app/controller/workout_controller.dart';
-import 'package:sidekick_app/models/exercise.dart';
-import 'package:sidekick_app/utils/http_request.dart';
 import 'package:sidekick_app/utils/token_storage.dart';
 
 class TrainingView extends StatefulWidget {
@@ -203,6 +199,39 @@ class _TrainingViewState extends State<TrainingView> {
                       child: ListView(
                         scrollDirection: Axis.horizontal,
                         children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  selectedExercise = -1;
+                                  workoutController.getAllExercices();
+                                });
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: selectedExercise == -1
+                                    ? ConstColors.lightBlackColor
+                                    : Colors.transparent,
+                                  borderRadius: BorderRadius.circular(15.41),
+                                ),
+                                child: Container(
+                                  margin: const EdgeInsets.only(left: 10, right: 10),
+                                  child: Center(
+                                    child: Text(
+                                      "tout",
+                                      style: pSemiBold18.copyWith(
+                                        fontSize: 11.56,
+                                        color: selectedExercise == -1
+                                          ? ConstColors.secondaryColor
+                                          : ConstColors.blackColor
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                           for (final (index, item) in allWorkouts.indexed)
                             Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -236,7 +265,7 @@ class _TrainingViewState extends State<TrainingView> {
                                   ),
                                 ),
                               ),
-                            ),
+                            )
                         ],
                       ),
                     ),

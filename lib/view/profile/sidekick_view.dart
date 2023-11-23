@@ -7,7 +7,7 @@ import '../../config/images.dart';
 import '../../config/text_style.dart';
 import '../../controller/user_controller.dart';
 import '../../enum/activities.dart';
-import '../../enum/activities_map.dart';
+import '../../models/activity.dart';
 import '../../utils/calculate_age.dart';
 
 class SidekickView extends StatefulWidget {
@@ -19,7 +19,7 @@ class SidekickView extends StatefulWidget {
 
 class _SidekickViewState extends State<SidekickView> {
   final userController = Get.find<UserController>();
-  List<String> activityList = [];
+  List<Activity> activityList = [];
 
   String getGoalText(String goal) {
     switch (goal) {
@@ -73,20 +73,18 @@ class _SidekickViewState extends State<SidekickView> {
     }
   }
 
-  List<String> getTranslations() {
+  List<Activity> getActivities() {
     return userController.partner.value.activities
-        .map((activity) => Activities.values.firstWhere(
+        .map((activity) => Activity(Activities.values.firstWhere(
             (e) => e.toString().split('.').last == activity.value,
-            orElse: () => throw Exception('Activity not found: $activity')))
-        .where((e) => sportsTranslation.containsKey(e))
-        .map((e) => sportsTranslation[e]!)
+            orElse: () => throw Exception('Activity not found: $activity'))))
         .toList();
   }
 
   @override
   void initState() {
     super.initState();
-    activityList = getTranslations();
+    activityList = getActivities();
   }
 
   @override
@@ -371,7 +369,7 @@ class _SidekickViewState extends State<SidekickView> {
                                   : 9,
                               itemBuilder: (BuildContext context, int index) {
                                 return categoryCard(
-                                    DefaultImages.a0, activityList[index]);
+                                    activityList[index].iconPath, activityList[index].activityName);
                               },
                             )
                           ],

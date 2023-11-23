@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../config/colors.dart';
-import '../../../../config/images.dart';
 import '../../../../config/text_style.dart';
 import '../../../../controller/auth_controller.dart';
+import '../../../../enum/activities.dart';
 import '../../../../enum/activities_map.dart';
+import '../../../../models/activity.dart';
 
 class ActivityView extends StatefulWidget {
   final AuthController authController;
@@ -18,7 +19,16 @@ class ActivityView extends StatefulWidget {
 }
 
 class _ActivityViewState extends State<ActivityView> {
-  List<String> sportsList = sportsTranslation.values.toList();
+  List<Activity> activityList = [];
+
+  List<Activity> getActivities() {
+    return Activities.values.map((e) => Activity(e)).toList();
+  }
+
+  @override
+  void initState() {
+    activityList = getActivities();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +45,7 @@ class _ActivityViewState extends State<ActivityView> {
         ),
         const SizedBox(height: 30),
         ListView.builder(
-          itemCount: sportsList.length,
+          itemCount: activityList.length,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) {
@@ -73,13 +83,13 @@ class _ActivityViewState extends State<ActivityView> {
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: Image.asset(
-                              DefaultImages.a0,
+                              activityList[index].iconPath,
                             ),
                           ),
                         ),
                         const SizedBox(width: 15),
                         Text(
-                          sportsList[index],  // get the sport from the list
+                          activityList[index].activityName,  // get the sport from the list
                           style: pSemiBold18.copyWith(
                             fontSize: 15,
                           ),

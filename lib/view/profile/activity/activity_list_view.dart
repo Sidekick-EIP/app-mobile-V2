@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sidekick_app/controller/user_controller.dart';
 
-import '../../../config/images.dart';
 import '../../../config/text_style.dart';
 import '../../../enum/activities.dart';
-import '../../../enum/activities_map.dart';
+import '../../../models/activity.dart';
 
 class ActivityListView extends StatefulWidget {
   const ActivityListView({Key? key}) : super(key: key);
@@ -16,22 +15,20 @@ class ActivityListView extends StatefulWidget {
 
 class ActivityListViewState extends State<ActivityListView> {
   final userController = Get.find<UserController>();
-  List<String> activityList = [];
+  List<Activity> activityList = [];
 
-  List<String> getTranslations() {
+  List<Activity> getActivities() {
     return userController.user.value.activities
-        .map((activity) => Activities.values.firstWhere(
+        .map((activity) => Activity(Activities.values.firstWhere(
             (e) => e.toString().split('.').last == activity.value,
-            orElse: () => throw Exception('Activity not found: $activity')))
-        .where((e) => sportsTranslation.containsKey(e))
-        .map((e) => sportsTranslation[e]!)
+            orElse: () => throw Exception('Activity not found: $activity'))))
         .toList();
   }
 
   @override
   void initState() {
     super.initState();
-    activityList = getTranslations();
+    activityList = getActivities();
   }
 
   @override
@@ -84,13 +81,13 @@ class ActivityListViewState extends State<ActivityListView> {
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: Image.asset(
-                              DefaultImages.a0,
+                              activityList[index].iconPath,
                             ),
                           ),
                         ),
                         const SizedBox(width: 15),
                         Text(
-                          activityList[index],
+                          activityList[index].activityName,
                           // get the sport from the list
                           style: pSemiBold18.copyWith(
                             fontSize: 15,

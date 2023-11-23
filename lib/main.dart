@@ -9,6 +9,8 @@ import 'package:sidekick_app/utils/token_storage.dart';
 import 'package:sidekick_app/view/auth/signin_screen.dart';
 import 'package:sidekick_app/view/onboarding/onboarding_screen.dart';
 import 'package:sidekick_app/view/tab_screen.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
 
 Future main() async {
   await dotenv.load(fileName: ".env");
@@ -95,6 +97,15 @@ class _MyAppState extends State<MyApp> {
             },
           ),
         ),
+        locale: const Locale('fr', ''),
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('fr', ''), // Français
+        ],
         home: _accessToken != ""
             ? const TabScreen()
             : isFirstTime!

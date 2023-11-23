@@ -222,7 +222,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.0"
-<<<<<<< HEAD
   flutter_keyboard_visibility:
     dependency: transitive
     description:
@@ -713,7 +712,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.7.3"
->>>>>>> 76223ccd11401f76169edd89044690cc5a38b7ba
   provider:
     dependency: "direct main"
     description:

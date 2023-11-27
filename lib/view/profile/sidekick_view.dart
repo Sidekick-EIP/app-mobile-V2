@@ -156,6 +156,7 @@ class _SidekickViewState extends State<SidekickView> {
             height: Get.height,
             width: Get.width,
             decoration: const BoxDecoration(
+              color: Color.fromARGB(250, 254, 251, 254),
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30),
                 topRight: Radius.circular(30),

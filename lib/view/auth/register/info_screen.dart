@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:sidekick_app/view/auth/signin_screen.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter/cupertino.dart';
 
 import '../../../config/colors.dart';
 import '../../../config/text_style.dart';
@@ -69,6 +71,27 @@ class _InfoScreenState extends State<InfoScreen> {
     }
   }
 
+  void _showCupertinoDatePicker() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext builder) {
+        return Container(
+          height: MediaQuery.of(context).copyWith().size.height / 3,
+          child: CupertinoDatePicker(
+            mode: CupertinoDatePickerMode.date,
+            initialDateTime: DateTime.now(),
+            onDateTimeChanged: (DateTime newDate) {
+              birthDateController.text =
+                  DateFormat('dd/MM/yyyy').format(newDate).toString();
+            },
+            minimumYear: 1900,
+            maximumYear: DateTime.now().year,
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,12 +129,14 @@ class _InfoScreenState extends State<InfoScreen> {
                         },
                       ),
                       const SizedBox(height: 15),
-                      CustomTextField(
-                        text: "Date de naissance",
-                        textEditingController: birthDateController,
-                        onChanged: (value) {
-                          authController.updateBirthDate(value);
-                        },
+                      GestureDetector(
+                        onTap: _showCupertinoDatePicker,
+                        child: AbsorbPointer(
+                          child: CustomTextField(
+                            text: "Date de naissance",
+                            textEditingController: birthDateController,
+                          ),
+                        ),
                       ),
                       const SizedBox(height: 15),
                       CustomTextField(
@@ -137,6 +162,9 @@ class _InfoScreenState extends State<InfoScreen> {
                           child: TypeAheadFormField(
                             textFieldConfiguration: TextFieldConfiguration(
                               controller: cityController,
+                              style: pSemiBold18.copyWith(
+                                fontSize: 13,
+                              ),
                               decoration: InputDecoration(
                                 hintText: "Ville",
                                 border: InputBorder.none,

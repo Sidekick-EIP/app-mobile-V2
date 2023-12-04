@@ -9,6 +9,7 @@ import '../../config/colors.dart';
 import '../../config/images.dart';
 import '../../config/text_style.dart';
 import '../../widget/search_field.dart';
+import '../../widget/welcome_card.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -83,25 +84,22 @@ class _HomeViewState extends State<HomeView> {
                     text: "Rechercher",
                     textEditingController: TextEditingController(),
                   ),
+                  const SizedBox(height: 30),
                   Expanded(
                     child: ListView(
                       padding: EdgeInsets.zero,
                       physics: const ClampingScrollPhysics(),
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 30),
-                            SizedBox(
-                              height: 207.89,
-                              width: Get.width,
-                              child: Image.asset(
-                                DefaultImages.sidekickBanner,
-                                fit: BoxFit.fill,
-                              ),
-                            ),
-                          ],
-                        ),
+                        userController.user.value.sidekickId != null ?
+                        InkWell(
+                          onTap: () => {
+                            homeController.flag.value = 1
+                          }, child: WelcomeCardWSidekick(
+                            sidekickName: userController.partner.value.firstname.value,
+                            imagePath: userController.partner.value.avatar.value
+                          )
+                        ) :
+                        const WelcomeCardWOutSidekick(),
                         const SizedBox(height: 30),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

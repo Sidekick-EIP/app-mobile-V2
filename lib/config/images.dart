@@ -34,7 +34,6 @@ class DefaultImages {
   static const String error = 'assets/images/feather_info.svg';
   static const String notification = 'assets/images/Notification.svg';
   static const String filter = 'assets/images/Filter.svg';
-  static const String banner = 'assets/images/Banner.png';
   static const String h1 = 'assets/images/h1.png';
   static const String h2 = 'assets/images/h2.png';
   static const String h3 = 'assets/images/h3.png';

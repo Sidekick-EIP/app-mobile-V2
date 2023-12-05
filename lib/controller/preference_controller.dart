@@ -18,7 +18,7 @@ class PreferenceController extends GetxController {
     sounds: RxBool(false),
   ).obs;
 
-  Future<void> fetchPreferenceFromBack() async {
+  Future<bool> fetchPreferenceFromBack() async {
     final response = await HttpRequest.mainGet('/preferences/');
 
     if (response.statusCode == 200) {
@@ -27,11 +27,14 @@ class PreferenceController extends GetxController {
       preference.value.isDarkMode.value = body['darkMode'];
       preference.value.notifications.value = body['notifications'];
       preference.value.sounds.value = body['sounds'];
+      return true;
     } else if (response.statusCode == 500) {
       if (kDebugMode) {
         print("Error 500 from server");
       }
+      return false;
     }
+    return false;
   }
 
   Future<void> updatePreference() async {

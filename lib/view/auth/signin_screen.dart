@@ -236,7 +236,7 @@ class _SignInScreenState extends State<SignInScreen> {
               child: Container(
                 color: ConstColors.secondaryColor,
                 child: const Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(color: ConstColors.primaryColor),
                 ),
               ),
             ),

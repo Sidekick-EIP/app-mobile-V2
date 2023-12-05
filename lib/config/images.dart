@@ -111,4 +111,6 @@ class DefaultImages {
   static const String goal2RemoveBg = 'assets/images/goal2-removebg-preview.png';
   static const String goal3RemoveBg = 'assets/images/goal3-removebg-preview.png';
   static const String goal4RemoveBg = 'assets/images/goal4-removebg-preview.png';
+  static const String noExerice = 'assets/images/no_exercice.png';
+  static const String hourGlass = 'assets/images/hourglass.png';
 }

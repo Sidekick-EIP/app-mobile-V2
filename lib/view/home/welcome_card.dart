@@ -1,5 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../../config/colors.dart';
+import '../../config/images.dart';
+import '../../config/text_style.dart';
 
 class WelcomeCardWOutSidekick extends StatelessWidget {
   const WelcomeCardWOutSidekick({super.key});
@@ -11,34 +14,24 @@ class WelcomeCardWOutSidekick extends StatelessWidget {
         height: 141,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(7.7),
-          color : Color.fromRGBO(255, 255, 255, 1),
+          color : const Color.fromRGBO(255, 255, 255, 1),
         ),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const Padding(
-                padding: EdgeInsets.only(left: 10, top: 10),
-                child: Text('Bienvenue !', textAlign: TextAlign.left, style: TextStyle(
-                  color: Color.fromRGBO(10, 6, 21, 1),
-                  fontFamily: 'Poppins',
-                  fontSize: 22,
-                  letterSpacing: 0,
-                  fontWeight: FontWeight.w500,
-                ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10, top: 10),
+                child: Text('Bienvenue !', textAlign: TextAlign.left,
+                    style: pSemiBold20
                 ),
               ), Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Flexible(
+                  Flexible(
                     child: Padding(
-                      padding: EdgeInsets.only(left: 10),
-                      child: Text('Recherche en cours... Vous recevrez une notification lorsque le partenaire parfait sera trouvé.', style: TextStyle(
-                          color: Color.fromRGBO(10, 6, 21, 1),
-                          fontFamily: 'Open Sans',
-                          fontSize: 14,
-                          fontWeight: FontWeight.normal,
-                          height: 1.3
-                      ),
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Text('Recherche en cours... Vous recevrez une notification lorsque le partenaire parfait sera trouvé.',
+                          style: pRegular14,
                       ),
                     ),
                   ), Padding(
@@ -48,7 +41,7 @@ class WelcomeCardWOutSidekick extends StatelessWidget {
                         height: 78,
                         decoration: const BoxDecoration(
                           image : DecorationImage(
-                              image: AssetImage('assets/images/hourglass.png'),
+                              image: AssetImage(DefaultImages.hourGlass),
                               fit: BoxFit.fitWidth
                           ),
                         )
@@ -74,13 +67,13 @@ class WelcomeCardWSidekick extends StatelessWidget {
           height: 142,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(7.7),
-            boxShadow : [
+            boxShadow : const [
               BoxShadow(
                 color: Color.fromRGBO(242, 93, 41, 0.5),
                 blurRadius: 16
               ),
             ],
-            color: Color(0xffF25D29),
+            color: ConstColors.primaryColor,
           ),
           child: Row(
               children: <Widget>[
@@ -103,13 +96,10 @@ class WelcomeCardWSidekick extends StatelessWidget {
                       children: [
                         Text('$sidekickName vient de réaliser sa séance d’abdos il y a 3h !',
                           textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            color: Color.fromRGBO(255, 255, 255, 1),
-                            fontFamily: 'Poppins',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            height: 1.3,
-                          )
+                          style: pSemiBold18.copyWith(
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
                         ),
                         Container(
                           decoration: BoxDecoration(
@@ -132,16 +122,10 @@ class WelcomeCardWSidekick extends StatelessWidget {
                                     ),
                                 ),
                               ),
-                              const Padding(
-                                padding: EdgeInsets.only(left: 10),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10),
                                 child: Text('Lui envoyer un message', textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Color.fromRGBO(0, 0, 0, 1),
-                                    fontFamily: 'Poppins',
-                                    fontSize: 12,
-                                    letterSpacing: 0,
-                                    fontWeight: FontWeight.normal,
-                                  ),
+                                  style: pRegular14,
                                 ),
                               )
                             ]

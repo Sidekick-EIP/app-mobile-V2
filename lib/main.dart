@@ -11,6 +11,8 @@ import 'package:sidekick_app/view/onboarding/onboarding_screen.dart';
 import 'package:sidekick_app/view/tab_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'config/colors.dart';
+
 
 Future main() async {
   await dotenv.load(fileName: ".env");
@@ -73,7 +75,7 @@ class _MyAppState extends State<MyApp> {
         title: 'Sidekick',
         debugShowCheckedModeBanner: false,
         home: Scaffold(
-          body: Center(child: CircularProgressIndicator()),
+          body: Center(child: CircularProgressIndicator(color: ConstColors.primaryColor)),
         ),
       );
     } else {

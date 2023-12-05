@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sidekick_app/utils/http_request.dart';
+import 'package:sidekick_app/view/auth/register/info_screen.dart';
 import 'package:sidekick_app/view/auth/signin_screen.dart';
 
 import '../../../config/colors.dart';
 import '../../../config/text_style.dart';
+import '../../../utils/token_storage.dart';
 import '../../../widget/custom_button.dart';
 import '../../../widget/custom_textfield.dart';
 
@@ -20,7 +24,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
-
+  final TokenStorage tokenStorage = TokenStorage();
   bool isLoading = false;
 
   Future<bool> registerUser(String email, String password) async {
@@ -34,6 +38,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
 
     if (response.statusCode == 201) {
+      Map<String, dynamic> decodedResponse = jsonDecode(response.body);
+      await tokenStorage.storeAccessToken(decodedResponse['access_token']);
+      await tokenStorage.storeRefreshToken(decodedResponse['refresh_token']);
       return true;
     } else {
       return false;
@@ -112,7 +119,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   Get.snackbar("Succès", "Inscription réussie",
                                       snackPosition: SnackPosition.BOTTOM);
                                   Get.to(
-                                    () => const SignInScreen(),
+                                    () => const InfoScreen(),
                                     transition: Transition.rightToLeft,
                                   );
                                 } else {
@@ -171,7 +178,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Container(
                 color: ConstColors.secondaryColor,
                 child: const Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(color: ConstColors.secondaryColor),
                 ),
               ),
             ),

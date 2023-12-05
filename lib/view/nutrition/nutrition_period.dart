@@ -7,6 +7,8 @@ import 'package:sidekick_app/models/nutrition.dart';
 import 'package:sidekick_app/view/nutrition/add_meal.dart';
 import 'package:sidekick_app/view/nutrition/edit_meal.dart';
 
+import '../../config/colors.dart';
+
 enum SampleItem { itemOne, itemTwo }
 
 class NutritionPeriod extends StatefulWidget {
@@ -127,7 +129,7 @@ class _NutritionPeriodState extends State<NutritionPeriod> {
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');
               }
-              return const Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator(color: ConstColors.primaryColor));
             },
           )
         ],

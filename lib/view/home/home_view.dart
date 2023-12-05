@@ -1,14 +1,21 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sidekick_app/controller/home_controller.dart';
 import 'package:sidekick_app/controller/user_controller.dart';
+import 'package:sidekick_app/utils/http_request.dart';
 
 import '../../controller/preference_controller.dart';
 import '../../config/colors.dart';
 import '../../config/images.dart';
 import '../../config/text_style.dart';
+import '../../controller/workout_controller.dart';
+import '../../utils/token_storage.dart';
 import '../../widget/search_field.dart';
+import '../auth/signin_screen.dart';
 import 'welcome_card.dart';
 
 class HomeView extends StatefulWidget {
@@ -22,13 +29,63 @@ class _HomeViewState extends State<HomeView> {
   final homeController = Get.put(HomeController());
   final userController = Get.put(UserController(), permanent: true);
   final preferenceController = Get.put(PreferenceController(), permanent: true);
+  final workoutController = Get.put(WorkoutController(), permanent: true);
+  bool isLoading = false;
+  final TokenStorage tokenStorage = TokenStorage();
 
   @override
   void initState() {
     super.initState();
-    preferenceController.fetchPreferenceFromBack();
-    userController.fetchUserFromBack();
+    fetchInitialData();
+  }
+
+  void fetchInitialData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final email = prefs.getString('email') ?? '';
+    final password = prefs.getString('password') ?? '';
+
+    bool isPreferenceFetched =
+        await preferenceController.fetchPreferenceFromBack();
+    bool isUserFetched = await userController.fetchUserFromBack();
     userController.fetchSidekickFromBack();
+
+    if (!isPreferenceFetched || !isUserFetched) {
+      setState(() => isLoading = true);
+      if (email.isNotEmpty && password.isNotEmpty) {
+        await attemptReLogin(email, password);
+      } else {
+        Get.offAll(() => const SignInScreen(),
+            transition: Transition.rightToLeft);
+      }
+    } else {
+      setState(() => isLoading = false);
+    }
+  }
+
+  Future<void> attemptReLogin(String email, String password) async {
+    try {
+      final response = await HttpRequest.mainPost(
+        "/auth/login",
+        {"email": email, "password": password},
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+      );
+
+      if (response.statusCode == 201) {
+        var decodedResponse = jsonDecode(response.body);
+        await tokenStorage.storeAccessToken(decodedResponse['access_token']);
+        await tokenStorage.storeRefreshToken(decodedResponse['refresh_token']);
+      } else {
+        Get.snackbar("Erreur", "Échec de la reconnexion automatique",
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+            snackPosition: SnackPosition.BOTTOM);
+      }
+    } catch (error) {
+      Get.snackbar("Erreur", "Une erreur s'est produite lors de la connexion.",
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM);
+    }
   }
 
   @override
@@ -37,8 +94,10 @@ class _HomeViewState extends State<HomeView> {
       body: GetX<HomeController>(
         init: HomeController(),
         builder: (builder) {
-          if (userController.isLoading.value) {
-            return const Center(child: CircularProgressIndicator());
+          if (userController.isLoading.value || isLoading) {
+            return const Center(
+                child:
+                    CircularProgressIndicator(color: ConstColors.primaryColor));
           } else {
             return Padding(
               padding: const EdgeInsets.only(left: 20, right: 20),
@@ -90,16 +149,15 @@ class _HomeViewState extends State<HomeView> {
                       padding: EdgeInsets.zero,
                       physics: const ClampingScrollPhysics(),
                       children: [
-                        userController.user.value.sidekickId != null ?
-                        InkWell(
-                          onTap: () => {
-                            homeController.flag.value = 1
-                          }, child: WelcomeCardWSidekick(
-                            sidekickName: userController.partner.value.firstname.value,
-                            imagePath: userController.partner.value.avatar.value
-                          )
-                        ) :
-                        const WelcomeCardWOutSidekick(),
+                        userController.user.value.sidekickId != null
+                            ? InkWell(
+                                onTap: () => {homeController.flag.value = 1},
+                                child: WelcomeCardWSidekick(
+                                    sidekickName: userController
+                                        .partner.value.firstname.value,
+                                    imagePath: userController
+                                        .partner.value.avatar.value))
+                            : const WelcomeCardWOutSidekick(),
                         const SizedBox(height: 30),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

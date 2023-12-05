@@ -5,6 +5,8 @@ import 'package:sidekick_app/controller/nutrition_controller.dart';
 import 'package:sidekick_app/controller/user_controller.dart';
 import 'package:sidekick_app/models/nutrition.dart';
 
+import '../../config/colors.dart';
+
 enum SampleItem { itemOne, itemTwo }
 
 class AddMeal extends StatefulWidget {
@@ -76,7 +78,7 @@ class _AddMealState extends State<AddMeal> {
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');
               }
-              return const Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator(color: ConstColors.primaryColor));
             },
           )
         ],

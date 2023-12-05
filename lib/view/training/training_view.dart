@@ -6,6 +6,8 @@ import 'package:sidekick_app/config/text_style.dart';
 import 'package:sidekick_app/controller/workout_controller.dart';
 import 'package:sidekick_app/utils/token_storage.dart';
 
+import '../../config/images.dart';
+
 class TrainingView extends StatefulWidget {
   const TrainingView({Key? key}) : super(key: key);
 
@@ -68,11 +70,21 @@ String getMuscleGroupeReverse(String muscle) {
 }
 
 class _TrainingViewState extends State<TrainingView> {
-  final TokenStorage tokenStorage = TokenStorage();
+  final workoutController = Get.find<WorkoutController>();
+
   var page = 0;
   var selectedExercise = -1;
-  final workoutController = Get.put(WorkoutController(), permanent: true);
-  final allWorkouts = ["dos", "cardio","épaules", "biceps", "triceps", "mollet", "jambes", "fessier", "abdos"];
+  final allWorkouts = [
+    "dos",
+    "cardio",
+    "épaules",
+    "biceps",
+    "triceps",
+    "mollet",
+    "jambes",
+    "fessier",
+    "abdos"
+  ];
 
   @override
   void initState() {
@@ -180,187 +192,226 @@ class _TrainingViewState extends State<TrainingView> {
                     ),
                   ),
                 ),
-                page == 1 ?
-                  Container(
-                    margin: const EdgeInsets.only(top: 10, bottom: 10),
-                    height: 50,
-                    width: Get.width,
-                    decoration: BoxDecoration(
-                      color: ConstColors.secondaryColor,
-                      borderRadius: BorderRadius.circular(15.41),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xff000000).withOpacity(0.04),
-                        ),
-                      ],
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: InkWell(
-                              onTap: () {
-                                setState(() {
-                                  selectedExercise = -1;
-                                  workoutController.getAllExercices();
-                                });
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: selectedExercise == -1
-                                    ? ConstColors.lightBlackColor
-                                    : Colors.transparent,
-                                  borderRadius: BorderRadius.circular(15.41),
-                                ),
-                                child: Container(
-                                  margin: const EdgeInsets.only(left: 10, right: 10),
-                                  child: Center(
-                                    child: Text(
-                                      "tout",
-                                      style: pSemiBold18.copyWith(
-                                        fontSize: 11.56,
-                                        color: selectedExercise == -1
-                                          ? ConstColors.secondaryColor
-                                          : ConstColors.blackColor
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
+                page == 1
+                    ? Container(
+                        margin: const EdgeInsets.only(top: 10, bottom: 10),
+                        height: 50,
+                        width: Get.width,
+                        decoration: BoxDecoration(
+                          color: ConstColors.secondaryColor,
+                          borderRadius: BorderRadius.circular(15.41),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xff000000).withOpacity(0.04),
                             ),
-                          ),
-                          for (final (index, item) in allWorkouts.indexed)
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    selectedExercise = index;
-                                    workoutController.getSpecificExercises(getMuscleGroupeReverse(item));
-                                  });
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: selectedExercise == index
-                                      ? ConstColors.lightBlackColor
-                                      : Colors.transparent,
-                                    borderRadius: BorderRadius.circular(15.41),
-                                  ),
+                          ],
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      selectedExercise = -1;
+                                      workoutController.getAllExercices();
+                                    });
+                                  },
                                   child: Container(
-                                    margin: const EdgeInsets.only(left: 10, right: 10),
-                                    child: Center(
-                                      child: Text(
-                                        item,
-                                        style: pSemiBold18.copyWith(
-                                          fontSize: 11.56,
-                                          color: selectedExercise == index
-                                            ? ConstColors.secondaryColor
-                                            : ConstColors.blackColor
+                                    decoration: BoxDecoration(
+                                      color: selectedExercise == -1
+                                          ? ConstColors.lightBlackColor
+                                          : Colors.transparent,
+                                      borderRadius:
+                                          BorderRadius.circular(15.41),
+                                    ),
+                                    child: Container(
+                                      margin: const EdgeInsets.only(
+                                          left: 10, right: 10),
+                                      child: Center(
+                                        child: Text(
+                                          "tout",
+                                          style: pSemiBold18.copyWith(
+                                              fontSize: 11.56,
+                                              color: selectedExercise == -1
+                                                  ? ConstColors.secondaryColor
+                                                  : ConstColors.blackColor),
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
-                            )
-                        ],
-                      ),
-                    ),
-                  )
-                : const SizedBox(height: 20),
-                page == 0 ? (workoutController.workout == [] ? const CircularProgressIndicator() :
-                  Expanded(
-                    child: ListView.builder(
-                      padding: const EdgeInsets.all(5),
-                      itemCount: workoutController.workout.length,
-                      itemBuilder: (context, x) {
-                        return Column(children: [
-                          Row(
-                            mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                              for (final (index, item) in allWorkouts.indexed)
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        selectedExercise = index;
+                                        workoutController.getSpecificExercises(
+                                            getMuscleGroupeReverse(item));
+                                      });
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: selectedExercise == index
+                                            ? ConstColors.lightBlackColor
+                                            : Colors.transparent,
+                                        borderRadius:
+                                            BorderRadius.circular(15.41),
+                                      ),
+                                      child: Container(
+                                        margin: const EdgeInsets.only(
+                                            left: 10, right: 10),
+                                        child: Center(
+                                          child: Text(
+                                            item,
+                                            style: pSemiBold18.copyWith(
+                                                fontSize: 11.56,
+                                                color: selectedExercise == index
+                                                    ? ConstColors.secondaryColor
+                                                    : ConstColors.blackColor),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                            ],
+                          ),
+                        ),
+                      )
+                    : const SizedBox(height: 20),
+                page == 0
+                    ? workoutController.workout.isEmpty
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(
-                                DateFormat('dd MMM y').format(
-                                    DateTime.parse(workoutController
-                                        .workout[x][0].date)),
-                                style: pRegular14.copyWith(
-                                  fontSize: 11.55,
-                                  color: ConstColors.lightBlackColor,
-                                ),
-                              ),
-                              Text(
-                                workoutController.workout[x].length == 1
-                                  ? "${workoutController.workout[x].length} workout"
-                                  : "${workoutController.workout[x].length} workouts",
-                                style: pRegular14.copyWith(
-                                  fontSize: 11.55,
-                                  color: ConstColors.lightBlackColor,
+                              Image.asset(DefaultImages.noExerice),
+                              const SizedBox(height: 30),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 10, right: 10),
+                                child: Text(
+                                  'Vous n\'avez pas encore d\'exercice dans votre historique.',
+                                  textAlign: TextAlign.center,
+                                  style: pRegular14.copyWith(
+                                    fontSize: 16,
+                                  ),
                                 ),
                               ),
                             ],
-                          ),
-                          const SizedBox(height: 20),
-                          SizedBox(
-                            height: (95 *
-                                    (workoutController
-                                        .workout[x].length))
-                                .toDouble(),
+                          )
+                        : (workoutController.workout == []
+                            ? const CircularProgressIndicator(
+                                color: ConstColors.primaryColor)
+                            : Expanded(
+                                child: ListView.builder(
+                                    padding: const EdgeInsets.all(5),
+                                    itemCount: workoutController.workout.length,
+                                    itemBuilder: (context, x) {
+                                      return Column(children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              DateFormat('dd MMM y').format(
+                                                  DateTime.parse(
+                                                      workoutController
+                                                          .workout[x][0].date)),
+                                              style: pRegular14.copyWith(
+                                                fontSize: 11.55,
+                                                color:
+                                                    ConstColors.lightBlackColor,
+                                              ),
+                                            ),
+                                            Text(
+                                              workoutController
+                                                          .workout[x].length ==
+                                                      1
+                                                  ? "${workoutController.workout[x].length} workout"
+                                                  : "${workoutController.workout[x].length} workouts",
+                                              style: pRegular14.copyWith(
+                                                fontSize: 11.55,
+                                                color:
+                                                    ConstColors.lightBlackColor,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 20),
+                                        SizedBox(
+                                          height: (95 *
+                                                  (workoutController
+                                                      .workout[x].length))
+                                              .toDouble(),
+                                          child: ListView.builder(
+                                              shrinkWrap: false,
+                                              physics:
+                                                  const NeverScrollableScrollPhysics(),
+                                              itemCount: workoutController
+                                                  .workout[x].length,
+                                              itemBuilder: (context, y) {
+                                                return InkWell(
+                                                  onTap: () {},
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            bottom: 10),
+                                                    child: workoutCard(
+                                                        workoutController
+                                                            .workout[x][y].name,
+                                                        "${workoutController.workout[x][y].duration} min",
+                                                        workoutController
+                                                            .workout[x][y]
+                                                            .thumbnail,
+                                                        DateTime.parse(
+                                                                workoutController
+                                                                    .workout[x]
+                                                                        [y]
+                                                                    .date)
+                                                            .isBefore(DateTime
+                                                                .now())),
+                                                  ),
+                                                );
+                                              }),
+                                        )
+                                      ]);
+                                    }),
+                              ))
+                    : (workoutController.exercise == []
+                        ? const CircularProgressIndicator(
+                            color: ConstColors.primaryColor)
+                        : Expanded(
                             child: ListView.builder(
-                              shrinkWrap: false,
-                              physics:
-                                  const NeverScrollableScrollPhysics(),
-                              itemCount:
-                                  workoutController.workout[x].length,
-                              itemBuilder: (context, y) {
-                                return InkWell(
-                                  onTap: () {},
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(bottom: 10),
-                                    child: workoutCard(
-                                        workoutController.workout[x][y].name,
-                                        "${workoutController.workout[x][y].duration} min",
-                                        workoutController.workout[x][y].thumbnail,
-                                        DateTime.parse(workoutController.workout[x][y].date)
-                                            .isBefore(DateTime.now())
-                                    ),
-                                  ),
-                                );
-                              }
-                            ),
-                          )
-                        ]);
-                      }
-                    ),
-                  )
-                ): (workoutController.exercise == [] ? const CircularProgressIndicator() :
-                  Expanded(
-                    child: ListView.builder(
-                      padding: const EdgeInsets.all(5),
-                      itemCount: workoutController.exercise.length,
-                      itemBuilder: (context, elem) {
-                        return Column(children: [
-                          InkWell(
-                            onTap: () {},
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.only(bottom: 10),
-                              child: workoutCard(
-                                  workoutController.exercise[elem].name,
-                                  getMuscleGroupe(workoutController
-                                      .exercise[elem].muscleGroup),
-                                  workoutController
-                                      .exercise[elem].thumbnail,
-                                  false),
-                            ),
-                          )
-                        ]);
-                      }
-                    ),
-                  )
-                ),
+                                padding: const EdgeInsets.all(5),
+                                itemCount: workoutController.exercise.length,
+                                itemBuilder: (context, elem) {
+                                  return Column(children: [
+                                    InkWell(
+                                      onTap: () {},
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 10),
+                                        child: workoutCard(
+                                            workoutController
+                                                .exercise[elem].name,
+                                            getMuscleGroupe(workoutController
+                                                .exercise[elem].muscleGroup),
+                                            workoutController
+                                                .exercise[elem].thumbnail,
+                                            false),
+                                      ),
+                                    )
+                                  ]);
+                                }),
+                          )),
               ],
             ),
           );

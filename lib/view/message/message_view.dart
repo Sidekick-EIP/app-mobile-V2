@@ -110,7 +110,7 @@ class _MessageViewState extends State<MessageView> {
               ),
               messages: userController.user.value.userId.toString() == 'ID'
                   ? []
-                  : messageController.messages.value,
+                  : messageController.messages,
               onEndReachedThreshold: 1,
               onSendPressed: _handleSendPressed,
               showUserAvatars: true,

@@ -5,7 +5,6 @@ import '../../../../config/colors.dart';
 import '../../../../config/text_style.dart';
 import '../../../../controller/auth_controller.dart';
 import '../../../../enum/activities.dart';
-import '../../../../enum/activities_map.dart';
 import '../../../../models/activity.dart';
 
 class ActivityView extends StatefulWidget {
@@ -27,6 +26,7 @@ class _ActivityViewState extends State<ActivityView> {
 
   @override
   void initState() {
+    super.initState();
     activityList = getActivities();
   }
 

@@ -52,7 +52,22 @@ class _HomeViewState extends State<HomeView> {
     if (!isPreferenceFetched || !isUserFetched) {
       setState(() => isLoading = true);
       if (email.isNotEmpty && password.isNotEmpty) {
-        await attemptReLogin(email, password);
+        bool isReLogin = await attemptReLogin(email, password);
+        if (isReLogin) {
+          bool isPreferenceFetched =
+              await preferenceController.fetchPreferenceFromBack();
+          bool isUserFetched = await userController.fetchUserFromBack();
+          userController.fetchSidekickFromBack();
+          if (isPreferenceFetched && isUserFetched) {
+            setState(() => isLoading = false);
+          } else {
+            Get.offAll(() => const SignInScreen(),
+                transition: Transition.rightToLeft);
+          }
+        } else {
+          Get.offAll(() => const SignInScreen(),
+              transition: Transition.rightToLeft);
+        }
       } else {
         Get.offAll(() => const SignInScreen(),
             transition: Transition.rightToLeft);
@@ -62,7 +77,7 @@ class _HomeViewState extends State<HomeView> {
     }
   }
 
-  Future<void> attemptReLogin(String email, String password) async {
+  Future<bool> attemptReLogin(String email, String password) async {
     try {
       final response = await HttpRequest.mainPost(
         "/auth/login",
@@ -74,18 +89,21 @@ class _HomeViewState extends State<HomeView> {
         var decodedResponse = jsonDecode(response.body);
         await tokenStorage.storeAccessToken(decodedResponse['access_token']);
         await tokenStorage.storeRefreshToken(decodedResponse['refresh_token']);
+        return true;
       } else {
         Get.snackbar("Erreur", "Échec de la reconnexion automatique",
             backgroundColor: Colors.red,
             colorText: Colors.white,
             snackPosition: SnackPosition.BOTTOM);
       }
+      return false;
     } catch (error) {
       Get.snackbar("Erreur", "Une erreur s'est produite lors de la connexion.",
           backgroundColor: Colors.red,
           colorText: Colors.white,
           snackPosition: SnackPosition.BOTTOM);
     }
+    return false;
   }
 
   @override

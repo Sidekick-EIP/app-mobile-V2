@@ -9,7 +9,7 @@ import '../../config/colors.dart';
 import '../../config/images.dart';
 import '../../config/text_style.dart';
 import '../../widget/search_field.dart';
-import '../../widget/welcome_card.dart';
+import 'welcome_card.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);

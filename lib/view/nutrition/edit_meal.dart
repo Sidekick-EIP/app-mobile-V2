@@ -1,15 +1,9 @@
-import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:sidekick_app/config/colors.dart';
 import 'package:sidekick_app/config/images.dart';
-import 'package:sidekick_app/config/text_style.dart';
-import 'package:sidekick_app/controller/home_controller.dart';
 import 'package:sidekick_app/controller/nutrition_controller.dart';
 import 'package:sidekick_app/controller/user_controller.dart';
-import 'package:sidekick_app/main.dart';
 import 'package:sidekick_app/models/nutrition.dart';
 
 class EditMeal extends StatefulWidget {
@@ -19,6 +13,7 @@ class EditMeal extends StatefulWidget {
     required this.callback,
     required this.nutritionData,
   });
+
   final Food food;
   final Function callback;
   final Nutrition nutritionData;
@@ -32,7 +27,9 @@ class _EditMealState extends State<EditMeal> {
   final userController = Get.find<UserController>();
 
   final nutritionController = Get.put(NutritionController(), permanent: true);
-  String getDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0).toIso8601String();
+  String getDate = DateTime(DateTime.now().year, DateTime.now().month,
+          DateTime.now().day, 0, 0, 0)
+      .toIso8601String();
 
   @override
   void initState() {
@@ -81,7 +78,8 @@ class _EditMealState extends State<EditMeal> {
                     children: [
                       Text(
                         "Détail",
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 20),
                       ),
                     ],
                   ),
@@ -172,13 +170,17 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                   )
                 ],
               ),
-              MealNameWidget(width: widget.width, height: widget.height, food: widget.food),
+              MealNameWidget(
+                  width: widget.width,
+                  height: widget.height,
+                  food: widget.food),
               MacrosCard(
                 width: widget.width,
                 height: widget.height,
                 macrosName: "Glucides",
                 image: DefaultImages.carbs,
-                macrosValue: "${(widget.food.carbs * (widget.food.weight / 100)).toString()}g",
+                macrosValue:
+                    "${(widget.food.carbs * (widget.food.weight / 100)).toString()}g",
                 progressColor: const Color.fromARGB(255, 98, 7, 255),
                 percent: widget.food.carbs / totalMacros,
               ),
@@ -187,7 +189,8 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                 height: widget.height,
                 macrosName: "Proteines",
                 image: DefaultImages.proteins,
-                macrosValue: "${(widget.food.protein * (widget.food.weight / 100)).toString()}g",
+                macrosValue:
+                    "${(widget.food.protein * (widget.food.weight / 100)).toString()}g",
                 progressColor: Colors.red,
                 percent: widget.food.protein / totalMacros,
               ),
@@ -196,7 +199,8 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                 height: widget.height,
                 macrosName: "Lipides",
                 image: DefaultImages.fat,
-                macrosValue: "${(widget.food.fat * (widget.food.weight / 100)).toString()}g",
+                macrosValue:
+                    "${(widget.food.fat * (widget.food.weight / 100)).toString()}g",
                 progressColor: Colors.amber,
                 percent: widget.food.fat / totalMacros,
               ),
@@ -250,7 +254,8 @@ class MealNameWidget extends StatelessWidget {
                     alignment: Alignment.bottomLeft,
                     child: Text(
                       food.name,
-                      style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w800, fontSize: 18),
                     ),
                   ),
                 ),
@@ -261,7 +266,8 @@ class MealNameWidget extends StatelessWidget {
                     alignment: Alignment.bottomRight,
                     child: Text(
                       "${food.weight.toString()}g",
-                      style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w800, fontSize: 18),
                     ),
                   ),
                 ),
@@ -340,7 +346,9 @@ class MacrosCard extends StatelessWidget {
                 width: width * 0.12,
                 height: height * 0.055,
                 decoration: BoxDecoration(
-                  border: Border.all(width: 1.6, color: const Color.fromARGB(66, 128, 128, 128)),
+                  border: Border.all(
+                      width: 1.6,
+                      color: const Color.fromARGB(66, 128, 128, 128)),
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: Align(
@@ -365,11 +373,15 @@ class MacrosCard extends StatelessWidget {
                   children: [
                     Text(
                       macrosName,
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                     Text(
                       "${macrosSplit[0]}g",
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color.fromARGB(255, 120, 120, 120)),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Color.fromARGB(255, 120, 120, 120)),
                     ),
                   ],
                 ),
@@ -402,7 +414,7 @@ class MacrosCard extends StatelessWidget {
 }
 
 class WeightValues extends StatefulWidget {
-  WeightValues({
+  const WeightValues({
     super.key,
     required this.width,
     required this.height,
@@ -414,7 +426,7 @@ class WeightValues extends StatefulWidget {
 
   final double width;
   final double height;
-  late int foodWeight;
+  final int foodWeight;
   final Function(int) updateWeight;
   final Function callback;
   final Nutrition nutritionData;
@@ -424,6 +436,14 @@ class WeightValues extends StatefulWidget {
 }
 
 class _WeightValuesState extends State<WeightValues> {
+  late int foodWeight;
+
+  @override
+  void initState() {
+    super.initState();
+    foodWeight = widget.foodWeight;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -461,7 +481,13 @@ class _WeightValuesState extends State<WeightValues> {
                                 Icons.minimize,
                               ),
                               onPressed: () => {
-                                if (widget.foodWeight > 10) {setState(() => widget.foodWeight -= 10), widget.updateWeight(widget.foodWeight)}
+                                if (widget.foodWeight > 10)
+                                  {
+                                    setState(() {
+                                      foodWeight -= 10;
+                                      widget.updateWeight(foodWeight);
+                                    }),
+                                  }
                               },
                             ),
                           ),
@@ -470,7 +496,10 @@ class _WeightValuesState extends State<WeightValues> {
                             child: Text(
                               "${widget.foodWeight.toString()} g",
                               textAlign: TextAlign.center,
-                              style: TextStyle(fontWeight: FontWeight.bold, color: const Color.fromARGB(255, 0, 0, 0), fontSize: widget.width * .04),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color.fromARGB(255, 0, 0, 0),
+                                  fontSize: widget.width * .04),
                             ),
                           ),
                           Container(
@@ -486,7 +515,13 @@ class _WeightValuesState extends State<WeightValues> {
                                 Icons.add,
                               ),
                               onPressed: () => {
-                                if (widget.foodWeight < 990) {setState(() => widget.foodWeight += 10), widget.updateWeight(widget.foodWeight)}
+                                if (widget.foodWeight < 990)
+                                  {
+                                    setState(() {
+                                      foodWeight += 10;
+                                      widget.updateWeight(foodWeight);
+                                    }),
+                                  }
                               },
                             ),
                           ),
@@ -518,7 +553,10 @@ class _WeightValuesState extends State<WeightValues> {
                       },
                       child: Text(
                         'Appliquer',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: widget.width * .05, color: const Color.fromARGB(255, 255, 255, 255)),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: widget.width * .05,
+                            color: const Color.fromARGB(255, 255, 255, 255)),
                       ),
                     ),
                   ),

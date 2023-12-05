@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:sidekick_app/controller/socket_controller.dart';
 import 'package:sidekick_app/controller/user_controller.dart';

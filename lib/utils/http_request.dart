@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -212,7 +211,9 @@ class HttpRequest {
 
       var file = File(filepath);
       if (!await file.exists()) {
-        print('File does not exist at path: $filepath');
+        if (kDebugMode) {
+          print('File does not exist at path: $filepath');
+        }
         return null;
       }
 

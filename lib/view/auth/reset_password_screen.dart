@@ -2,8 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:sidekick_app/utils/http_request.dart';
 import 'package:sidekick_app/view/auth/register/signup_screen.dart';
 
@@ -25,8 +23,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   bool isLoading = false;
 
   Future<void> forgotPassword() async {
-    String apiUrl = dotenv.env['API_BACK_URL'] ?? "";
-
     if (!_validateEmail(emailPasswordController.text)) {
       Get.snackbar("Erreur", "Email non valide",
           backgroundColor: Colors.red,

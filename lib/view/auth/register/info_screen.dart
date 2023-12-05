@@ -75,7 +75,7 @@ class _InfoScreenState extends State<InfoScreen> {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext builder) {
-        return Container(
+        return SizedBox(
           height: MediaQuery.of(context).copyWith().size.height / 3,
           child: CupertinoDatePicker(
             mode: CupertinoDatePickerMode.date,

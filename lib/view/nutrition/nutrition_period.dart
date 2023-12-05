@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 import 'package:sidekick_app/controller/nutrition_controller.dart';
-import 'package:sidekick_app/controller/user_controller.dart';
-import 'package:sidekick_app/main.dart';
 import 'package:sidekick_app/models/nutrition.dart';
 import 'package:sidekick_app/view/nutrition/add_meal.dart';
 import 'package:sidekick_app/view/nutrition/edit_meal.dart';
@@ -140,16 +137,16 @@ class _NutritionPeriodState extends State<NutritionPeriod> {
 }
 
 class CategoryWidget extends StatefulWidget {
-  CategoryWidget({super.key, required this.period, required this.updatePeriod});
+  const CategoryWidget({super.key, required this.period, required this.updatePeriod});
 
-  late String period;
+  final String period;
   final Function(String) updatePeriod;
 
   @override
-  _CategoryWidgetState createState() => _CategoryWidgetState();
+  CategoryWidgetState createState() => CategoryWidgetState();
 }
 
-class _CategoryWidgetState extends State<CategoryWidget> {
+class CategoryWidgetState extends State<CategoryWidget> {
   int selectedCategoryIndex = 0;
 
   List<String> categories = ['Petit déjeuner', 'Déjeuner', 'Dinner', 'Snacks'];
@@ -187,7 +184,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
 }
 
 class MealViewBuilder extends StatefulWidget {
-  MealViewBuilder({
+  const MealViewBuilder({
     super.key,
     required this.width,
     required this.height,
@@ -198,7 +195,7 @@ class MealViewBuilder extends StatefulWidget {
 
   final double width;
   final double height;
-  late Nutrition nutritionData;
+  final Nutrition nutritionData;
   final String period;
   final Function callbackPeriod;
 
@@ -207,9 +204,17 @@ class MealViewBuilder extends StatefulWidget {
 }
 
 class _MealViewBuilderState extends State<MealViewBuilder> {
+  late Nutrition nutritionData;
+
+  @override
+  void initState() {
+    super.initState();
+    nutritionData = widget.nutritionData;
+  }
+
   callback(Nutrition meals) {
     setState(() {
-      widget.nutritionData = meals;
+      nutritionData = meals;
     });
   }
 

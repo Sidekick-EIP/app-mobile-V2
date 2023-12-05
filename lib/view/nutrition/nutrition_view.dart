@@ -1,15 +1,9 @@
-import 'dart:developer';
-
 import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:sidekick_app/config/colors.dart';
-import 'package:sidekick_app/config/images.dart';
 import 'package:sidekick_app/config/text_style.dart';
-import 'package:sidekick_app/controller/home_controller.dart';
 import 'package:sidekick_app/controller/nutrition_controller.dart';
 import 'package:sidekick_app/controller/user_controller.dart';
 import 'package:sidekick_app/models/nutrition.dart';
@@ -109,11 +103,11 @@ class _NutritionViewState extends State<NutritionView> {
 }
 
 class DisplayNutritionPage extends StatefulWidget {
-  DisplayNutritionPage({super.key, required this.width, required this.height, required this.nutritionData, required this.date});
+  const DisplayNutritionPage({super.key, required this.width, required this.height, required this.nutritionData, required this.date});
 
   final double width;
   final double height;
-  late Nutrition nutritionData;
+  final Nutrition nutritionData;
   final String date;
 
   @override
@@ -121,12 +115,17 @@ class DisplayNutritionPage extends StatefulWidget {
 }
 
 class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
+  late Nutrition nutritionData;
+
+  @override
+  void initState() {
+    super.initState();
+    nutritionData = widget.nutritionData;
+  }
+
   callbackPeriod(Nutrition meals) {
     setState(() {
-      print("callbackkkk");
-      widget.nutritionData = meals;
-      print(widget.nutritionData.calories);
-      print(meals.calories);
+      nutritionData = meals;
     });
   }
 

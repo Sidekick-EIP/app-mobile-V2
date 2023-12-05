@@ -8,7 +8,6 @@ import 'package:sidekick_app/models/exercise.dart';
 import 'package:sidekick_app/models/workout.dart';
 import 'package:sidekick_app/utils/http_request.dart';
 import 'package:sidekick_app/utils/token_storage.dart';
-import 'package:http/http.dart' as http;
 
 class WorkoutController extends GetxController {
   final TokenStorage tokenStorage = TokenStorage();

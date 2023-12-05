@@ -1,16 +1,17 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:sidekick_app/controller/messages_controller.dart';
 import 'package:sidekick_app/controller/user_controller.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:socket_io_client/socket_io_client.dart' as io;
 
 import 'home_controller.dart';
 
 class SocketController extends GetxController {
-  final socket = Rx<IO.Socket?>(null);
+  final socket = Rx<io.Socket?>(null);
 
   void initSocket(String userId) {
-      socket.value = IO.io(dotenv.env['API_BACK_URL']!, <String, dynamic>{
+      socket.value = io.io(dotenv.env['API_BACK_URL']!, <String, dynamic>{
         'autoConnect': false,
         'transports': ['websocket'],
         'auth': {'token': userId},
@@ -46,7 +47,9 @@ class SocketController extends GetxController {
 
   void setOnMatching() {
     socket.value?.on('match', (data) {
-      print('Partenaire trouvé!');
+      if (kDebugMode) {
+        print('Partenaire trouvé!');
+      }
     });
   }
 

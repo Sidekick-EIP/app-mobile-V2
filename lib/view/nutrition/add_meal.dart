@@ -1,17 +1,9 @@
-import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:sidekick_app/config/colors.dart';
-import 'package:sidekick_app/config/text_style.dart';
-import 'package:sidekick_app/controller/home_controller.dart';
 import 'package:sidekick_app/controller/nutrition_controller.dart';
 import 'package:sidekick_app/controller/user_controller.dart';
-import 'package:sidekick_app/main.dart';
 import 'package:sidekick_app/models/nutrition.dart';
-import 'package:sidekick_app/view/nutrition/add_meal.dart';
-import 'package:sidekick_app/view/nutrition/edit_meal.dart';
 
 enum SampleItem { itemOne, itemTwo }
 
@@ -399,10 +391,10 @@ class SearchWidget extends StatefulWidget {
   const SearchWidget({super.key});
 
   @override
-  _SearchWidgetState createState() => _SearchWidgetState();
+  SearchWidgetState createState() => SearchWidgetState();
 }
 
-class _SearchWidgetState extends State<SearchWidget> {
+class SearchWidgetState extends State<SearchWidget> {
   @override
   Widget build(BuildContext context) {
     return const Row(

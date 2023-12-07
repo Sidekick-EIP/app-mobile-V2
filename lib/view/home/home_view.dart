@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sidekick_app/controller/home_controller.dart';
 import 'package:sidekick_app/controller/user_controller.dart';
 import 'package:sidekick_app/utils/http_request.dart';
@@ -32,6 +32,7 @@ class _HomeViewState extends State<HomeView> {
   final workoutController = Get.put(WorkoutController(), permanent: true);
   bool isLoading = false;
   final TokenStorage tokenStorage = TokenStorage();
+  final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
 
   @override
   void initState() {
@@ -40,9 +41,8 @@ class _HomeViewState extends State<HomeView> {
   }
 
   void fetchInitialData() async {
-    final prefs = await SharedPreferences.getInstance();
-    final email = prefs.getString('email') ?? '';
-    final password = prefs.getString('password') ?? '';
+    final email = secureStorage.read(key: 'email').toString();
+    final password = secureStorage.read(key: 'password').toString();
 
     bool isPreferenceFetched =
         await preferenceController.fetchPreferenceFromBack();

@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:sidekick_app/config/colors.dart';
 import 'package:sidekick_app/config/text_style.dart';
 import 'package:sidekick_app/controller/workout_controller.dart';
-import 'package:sidekick_app/utils/token_storage.dart';
 
 import '../../config/images.dart';
 

@@ -83,6 +83,8 @@ class _InfoScreenState extends State<InfoScreen> {
             onDateTimeChanged: (DateTime newDate) {
               birthDateController.text =
                   DateFormat('dd/MM/yyyy').format(newDate).toString();
+              authController.birthDate.value =
+                  DateFormat('dd/MM/yyyy').format(newDate).toString();
             },
             minimumYear: 1900,
             maximumYear: DateTime.now().year,

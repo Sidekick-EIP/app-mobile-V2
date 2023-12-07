@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sidekick_app/utils/http_request.dart';
 import 'package:sidekick_app/view/auth/register/info_screen.dart';
 import 'package:sidekick_app/view/auth/reset_password_screen.dart';
@@ -28,7 +28,11 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
+  final TokenStorage tokenStorage = TokenStorage();
+
   bool isLoading = false;
+  String apiUrl = dotenv.env['API_BACK_URL'] ?? "";
 
   @override
   void initState() {
@@ -37,18 +41,14 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   Future<void> loadLoginInfo() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String email = prefs.getString('email') ?? '';
-    final String password = prefs.getString('password') ?? '';
+    final email = await secureStorage.read(key: 'email') ?? '';
+    final password = await secureStorage.read(key: 'password') ?? '';
 
     setState(() {
       emailController.text = email;
       passwordController.text = password;
     });
   }
-
-  String apiUrl = dotenv.env['API_BACK_URL'] ?? "";
-  final TokenStorage tokenStorage = TokenStorage();
 
   Future<bool> checkUserInfos() async {
     final response = await HttpRequest.mainGet("/user_infos/");
@@ -125,9 +125,8 @@ class _SignInScreenState extends State<SignInScreen> {
       });
     }
 
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('email', emailController.text);
-    await prefs.setString('password', passwordController.text);
+    await secureStorage.write(key: 'email', value: emailController.text);
+    await secureStorage.write(key: 'password', value: passwordController.text);
   }
 
   @override
@@ -236,7 +235,7 @@ class _SignInScreenState extends State<SignInScreen> {
               child: Container(
                 color: ConstColors.secondaryColor,
                 child: const Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(color: ConstColors.primaryColor),
                 ),
               ),
             ),

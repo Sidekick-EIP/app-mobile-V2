@@ -56,36 +56,42 @@ class UserController extends GetxController {
     location: RxString('Paris'),
   ).obs;
 
-  Future<void> fetchUserFromBack() async {
+  Future<bool> fetchUserFromBack() async {
     final response = await HttpRequest.mainGet('/user_infos/');
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> body = jsonDecode(response.body);
       user.value = User.fromJson(body);
+      return true;
     } else if (response.statusCode == 500) {
       if (kDebugMode) {
         print("Error 500 from server");
       }
+      return false;
     }
+    return false;
   }
 
-  Future<void> fetchSidekickFromBack() async {
+  Future<bool> fetchSidekickFromBack() async {
     final response = await HttpRequest.mainGet('/user_infos/sidekick');
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> body = jsonDecode(response.body);
       partner.value = Partner.fromJson(body);
       isSidekickLoading.value = true;
+      return true;
     } else if (response.statusCode == 404) {
       isSidekickLoading.value = false;
       if (kDebugMode) {
         print("The user doesn't have a sidekick.");
       }
+      return false;
     } else {
       isSidekickLoading.value = false;
       if (kDebugMode) {
         print("Error 500 from server");
       }
+      return false;
     }
   }
 

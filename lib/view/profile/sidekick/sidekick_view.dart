@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sidekick_app/view/profile/profile_view.dart';
 
-import '../../config/colors.dart';
-import '../../config/images.dart';
-import '../../config/text_style.dart';
-import '../../controller/user_controller.dart';
-import '../../enum/activities.dart';
-import '../../models/activity.dart';
-import '../../utils/calculate_age.dart';
+import '../../../config/colors.dart';
+import '../../../config/images.dart';
+import '../../../config/text_style.dart';
+import '../../../controller/user_controller.dart';
+import '../../../enum/activities.dart';
+import '../../../models/activity.dart';
+import '../../../utils/calculate_age.dart';
 
 class SidekickView extends StatefulWidget {
   const SidekickView({Key? key}) : super(key: key);

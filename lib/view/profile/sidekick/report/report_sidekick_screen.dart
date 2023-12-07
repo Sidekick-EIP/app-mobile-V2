@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sidekick_app/utils/http_request.dart';
 
-import '../../../config/colors.dart';
-import '../../../config/text_style.dart';
-import '../../../widget/custom_button.dart';
-import '../../../widget/custom_textfield.dart';
+import '../../../../config/colors.dart';
+import '../../../../config/text_style.dart';
+import '../../../../widget/custom_button.dart';
+import '../../../../widget/custom_textfield.dart';
 
 class ReportSidekickScreen extends StatefulWidget {
   const ReportSidekickScreen({Key? key}) : super(key: key);
@@ -106,15 +106,11 @@ class _ReportSidekickScreenState extends State<ReportSidekickScreen> {
                     errorMessage = "Veuillez entrer un motif";
                   });
                 } else {
-                  Map<String, String> headers = {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                  };
-                  final response = await HttpRequest.mainPost(
-                      "/reports/",
-                      {
-                        "reason": controller.text,
-                      },
-                      headers: headers);
+                  final response = await HttpRequest.mainPost("/reports/", {
+                    "reason": controller.text,
+                  }, headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                  });
                   if (response.statusCode == 201) {
                     Get.snackbar('Succès', 'Sidekick signalé',
                         snackPosition: SnackPosition.BOTTOM,

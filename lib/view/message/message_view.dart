@@ -9,7 +9,7 @@ import '../../config/images.dart';
 import '../../config/text_style.dart';
 import '../../controller/socket_controller.dart';
 import '../../controller/user_controller.dart';
-import '../profile/sidekick_view.dart';
+import '../profile/sidekick/sidekick_view.dart';
 
 class MessageView extends StatefulWidget {
   const MessageView({Key? key}) : super(key: key);

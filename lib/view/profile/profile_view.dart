@@ -88,6 +88,7 @@ class _ProfileViewState extends State<ProfileView> {
             child: Text('Confirmer',
                 style: pSemiBold18.copyWith(color: Colors.green)),
             onPressed: () async {
+              userController.isSidekickLoading.value = false;
               final response = await HttpRequest.mainPost("/reports/change", {}, headers: {});
               Get.back();
               if (response.statusCode == 201) {

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sidekick_app/utils/http_request.dart';
+import 'package:sidekick_app/view/auth/password_webview.dart';
 import 'package:sidekick_app/view/auth/register/signup_screen.dart';
 
 import '../../config/colors.dart';
@@ -47,6 +48,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
           backgroundColor: Colors.green,
           colorText: Colors.white,
           snackPosition: SnackPosition.BOTTOM);
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const MyWebview()));
     } else {
       Map<String, dynamic> decodedResponse = jsonDecode(response.body);
       String errorMessage = decodedResponse['error'] ?? "Erreur inconnue";

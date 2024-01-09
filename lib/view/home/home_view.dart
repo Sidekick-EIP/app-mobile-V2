@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:sidekick_app/controller/home_controller.dart';
 import 'package:sidekick_app/controller/user_controller.dart';
 import 'package:sidekick_app/utils/http_request.dart';
@@ -16,6 +17,9 @@ import '../../controller/workout_controller.dart';
 import '../../utils/token_storage.dart';
 import '../../widget/search_field.dart';
 import '../auth/signin_screen.dart';
+import '../../enum/activities.dart';
+import '../../models/activity.dart';
+import '../profile/activity/activity_screen.dart';
 import 'welcome_card.dart';
 
 class HomeView extends StatefulWidget {
@@ -33,6 +37,22 @@ class _HomeViewState extends State<HomeView> {
   bool isLoading = false;
   final TokenStorage tokenStorage = TokenStorage();
   final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
+  List<Activity> activityList = [];
+
+  List<Activity> getActivities() {
+    return userController.user.value.activities
+        .map((activity) => Activity(Activities.values.firstWhere(
+            (e) => e.toString().split('.').last == activity.value,
+        orElse: () => throw Exception('Activity not found: $activity'))))
+        .toList();
+  }
+
+  Future<void> reloadData() async {
+    preferenceController.fetchPreferenceFromBack();
+    userController.fetchUserFromBack();
+    userController.fetchSidekickFromBack();
+    activityList = getActivities();
+  }
 
   @override
   void initState() {
@@ -48,6 +68,7 @@ class _HomeViewState extends State<HomeView> {
         await preferenceController.fetchPreferenceFromBack();
     bool isUserFetched = await userController.fetchUserFromBack();
     userController.fetchSidekickFromBack();
+    activityList = getActivities();
 
     if (!isPreferenceFetched || !isUserFetched) {
       setState(() => isLoading = true);
@@ -163,274 +184,223 @@ class _HomeViewState extends State<HomeView> {
                   ),
                   const SizedBox(height: 30),
                   Expanded(
-                    child: ListView(
-                      padding: EdgeInsets.zero,
-                      physics: const ClampingScrollPhysics(),
-                      children: [
-                        userController.user.value.sidekickId != null
-                            ? InkWell(
-                                onTap: () => {homeController.flag.value = 1},
-                                child: WelcomeCardWSidekick(
-                                    sidekickName: userController
-                                        .partner.value.firstname.value,
-                                    imagePath: userController
-                                        .partner.value.avatar.value))
-                            : const WelcomeCardWOutSidekick(),
-                        const SizedBox(height: 30),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Catégorie",
-                              style: pSemiBold18.copyWith(
-                                fontSize: 19.25,
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                homeController.homeFlag.value = 1;
-                              },
-                              child: Text(
-                                "Voir tout",
+                    flex: 1,
+                    child: RefreshIndicator(
+                      onRefresh: () {
+                        return reloadData();
+                      },
+                      child: ListView(
+                        padding: EdgeInsets.zero,
+                        physics: const ClampingScrollPhysics(),
+                        children: [
+                          userController.user.value.sidekickId != null ?
+                          InkWell(
+                            onTap: () => {
+                              homeController.flag.value = 1
+                            }, child: WelcomeCardWSidekick(
+                              sidekickName: userController.partner.value.firstname.value,
+                              imagePath: userController.partner.value.avatar.value
+                            )
+                          ) :
+                          const WelcomeCardWOutSidekick(),
+                          const SizedBox(height: 30),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Mes activités",
                                 style: pSemiBold18.copyWith(
-                                  fontSize: 14.44,
-                                  color: ConstColors.lightBlackColor,
+                                  fontSize: 19.25,
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        Row(
-                          children: [
-                            categoryCard(DefaultImages.h7, "Cardio"),
-                            const SizedBox(width: 14),
-                            categoryCard(DefaultImages.h8, "Yoga"),
-                            const SizedBox(width: 14),
-                            categoryCard(DefaultImages.h9, "Stretch"),
-                            const SizedBox(width: 14),
-                            categoryCard(DefaultImages.h10, "Gym"),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Entraînements pour vous",
-                              style: pSemiBold18.copyWith(
-                                fontSize: 19.25,
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                homeController.homeFlag.value = 4;
-                              },
-                              child: Text(
-                                "Voir tout",
-                                style: pSemiBold18.copyWith(
-                                  fontSize: 14.44,
-                                  color: ConstColors.lightBlackColor,
+                              InkWell(
+                                onTap: () {
+                                  Get.to(
+                                        () => const ActivityScreen(),
+                                    transition: Transition.rightToLeft,
+                                  );
+                                },
+                                child: Text(
+                                  "Voir tout",
+                                  style: pSemiBold18.copyWith(
+                                    fontSize: 14.44,
+                                    color: ConstColors.lightBlackColor,
+                                  ),
                                 ),
                               ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          SizedBox(
+                            height: 80,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: activityList.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Row(
+                                  children: [
+                                    categoryCard(activityList[index].iconPath, activityList[index].activityName),
+                                    const SizedBox(width: 10)
+                                  ],
+                                );
+                              }
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        SizedBox(
-                          height: 207.89,
-                          width: Get.width,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: 3,
+                          ),
+                          const SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Analyse",
+                                style: pSemiBold18.copyWith(
+                                  fontSize: 19.25,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          Expanded(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                graph(
+                                  "Nb. de pas",
+                                  "Pas",
+                                  DefaultImages.i1,
+                                  8357,
+                                  const Color(0xffEFF7FF),
+                                    MediaQuery.of(context).size.width,
+                                    MediaQuery.of(context).size.height
+                                ),
+                                const SizedBox(width: 15),
+                                graph(
+                                  "Calories",
+                                  "kCal",
+                                  DefaultImages.i4,
+                                  300,
+                                  const Color(0xffFFEFDD),
+                                    MediaQuery.of(context).size.width,
+                                    MediaQuery.of(context).size.height
+                                ),
+                              ],
+                            )
+                          ),
+                          const SizedBox(height: 30),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Exercices",
+                                style: pSemiBold18.copyWith(
+                                  fontSize: 19.25,
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  homeController.homeFlag.value = 2;
+                                },
+                                child: Text(
+                                  "Voir tout",
+                                  style: pSemiBold18.copyWith(
+                                    fontSize: 14.44,
+                                    color: ConstColors.lightBlackColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: 4,
+                            physics: const NeverScrollableScrollPhysics(),
                             itemBuilder: (BuildContext context, int index) {
                               return Padding(
-                                padding: const EdgeInsets.only(right: 16),
-                                child: SizedBox(
-                                  height: 207.89,
-                                  width: 230.99,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Stack(
-                                        alignment: Alignment.topRight,
-                                        children: [
-                                          Container(
-                                            height: 153.99,
-                                            width: 230.99,
-                                            decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                image: AssetImage(
-                                                  index == 1
-                                                      ? DefaultImages.h2
-                                                      : DefaultImages.h1,
-                                                ),
-                                                fit: BoxFit.fill,
+                                padding: const EdgeInsets.only(bottom: 15),
+                                child: Container(
+                                  height: 77,
+                                  width: Get.width,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(7.7),
+                                    border: Border.all(
+                                      color: const Color(0xffE5E9EF),
+                                      width: 1.5,
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(6.0),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          height: 61,
+                                          width: 61,
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              image: AssetImage(
+                                                index == 0
+                                                    ? DefaultImages.h3
+                                                    : index == 1
+                                                        ? DefaultImages.h4
+                                                        : index == 2
+                                                            ? DefaultImages.h5
+                                                            : DefaultImages.h6,
                                               ),
                                             ),
                                           ),
-                                          const Padding(
-                                            padding: EdgeInsets.only(
-                                                top: 20, right: 20),
-                                            child: Icon(
-                                              Icons.favorite,
-                                              color: ConstColors.secondaryColor,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      const Expanded(child: SizedBox()),
-                                      Text(
-                                        index == 1
-                                            ? "Full body stretching"
-                                            : "Bas du corps",
-                                        style: pSemiBold18.copyWith(
-                                          fontSize: 15.4,
                                         ),
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Débutant",
-                                            style: pSemiBold18.copyWith(
-                                              fontSize: 11.55,
-                                              color: ConstColors.primaryColor,
+                                        const SizedBox(width: 14),
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              index == 0
+                                                  ? "Front and Back Lunge"
+                                                  : index == 1
+                                                      ? "Side Plank"
+                                                      : index == 1
+                                                          ? "Arm circles"
+                                                          : "Sumo Squat",
+                                              style: pSemiBold18.copyWith(
+                                                fontSize: 15.4,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 8),
+                                            Text(
+                                              "0:30",
+                                              style: pRegular14.copyWith(
+                                                fontSize: 13.47,
+                                                color:
+                                                    ConstColors.lightBlackColor,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const Expanded(child: SizedBox()),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(right: 14),
+                                          child: SizedBox(
+                                            height: 19.25,
+                                            width: 19.25,
+                                            child: SvgPicture.asset(
+                                              DefaultImages.error,
+                                              fit: BoxFit.fill,
                                             ),
                                           ),
-                                          Text(
-                                            "  •  42 min",
-                                            style: pSemiBold18.copyWith(
-                                              fontSize: 11.55,
-                                              color:
-                                                  ConstColors.lightBlackColor,
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
                               );
                             },
                           ),
-                        ),
-                        const SizedBox(height: 30),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Exercices",
-                              style: pSemiBold18.copyWith(
-                                fontSize: 19.25,
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                homeController.homeFlag.value = 2;
-                              },
-                              child: Text(
-                                "Voir tout",
-                                style: pSemiBold18.copyWith(
-                                  fontSize: 14.44,
-                                  color: ConstColors.lightBlackColor,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: 4,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (BuildContext context, int index) {
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 15),
-                              child: Container(
-                                height: 77,
-                                width: Get.width,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(7.7),
-                                  border: Border.all(
-                                    color: const Color(0xffE5E9EF),
-                                    width: 1.5,
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(6.0),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        height: 61,
-                                        width: 61,
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                            image: AssetImage(
-                                              index == 0
-                                                  ? DefaultImages.h3
-                                                  : index == 1
-                                                      ? DefaultImages.h4
-                                                      : index == 2
-                                                          ? DefaultImages.h5
-                                                          : DefaultImages.h6,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 14),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            index == 0
-                                                ? "Front and Back Lunge"
-                                                : index == 1
-                                                    ? "Side Plank"
-                                                    : index == 1
-                                                        ? "Arm circles"
-                                                        : "Sumo Squat",
-                                            style: pSemiBold18.copyWith(
-                                              fontSize: 15.4,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 8),
-                                          Text(
-                                            "0:30",
-                                            style: pRegular14.copyWith(
-                                              fontSize: 13.47,
-                                              color:
-                                                  ConstColors.lightBlackColor,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const Expanded(child: SizedBox()),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 14),
-                                        child: SizedBox(
-                                          height: 19.25,
-                                          width: 19.25,
-                                          child: SvgPicture.asset(
-                                            DefaultImages.error,
-                                            fit: BoxFit.fill,
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 20),
-                      ],
+                          const SizedBox(height: 20),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -443,38 +413,110 @@ class _HomeViewState extends State<HomeView> {
   }
 }
 
-Widget categoryCard(String image, String text) {
-  return Expanded(
-    child: Container(
-      height: 77,
-      width: 77,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(7.7),
-        border: Border.all(
-          color: const Color(0xffE5E9EF),
-          width: 1.5,
-        ),
+Widget graph(String title, String subtitle, String image, int number, Color color, double width, double height) {
+  return Container(
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(7.7),
+      border: Border.all(
+        color: const Color(0xffE5E9EF),
+        width: 1.5,
       ),
+    ),
+    child: Padding(
+      padding: const EdgeInsets.all(15.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(
-            height: 23,
-            width: 23,
-            child: Image.asset(
-              image,
-              fit: BoxFit.fill,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text(
+                title,
+                style: pSemiBold18.copyWith(fontSize: 17),
+              ),
+              SizedBox(
+                width: width * 0.01,
+              ),
+              Container(
+                width: width * 0.1,
+                height: height * 0.045,
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(6.0),
+                  child: Image.asset(
+                    image,
+                  ),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 8),
-          Text(
-            text,
-            style: pSemiBold18.copyWith(
-              fontSize: 13.47,
+          SizedBox(
+            height: height * 0.02,
+          ),
+          CircularPercentIndicator(
+            radius: 60,
+            lineWidth: 12,
+            animation: true,
+            percent: number / 10000,
+            circularStrokeCap: CircularStrokeCap.round,
+            progressColor: const Color.fromARGB(255, 241, 56, 42),
+            backgroundColor: const Color.fromARGB(255, 180, 180, 180).withOpacity(0.2),
+            center: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  number.toString(),
+                  style: pSemiBold20.copyWith(
+                    fontSize: 20,
+                  ),
+                ),
+                Text(
+                  subtitle,
+                  style: pRegular14.copyWith(fontSize: 16, color: Colors.grey),
+                )
+              ],
             ),
           ),
         ],
       ),
+    ),
+  );
+}
+
+Widget categoryCard(String image, String text) {
+  return Container(
+    height: 77,
+    width: 77,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(7.7),
+      border: Border.all(
+        color: const Color(0xffE5E9EF),
+        width: 1.5,
+      ),
+    ),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          height: 23,
+          width: 23,
+          child: Image.asset(
+            image,
+            fit: BoxFit.fill,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          text,
+          textAlign: TextAlign.center,
+          style: pSemiBold18.copyWith(
+            fontSize: 12,
+          ),
+        ),
+      ],
     ),
   );
 }

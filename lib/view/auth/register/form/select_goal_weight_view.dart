@@ -6,7 +6,6 @@ import '../../../../config/colors.dart';
 import '../../../../config/text_style.dart';
 import '../../../../controller/auth_controller.dart';
 
-
 class SelectWeightGoalView extends StatelessWidget {
   final AuthController authController;
 
@@ -71,8 +70,8 @@ class SelectWeightGoalView extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 23, right: 16, top: 3),
                 child: TextFormField(
                   style: pSemiBold20.copyWith(fontSize: 25),
-                  controller:
-                      TextEditingController(text: authController.goalWeight.value),
+                  controller: TextEditingController(
+                      text: authController.goalWeight.value),
                   onChanged: (value) {
                     authController.goalWeight(value);
                   },

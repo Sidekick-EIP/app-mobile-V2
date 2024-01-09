@@ -129,7 +129,9 @@ class _NutritionPeriodState extends State<NutritionPeriod> {
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');
               }
-              return const Center(child: CircularProgressIndicator(color: ConstColors.primaryColor));
+              return const Center(
+                  child: CircularProgressIndicator(
+                      color: ConstColors.primaryColor));
             },
           )
         ],
@@ -139,7 +141,8 @@ class _NutritionPeriodState extends State<NutritionPeriod> {
 }
 
 class CategoryWidget extends StatefulWidget {
-  const CategoryWidget({super.key, required this.period, required this.updatePeriod});
+  const CategoryWidget(
+      {super.key, required this.period, required this.updatePeriod});
 
   final String period;
   final Function(String) updatePeriod;
@@ -171,7 +174,9 @@ class CategoryWidgetState extends State<CategoryWidget> {
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             padding: const EdgeInsets.all(12.0),
-            color: index == selectedCategoryIndex ? const Color.fromRGBO(242, 93, 41, 1) : Colors.grey,
+            color: index == selectedCategoryIndex
+                ? const Color.fromRGBO(242, 93, 41, 1)
+                : Colors.grey,
             child: Text(
               categories[index],
               style: const TextStyle(
@@ -235,14 +240,17 @@ class _MealViewBuilderState extends State<MealViewBuilder> {
                     children: [
                       Text(
                         "Pas d'aliment pour ce repas...",
-                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: widget.width * widget.height * 0.00005),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: widget.width * widget.height * 0.00005),
                       ),
                       SizedBox(
                         height: widget.height * 0.05,
                       ),
                       const Text(
                         "🍴",
-                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 70),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500, fontSize: 70),
                       ),
                     ],
                   ),
@@ -254,7 +262,8 @@ class _MealViewBuilderState extends State<MealViewBuilder> {
             height: widget.height * 0.75,
             width: widget.width,
             child: ListView.builder(
-                itemCount: widget.nutritionData.meals[widget.period]!["meals"].length,
+                itemCount:
+                    widget.nutritionData.meals[widget.period]!["meals"].length,
                 itemBuilder: (context, index) {
                   return Column(
                     children: [
@@ -268,7 +277,8 @@ class _MealViewBuilderState extends State<MealViewBuilder> {
                                 height: widget.height,
                                 color: Colors.green,
                                 colorAccent: Colors.greenAccent,
-                                food: widget.nutritionData.meals[widget.period]!["meals"][index],
+                                food: widget.nutritionData
+                                    .meals[widget.period]!["meals"][index],
                                 period: "breakfast",
                                 callback: callback,
                                 nutritionData: widget.nutritionData,
@@ -316,12 +326,15 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
 
   @override
   Widget build(BuildContext context) {
-    var kcalSplit = (widget.food.calories * (widget.food.weight / 100)).toString().split('.');
+    var kcalSplit = (widget.food.calories * (widget.food.weight / 100))
+        .toString()
+        .split('.');
 
     int totalMacros = widget.food.carbs + widget.food.protein + widget.food.fat;
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(width: 1.6, color: const Color.fromARGB(66, 128, 128, 128)),
+        border: Border.all(
+            width: 1.6, color: const Color.fromARGB(66, 128, 128, 128)),
         color: const Color.fromARGB(255, 255, 255, 255),
         borderRadius: const BorderRadius.all(Radius.circular(20)),
       ),
@@ -364,7 +377,8 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
                             alignment: Alignment.centerLeft,
                             child: Text(
                               widget.food.name,
-                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              style: const TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
@@ -373,7 +387,8 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
                           height: widget.height * 0.02,
                           child: Text(
                             "${kcalSplit[0]} kcal • ${widget.food.weight} g",
-                            style: const TextStyle(fontSize: 12, color: Colors.grey),
+                            style: const TextStyle(
+                                fontSize: 12, color: Colors.grey),
                           ),
                         )
                       ],
@@ -389,7 +404,8 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
                   borderRadius: BorderRadius.all(Radius.circular(40)),
                 ),
                 child: PopupMenuButton<String>(
-                  itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                  itemBuilder: (BuildContext context) =>
+                      <PopupMenuEntry<String>>[
                     const PopupMenuItem<String>(
                       value: 'Modifier',
                       child: Text('Modifier'),
@@ -423,7 +439,8 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
               MacrosWidgetCard(
                 width: widget.width,
                 height: widget.height,
-                grams: (widget.food.carbs * (widget.food.weight / 100)).toString(),
+                grams:
+                    (widget.food.carbs * (widget.food.weight / 100)).toString(),
                 macros: "Glucides",
                 barColor: const Color.fromARGB(255, 98, 7, 255),
                 percent: widget.food.carbs / totalMacros,
@@ -431,7 +448,8 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
               MacrosWidgetCard(
                 width: widget.width,
                 height: widget.height,
-                grams: (widget.food.protein * (widget.food.weight / 100)).toString(),
+                grams: (widget.food.protein * (widget.food.weight / 100))
+                    .toString(),
                 macros: "Proteines",
                 barColor: Colors.red,
                 percent: widget.food.protein / totalMacros,
@@ -439,7 +457,8 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
               MacrosWidgetCard(
                 width: widget.width,
                 height: widget.height,
-                grams: (widget.food.fat * (widget.food.weight / 100)).toString(),
+                grams:
+                    (widget.food.fat * (widget.food.weight / 100)).toString(),
                 macros: "Lipides",
                 barColor: Colors.amber,
                 percent: widget.food.fat / totalMacros,
@@ -519,7 +538,8 @@ class MacrosWidgetCard extends StatelessWidget {
                       height: height * 0.025,
                       child: Text(
                         "${macrosGramsSplit[0]} g",
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 15),
                       ),
                     ),
                     SizedBox(

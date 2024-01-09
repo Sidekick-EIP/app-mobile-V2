@@ -5,7 +5,6 @@ import '../../../../config/images.dart';
 import '../../../../config/text_style.dart';
 import '../../../../controller/auth_controller.dart';
 
-
 class GenderView extends StatefulWidget {
   final AuthController authController;
   const GenderView({Key? key, required this.authController}) : super(key: key);

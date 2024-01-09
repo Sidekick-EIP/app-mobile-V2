@@ -53,7 +53,7 @@ class _ActivityViewState extends State<ActivityView> {
               onTap: () {
                 setState(() {
                   widget.authController.activityList[index] =
-                  !widget.authController.activityList[index];
+                      !widget.authController.activityList[index];
                 });
               },
               child: Padding(
@@ -89,7 +89,8 @@ class _ActivityViewState extends State<ActivityView> {
                         ),
                         const SizedBox(width: 15),
                         Text(
-                          activityList[index].activityName,  // get the sport from the list
+                          activityList[index]
+                              .activityName, // get the sport from the list
                           style: pSemiBold18.copyWith(
                             fontSize: 15,
                           ),
@@ -101,15 +102,15 @@ class _ActivityViewState extends State<ActivityView> {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: widget.authController.activityList[index] ==
-                                true
+                                    true
                                 ? const Color(0xffF25D29)
                                 : Colors.transparent,
                             border: Border.all(
                               color:
-                              widget.authController.activityList[index] ==
-                                  true
-                                  ? const Color(0xffF25D29)
-                                  : const Color(0xffDAE0E8),
+                                  widget.authController.activityList[index] ==
+                                          true
+                                      ? const Color(0xffF25D29)
+                                      : const Color(0xffDAE0E8),
                             ),
                           ),
                           child: const Icon(

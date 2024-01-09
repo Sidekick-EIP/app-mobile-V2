@@ -43,7 +43,7 @@ class _HomeViewState extends State<HomeView> {
     return userController.user.value.activities
         .map((activity) => Activity(Activities.values.firstWhere(
             (e) => e.toString().split('.').last == activity.value,
-        orElse: () => throw Exception('Activity not found: $activity'))))
+            orElse: () => throw Exception('Activity not found: $activity'))))
         .toList();
   }
 
@@ -193,16 +193,15 @@ class _HomeViewState extends State<HomeView> {
                         padding: EdgeInsets.zero,
                         physics: const ClampingScrollPhysics(),
                         children: [
-                          userController.user.value.sidekickId != null ?
-                          InkWell(
-                            onTap: () => {
-                              homeController.flag.value = 1
-                            }, child: WelcomeCardWSidekick(
-                              sidekickName: userController.partner.value.firstname.value,
-                              imagePath: userController.partner.value.avatar.value
-                            )
-                          ) :
-                          const WelcomeCardWOutSidekick(),
+                          userController.user.value.sidekickId != null
+                              ? InkWell(
+                                  onTap: () => {homeController.flag.value = 1},
+                                  child: WelcomeCardWSidekick(
+                                      sidekickName: userController
+                                          .partner.value.firstname.value,
+                                      imagePath: userController
+                                          .partner.value.avatar.value))
+                              : const WelcomeCardWOutSidekick(),
                           const SizedBox(height: 30),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -216,7 +215,7 @@ class _HomeViewState extends State<HomeView> {
                               InkWell(
                                 onTap: () {
                                   Get.to(
-                                        () => const ActivityScreen(),
+                                    () => const ActivityScreen(),
                                     transition: Transition.rightToLeft,
                                   );
                                 },
@@ -234,17 +233,17 @@ class _HomeViewState extends State<HomeView> {
                           SizedBox(
                             height: 80,
                             child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: activityList.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Row(
-                                  children: [
-                                    categoryCard(activityList[index].iconPath, activityList[index].activityName),
-                                    const SizedBox(width: 10)
-                                  ],
-                                );
-                              }
-                            ),
+                                scrollDirection: Axis.horizontal,
+                                itemCount: activityList.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Row(
+                                    children: [
+                                      categoryCard(activityList[index].iconPath,
+                                          activityList[index].activityName),
+                                      const SizedBox(width: 10)
+                                    ],
+                                  );
+                                }),
                           ),
                           const SizedBox(height: 20),
                           Row(
@@ -260,31 +259,28 @@ class _HomeViewState extends State<HomeView> {
                           ),
                           const SizedBox(height: 20),
                           Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                graph(
+                              child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              graph(
                                   "Nb. de pas",
                                   "Pas",
                                   DefaultImages.i1,
                                   8357,
                                   const Color(0xffEFF7FF),
-                                    MediaQuery.of(context).size.width,
-                                    MediaQuery.of(context).size.height
-                                ),
-                                const SizedBox(width: 15),
-                                graph(
+                                  MediaQuery.of(context).size.width,
+                                  MediaQuery.of(context).size.height),
+                              const SizedBox(width: 15),
+                              graph(
                                   "Calories",
                                   "kCal",
                                   DefaultImages.i4,
                                   300,
                                   const Color(0xffFFEFDD),
-                                    MediaQuery.of(context).size.width,
-                                    MediaQuery.of(context).size.height
-                                ),
-                              ],
-                            )
-                          ),
+                                  MediaQuery.of(context).size.width,
+                                  MediaQuery.of(context).size.height),
+                            ],
+                          )),
                           const SizedBox(height: 30),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -413,7 +409,8 @@ class _HomeViewState extends State<HomeView> {
   }
 }
 
-Widget graph(String title, String subtitle, String image, int number, Color color, double width, double height) {
+Widget graph(String title, String subtitle, String image, int number,
+    Color color, double width, double height) {
   return Container(
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(7.7),
@@ -463,7 +460,8 @@ Widget graph(String title, String subtitle, String image, int number, Color colo
             percent: number / 10000,
             circularStrokeCap: CircularStrokeCap.round,
             progressColor: const Color.fromARGB(255, 241, 56, 42),
-            backgroundColor: const Color.fromARGB(255, 180, 180, 180).withOpacity(0.2),
+            backgroundColor:
+                const Color.fromARGB(255, 180, 180, 180).withOpacity(0.2),
             center: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

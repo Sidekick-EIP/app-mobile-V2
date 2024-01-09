@@ -37,18 +37,16 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     });
 
     final response = await HttpRequest.mainPost(
-      "/auth/forgotPassword",
-      {"email": emailPasswordController.text}, 
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
-    });
+        "/auth/forgotPassword", {"email": emailPasswordController.text},
+        headers: {"Content-Type": "application/x-www-form-urlencoded"});
 
     if (response.statusCode == 201) {
       Get.snackbar("Succès", "Un email de réinitialisation a été envoyé",
           backgroundColor: Colors.green,
           colorText: Colors.white,
           snackPosition: SnackPosition.BOTTOM);
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const MyWebview()));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const MyWebview()));
     } else {
       Map<String, dynamic> decodedResponse = jsonDecode(response.body);
       String errorMessage = decodedResponse['error'] ?? "Erreur inconnue";

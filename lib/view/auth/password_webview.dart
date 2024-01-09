@@ -32,8 +32,7 @@ class _MyWebViewState extends State<MyWebview> {
           },
         ),
       )
-      ..loadRequest(
-          Uri.parse('https://sidekickapp.live/reset_password'));
+      ..loadRequest(Uri.parse('https://sidekickapp.live/reset_password'));
   }
 
   @override

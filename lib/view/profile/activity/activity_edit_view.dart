@@ -27,7 +27,9 @@ class ActivityEditViewState extends State<ActivityEditView> {
 
     for (var activityEnum in Activities.values) {
       String enumString = activityEnum.toString().split('.').last;
-      if (userController.user.value.activities.toString().contains(enumString)) {
+      if (userController.user.value.activities
+          .toString()
+          .contains(enumString)) {
         results.add(true);
       } else {
         results.add(false);
@@ -103,7 +105,8 @@ class ActivityEditViewState extends State<ActivityEditView> {
                         ),
                         const SizedBox(width: 15),
                         Text(
-                          activityList[index].activityName, // get the sport from the list
+                          activityList[index]
+                              .activityName, // get the sport from the list
                           style: pSemiBold18.copyWith(
                             fontSize: 15,
                           ),

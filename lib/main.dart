@@ -5,6 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:sidekick_app/providers/auth.dart';
+import 'package:sidekick_app/utils/notifications.dart';
 import 'package:sidekick_app/utils/token_storage.dart';
 import 'package:sidekick_app/view/auth/signin_screen.dart';
 import 'package:sidekick_app/view/onboarding/onboarding_screen.dart';
@@ -13,11 +14,11 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'models/first_launch.dart';
 
-
 Future main() async {
   await dotenv.load(fileName: ".env");
   WidgetsFlutterBinding.ensureInitialized();
 
+  NotificationService.init();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -60,7 +61,6 @@ class MyAppState extends State<MyApp> {
     setState(() {});
   }
 
-
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -98,5 +98,5 @@ class MyAppState extends State<MyApp> {
               ? const OnBoardingScreen()
               : const SignInScreen(),
     );
-    }
+  }
 }

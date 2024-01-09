@@ -5,18 +5,19 @@ import 'package:sidekick_app/controller/messages_controller.dart';
 import 'package:sidekick_app/controller/user_controller.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
+import '../utils/notifications.dart';
 import 'home_controller.dart';
 
 class SocketController extends GetxController {
   final socket = Rx<io.Socket?>(null);
 
   void initSocket(String userId) {
-      socket.value = io.io(dotenv.env['API_BACK_URL']!, <String, dynamic>{
-        'autoConnect': false,
-        'transports': ['websocket'],
-        'auth': {'token': userId},
-        'forceNew': true,
-      });
+    socket.value = io.io(dotenv.env['API_BACK_URL']!, <String, dynamic>{
+      'autoConnect': false,
+      'transports': ['websocket'],
+      'auth': {'token': userId},
+      'forceNew': true,
+    });
   }
 
   void connectToSocket() {
@@ -33,9 +34,17 @@ class SocketController extends GetxController {
       final userController = Get.put(UserController());
       final homeController = Get.put(HomeController());
 
-      messageController.addMessage(data, userController.user.value.sidekickId!.value, userController.partner.value.avatar.value);
+      messageController.addMessage(
+          data,
+          userController.user.value.sidekickId!.value,
+          userController.partner.value.avatar.value);
       if (homeController.flag.value == 1) {
         messageController.seeMessage();
+      } else {
+        NotificationService.showNotification(
+            title: userController.partner.value.firstname.value,
+            body: data,
+            payload: 'msg');
       }
     });
 
@@ -47,9 +56,10 @@ class SocketController extends GetxController {
 
   void setOnMatching() {
     socket.value?.on('match', (data) {
-      if (kDebugMode) {
-        print('Partenaire trouvé!');
-      }
+      NotificationService.showNotification(
+          title: 'Sidekick trouvé !',
+          body: 'Le partenaire parfait a été trouvé, il vous attend !',
+          payload: 'msg');
     });
   }
 

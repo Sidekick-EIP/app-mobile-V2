@@ -178,7 +178,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Container(
                 color: ConstColors.secondaryColor,
                 child: const Center(
-                  child: CircularProgressIndicator(color: ConstColors.secondaryColor),
+                  child: CircularProgressIndicator(
+                      color: ConstColors.secondaryColor),
                 ),
               ),
             ),

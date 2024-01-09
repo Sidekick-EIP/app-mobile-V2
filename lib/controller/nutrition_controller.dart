@@ -12,7 +12,8 @@ class NutritionController {
 
   Future<Nutrition> fetchNutrition(String date) async {
     isLoading.value = true;
-    final response = await HttpRequest.mainGet("/nutrition/findByDay/?day=$date");
+    final response =
+        await HttpRequest.mainGet("/nutrition/findByDay/?day=$date");
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> body = jsonDecode(response.body);

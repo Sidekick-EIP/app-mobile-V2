@@ -122,10 +122,10 @@ class WelcomeCardWSidekick extends StatelessWidget {
                                     ),
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
+                              const Padding(
+                                padding: EdgeInsets.only(left: 10),
                                 child: Text('Lui envoyer un message', textAlign: TextAlign.center,
-                                  style: pRegular14,
+                                  style: TextStyle(fontSize: 12),
                                 ),
                               )
                             ]

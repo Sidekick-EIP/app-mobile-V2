@@ -68,6 +68,7 @@ class _HomeViewState extends State<HomeView> {
         await preferenceController.fetchPreferenceFromBack();
     bool isUserFetched = await userController.fetchUserFromBack();
     userController.fetchSidekickFromBack();
+    activityList = getActivities();
 
     if (!isPreferenceFetched || !isUserFetched) {
       setState(() => isLoading = true);

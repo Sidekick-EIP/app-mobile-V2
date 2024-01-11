@@ -1,11 +1,10 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:sidekick_app/controller/messages_controller.dart';
 import 'package:sidekick_app/controller/user_controller.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
-import '../utils/notifications.dart';
+import '../services/notifications.dart';
 import 'home_controller.dart';
 
 class SocketController extends GetxController {

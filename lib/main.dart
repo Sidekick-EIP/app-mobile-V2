@@ -5,7 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:sidekick_app/providers/auth.dart';
-import 'package:sidekick_app/utils/notifications.dart';
+import 'package:sidekick_app/services/notifications.dart';
 import 'package:sidekick_app/utils/token_storage.dart';
 import 'package:sidekick_app/view/auth/signin_screen.dart';
 import 'package:sidekick_app/view/onboarding/onboarding_screen.dart';

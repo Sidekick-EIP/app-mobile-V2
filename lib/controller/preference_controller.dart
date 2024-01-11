@@ -50,7 +50,8 @@ class PreferenceController extends GetxController {
       "notifications": preference.value.notifications.value,
     };
 
-    final response = await HttpRequest.mainPost("/preferences/", jsonEncode(body));
+    final response =
+        await HttpRequest.mainPost("/preferences/", jsonEncode(body));
 
     if (response.statusCode == 201) {
       if (kDebugMode) {

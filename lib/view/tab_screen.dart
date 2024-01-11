@@ -55,8 +55,12 @@ class _TabScreenState extends State<TabScreen> {
               card(
                 DefaultImages.homeOutlined,
                 "Accueil",
-                homeController.flag.value == 0 ? ConstColors.primaryColor : const Color(0xff9299A3),
-                homeController.flag.value == 0 ? ConstColors.primaryColor : const Color(0xff9299A3),
+                homeController.flag.value == 0
+                    ? ConstColors.primaryColor
+                    : const Color(0xff9299A3),
+                homeController.flag.value == 0
+                    ? ConstColors.primaryColor
+                    : const Color(0xff9299A3),
                 () {
                   homeController.flag.value = 0;
                 },
@@ -64,8 +68,12 @@ class _TabScreenState extends State<TabScreen> {
               card(
                 DefaultImages.message,
                 "Message",
-                homeController.flag.value == 1 ? ConstColors.primaryColor : const Color(0xff9299A3),
-                homeController.flag.value == 1 ? ConstColors.primaryColor : const Color(0xff9299A3),
+                homeController.flag.value == 1
+                    ? ConstColors.primaryColor
+                    : const Color(0xff9299A3),
+                homeController.flag.value == 1
+                    ? ConstColors.primaryColor
+                    : const Color(0xff9299A3),
                 () {
                   homeController.flag.value = 1;
                 },
@@ -73,8 +81,12 @@ class _TabScreenState extends State<TabScreen> {
               card(
                 DefaultImages.training,
                 "Entrainement",
-                homeController.flag.value == 2 ? ConstColors.primaryColor : const Color(0xff9299A3),
-                homeController.flag.value == 2 ? ConstColors.primaryColor : const Color(0xff9299A3),
+                homeController.flag.value == 2
+                    ? ConstColors.primaryColor
+                    : const Color(0xff9299A3),
+                homeController.flag.value == 2
+                    ? ConstColors.primaryColor
+                    : const Color(0xff9299A3),
                 () {
                   homeController.flag.value = 2;
                 },
@@ -82,8 +94,12 @@ class _TabScreenState extends State<TabScreen> {
               card(
                 DefaultImages.nutritionOutlined,
                 "Nutrition",
-                homeController.flag.value == 3 ? ConstColors.primaryColor : const Color(0xff9299A3),
-                homeController.flag.value == 3 ? ConstColors.primaryColor : const Color(0xff9299A3),
+                homeController.flag.value == 3
+                    ? ConstColors.primaryColor
+                    : const Color(0xff9299A3),
+                homeController.flag.value == 3
+                    ? ConstColors.primaryColor
+                    : const Color(0xff9299A3),
                 () {
                   homeController.flag.value = 3;
                 },
@@ -91,8 +107,12 @@ class _TabScreenState extends State<TabScreen> {
               card(
                 DefaultImages.profileOutlined,
                 "Profile",
-                homeController.flag.value == 4 ? ConstColors.primaryColor : const Color(0xff9299A3),
-                homeController.flag.value == 4 ? ConstColors.primaryColor : const Color(0xff9299A3),
+                homeController.flag.value == 4
+                    ? ConstColors.primaryColor
+                    : const Color(0xff9299A3),
+                homeController.flag.value == 4
+                    ? ConstColors.primaryColor
+                    : const Color(0xff9299A3),
                 () {
                   homeController.flag.value = 4;
                 },
@@ -115,7 +135,8 @@ class _TabScreenState extends State<TabScreen> {
     );
   }
 
-  Widget card(String image, String text, Color imageColor, Color textColor, VoidCallback onTap) {
+  Widget card(String image, String text, Color imageColor, Color textColor,
+      VoidCallback onTap) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 

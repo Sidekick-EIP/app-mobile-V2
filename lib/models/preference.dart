@@ -18,8 +18,8 @@ class Preference {
   }
 
   Map<String, bool> toJson() => {
-    'darkMode': isDarkMode.value,
-    'notifications': notifications.value,
-    'sounds': sounds.value,
-  };
+        'darkMode': isDarkMode.value,
+        'notifications': notifications.value,
+        'sounds': sounds.value,
+      };
 }

@@ -21,7 +21,9 @@ class _AddMealState extends State<AddMeal> {
   final userController = Get.find<UserController>();
 
   final nutritionController = Get.put(NutritionController(), permanent: true);
-  String getDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0).toIso8601String();
+  String getDate = DateTime(DateTime.now().year, DateTime.now().month,
+          DateTime.now().day, 0, 0, 0)
+      .toIso8601String();
 
   @override
   void initState() {
@@ -74,11 +76,16 @@ class _AddMealState extends State<AddMeal> {
             future: futureNutrition,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return DisplayNutritionPage(width: width, height: height, nutritionData: snapshot.data!);
+                return DisplayNutritionPage(
+                    width: width,
+                    height: height,
+                    nutritionData: snapshot.data!);
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');
               }
-              return const Center(child: CircularProgressIndicator(color: ConstColors.primaryColor));
+              return const Center(
+                  child: CircularProgressIndicator(
+                      color: ConstColors.primaryColor));
             },
           )
         ],
@@ -88,7 +95,11 @@ class _AddMealState extends State<AddMeal> {
 }
 
 class DisplayNutritionPage extends StatelessWidget {
-  const DisplayNutritionPage({super.key, required this.width, required this.height, required this.nutritionData});
+  const DisplayNutritionPage(
+      {super.key,
+      required this.width,
+      required this.height,
+      required this.nutritionData});
 
   final double width;
   final double height;
@@ -115,7 +126,8 @@ class DisplayNutritionPage extends StatelessWidget {
                   ],
                 ),
               ),
-              TodaysMeals(width: width, height: height, nutritionData: nutritionData),
+              TodaysMeals(
+                  width: width, height: height, nutritionData: nutritionData),
             ],
           ),
         ],
@@ -207,7 +219,8 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
       },
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(width: 1.6, color: const Color.fromARGB(66, 128, 128, 128)),
+          border: Border.all(
+              width: 1.6, color: const Color.fromARGB(66, 128, 128, 128)),
           color: const Color.fromARGB(255, 255, 255, 255),
           borderRadius: const BorderRadius.all(Radius.circular(20)),
         ),
@@ -249,7 +262,8 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
                               alignment: Alignment.centerLeft,
                               child: Text(
                                 widget.mealName,
-                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                             ),
                           ),
@@ -258,7 +272,8 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
                             height: widget.height * 0.02,
                             child: const Text(
                               "390 kcal ° 200 g",
-                              style: TextStyle(fontSize: 12, color: Colors.grey),
+                              style:
+                                  TextStyle(fontSize: 12, color: Colors.grey),
                             ),
                           )
                         ],
@@ -364,7 +379,8 @@ class MacrosWidgetCard extends StatelessWidget {
                       height: height * 0.025,
                       child: Text(
                         grams,
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 15),
                       ),
                     ),
                     SizedBox(

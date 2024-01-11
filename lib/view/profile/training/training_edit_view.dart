@@ -34,7 +34,8 @@ class TrainingEditViewState extends State<TrainingEditView> {
   @override
   void initState() {
     super.initState();
-    userController.trainingList = translateTrainingToBooleanList(userController.user.value.level.value);
+    userController.trainingList =
+        translateTrainingToBooleanList(userController.user.value.level.value);
   }
 
   @override
@@ -60,9 +61,7 @@ class TrainingEditViewState extends State<TrainingEditView> {
             return InkWell(
               onTap: () {
                 setState(() {
-                  for (var i = 0;
-                  i < userController.trainingList.length;
-                  i++) {
+                  for (var i = 0; i < userController.trainingList.length; i++) {
                     if (i == index) {
                       userController.trainingList[i] = true;
                     } else {
@@ -94,10 +93,10 @@ class TrainingEditViewState extends State<TrainingEditView> {
                           index == 0
                               ? "Débutant"
                               : index == 1
-                              ? "Entrainement irrégulier"
-                              : index == 2
-                              ? "Intermédiaire"
-                              : "Avancé",
+                                  ? "Entrainement irrégulier"
+                                  : index == 2
+                                      ? "Intermédiaire"
+                                      : "Avancé",
                           style: pSemiBold18.copyWith(
                             fontSize: 15,
                           ),
@@ -107,10 +106,10 @@ class TrainingEditViewState extends State<TrainingEditView> {
                           index == 0
                               ? "Je veux commencer à m'entraîner"
                               : index == 1
-                              ? "Je m'entraîne de temps en temps"
-                              : index == 2
-                              ? "Je m'entraîne 2 - 4 fois par semaine"
-                              : "Je m'entraîne 5 - 7 fois par semaine",
+                                  ? "Je m'entraîne de temps en temps"
+                                  : index == 2
+                                      ? "Je m'entraîne 2 - 4 fois par semaine"
+                                      : "Je m'entraîne 5 - 7 fois par semaine",
                           style: pRegular14.copyWith(
                             fontSize: 13,
                             color: ConstColors.lightBlackColor,

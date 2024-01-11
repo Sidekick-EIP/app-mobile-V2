@@ -104,7 +104,9 @@ class _EditMealState extends State<EditMeal> {
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');
               }
-              return const Center(child: CircularProgressIndicator(color: ConstColors.primaryColor));
+              return const Center(
+                  child: CircularProgressIndicator(
+                      color: ConstColors.primaryColor));
             },
           )
         ],

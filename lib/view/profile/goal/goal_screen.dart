@@ -58,19 +58,19 @@ class GoalScreenState extends State<GoalScreen> {
             padding: const EdgeInsets.only(right: 10, top: 0),
             child: !isEditMode
                 ? TextButton(
-              onPressed: () {
-                setState(() {
-                  isEditMode = !isEditMode;
-                });
-              },
-              child: Text("Éditer",
-                  style: pSemiBold20.copyWith(
-                      fontSize: 15.39, color: ConstColors.primaryColor)),
-            )
+                    onPressed: () {
+                      setState(() {
+                        isEditMode = !isEditMode;
+                      });
+                    },
+                    child: Text("Éditer",
+                        style: pSemiBold20.copyWith(
+                            fontSize: 15.39, color: ConstColors.primaryColor)),
+                  )
                 : const SizedBox(
-              height: 0,
-              width: 0,
-            ),
+                    height: 0,
+                    width: 0,
+                  ),
           ),
         ],
       ),
@@ -81,9 +81,7 @@ class GoalScreenState extends State<GoalScreen> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),
-                child: isEditMode
-                    ? const GoalEditView()
-                    : const GoalListView(),
+                child: isEditMode ? const GoalEditView() : const GoalListView(),
               ),
               const SizedBox(height: 100),
             ],
@@ -95,7 +93,8 @@ class GoalScreenState extends State<GoalScreen> {
                 title: "Enregistrer",
                 width: Get.width,
                 onTap: () async {
-                  userController.user.value.goal.value = enumToString(getSelectedGoal(userController.goalList));
+                  userController.user.value.goal.value =
+                      enumToString(getSelectedGoal(userController.goalList));
                   try {
                     await userController.updateUserProfile();
                     Get.snackbar('Succès', 'Profil mis à jour avec succès!',

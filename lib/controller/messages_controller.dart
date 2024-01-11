@@ -9,7 +9,7 @@ import 'package:sidekick_app/utils/http_request.dart';
 import 'package:uuid/uuid.dart';
 
 class MessageController extends GetxController {
-  RxList<types.Message> messages = <types.Message>[].obs;
+  RxList messages = [].obs;
   RxBool isLoading = false.obs;
 
   Future<void> fetchMessagesFromBack() async {
@@ -17,17 +17,19 @@ class MessageController extends GetxController {
 
     if (response.statusCode == 200) {
       final userController = Get.put(UserController());
-      registerMessageData(response.body, types.User(
-        firstName: userController.user.value.firstname.value,
-        id: userController.user.value.userId.value,
-        imageUrl: userController.user.value.avatar.value,
-        lastName: userController.user.value.lastname.value,
-      ),types.User(
-          firstName: userController.partner.value.firstname.value,
-          id: userController.user.value.sidekickId!.value,
-          lastName: userController.partner.value.lastname.value,
-          imageUrl: userController.partner.value.avatar.value
-      ));
+      registerMessageData(
+          response.body,
+          types.User(
+            firstName: userController.user.value.firstname.value,
+            id: userController.user.value.userId.value,
+            imageUrl: userController.user.value.avatar.value,
+            lastName: userController.user.value.lastname.value,
+          ),
+          types.User(
+              firstName: userController.partner.value.firstname.value,
+              id: userController.user.value.sidekickId!.value,
+              lastName: userController.partner.value.lastname.value,
+              imageUrl: userController.partner.value.avatar.value));
     } else if (response.statusCode == 500) {
       if (kDebugMode) {
         print("Error 500 from server");
@@ -38,12 +40,12 @@ class MessageController extends GetxController {
   registerMessageData(messageJson, types.User user, types.User partner) {
     final messageList = (jsonDecode(messageJson) as List)
         .map((e) => types.TextMessage(
-        author: e['from_id'] == user.id ? user : partner,
-        createdAt: DateTime.parse(e['createdAt']).millisecondsSinceEpoch,
-        id: const Uuid().v4(),
-        text: e['content'],
-        status: e['seen'] ? types.Status.seen : types.Status.delivered,
-        showStatus: true))
+            author: e['from_id'] == user.id ? user : partner,
+            createdAt: DateTime.parse(e['createdAt']).millisecondsSinceEpoch,
+            id: const Uuid().v4(),
+            text: e['content'],
+            status: e['seen'] ? types.Status.seen : types.Status.delivered,
+            showStatus: true))
         .toList();
     messageList.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
 
@@ -59,7 +61,7 @@ class MessageController extends GetxController {
             id: const Uuid().v4(),
             text: data,
             status: types.Status.delivered //TODO handle loading and error
-        ));
+            ));
   }
 
   void setAllMessagesSeen() {
@@ -73,13 +75,15 @@ class MessageController extends GetxController {
     final userController = Get.put(UserController());
     final socketController = Get.put(SocketController());
 
-    if (messages.isNotEmpty && messages[0].author.id != userController.user.value.userId.value) {
+    if (messages.isNotEmpty &&
+        messages[0].author.id != userController.user.value.userId.value) {
       socketController.emitSeen();
     }
   }
 
   @override
   void onReady() async {
+    print("moves");
     super.onReady();
     try {
       isLoading.value = true;

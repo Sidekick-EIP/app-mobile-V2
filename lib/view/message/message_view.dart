@@ -51,102 +51,93 @@ class _MessageViewState extends State<MessageView> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(DefaultImages.hourGlass,
-                  width: 200, height: 200),
-              const SizedBox(height: 20),
+              Image.asset(DefaultImages.hourGlass, width: 200, height: 200),
+              const SizedBox(height: 80),
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: Text(
-                  'Recherche en cours... Vous recevrez une notification lorsque le partenaire parfait sera trouvé',
+                  'Recherche en cours... Vous recevrez une notification lorsque le partenaire parfait sera trouvé.',
                   textAlign: TextAlign.center,
                   style: pRegular14.copyWith(
-                    fontSize: 16,
+                    fontSize: 18,
                   ),
                 ),
               ),
             ],
           )
-        : Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: MediaQuery.of(context).padding.top + 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(30),
-                              topRight: Radius.circular(30),
-                            ),
-                          ),
-                          builder: (v) => const FractionallySizedBox(
-                            heightFactor: 0.9,
-                            child: SidekickView(),
-                          ),
-                        );
-                      },
-                      child: CircleAvatar(
-                        backgroundImage: NetworkImage(
-                            userController.partner.value.avatar.value),
-                        radius: 15,
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    Text(
-                      userController.partner.value.firstname.value,
-                      style: pSemiBold20.copyWith(
-                        fontSize: 24,
-                      ),
-                    ),
-                  ],
+        : Scaffold(
+            appBar: AppBar(
+              backgroundColor: Color(0xfff4f4f4),
+              title: Text(
+                userController.partner.value.firstname.value,
+                style: pSemiBold20.copyWith(
+                  fontSize: 24,
                 ),
               ),
-              const SizedBox(height: 10),
-              SizedBox(
-                height: Get.height -
-                    (MediaQuery.of(context).padding.top + 20 + 30 + 10) -
-                    100,
-                width: Get.width,
-                child: GetX<MessageController>(builder: (_) {
-                  return Chat(
-                    theme: DefaultChatTheme(
-                      primaryColor: ConstColors.primaryColor,
-                      inputBackgroundColor: ConstColors.secondaryColor,
-                      inputTextColor: ConstColors.blackColor,
-                      inputBorderRadius:
-                          const BorderRadius.all(Radius.circular(20)),
-                      inputContainerDecoration: BoxDecoration(
-                        color: const Color.fromRGBO(245, 245, 247, 1.0),
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20),
+              elevation: 0,
+              leading: Padding(
+                padding: const EdgeInsets.all(6.0),
+                child: InkWell(
+                  onTap: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30),
+                          topRight: Radius.circular(30),
                         ),
-                        border:
-                            Border.all(color: Colors.transparent, width: 2.0),
                       ),
-                    ),
-                    messages:
-                        userController.user.value.userId.toString() == 'ID'
-                            ? []
-                            : messageController.messages,
-                    onEndReachedThreshold: 1,
-                    onSendPressed: _handleSendPressed,
-                    showUserAvatars: true,
-                    user:
-                        types.User(id: userController.user.value.userId.value),
-                    inputOptions:
-                        InputOptions(onTextChanged: _handleTextChanged),
-                    scrollPhysics: const BouncingScrollPhysics(),
-                  );
-                }),
+                      builder: (v) => const FractionallySizedBox(
+                        heightFactor: 0.9,
+                        child: SidekickView(),
+                      ),
+                    );
+                  },
+                  child: CircleAvatar(
+                    backgroundImage:
+                        NetworkImage(userController.partner.value.avatar.value),
+                    radius: 15,
+                  ),
+                ),
               ),
-            ],
+            ),
+            body: GetX<MessageController>(builder: (_) {
+              return Chat(
+                theme: DefaultChatTheme(
+                  primaryColor: ConstColors.primaryColor,
+                  inputBackgroundColor: ConstColors.secondaryColor,
+                  inputTextColor: ConstColors.blackColor,
+                  inputBorderRadius:
+                      const BorderRadius.all(Radius.circular(20)),
+                  inputContainerDecoration: BoxDecoration(
+                    color: const Color.fromRGBO(245, 245, 247, 1.0),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
+                    border: Border.all(color: Colors.transparent, width: 2.0),
+                  ),
+                ),
+                messages: userController.user.value.userId.toString() == 'ID'
+                    ? []
+                    : messageController.messages
+                        .map((o) => types.TextMessage(
+                            author: o.author,
+                            createdAt: o.createdAt,
+                            id: o.id,
+                            text: o.text,
+                            status: o.status,
+                            showStatus: o.showStatus))
+                        .toList(),
+                onEndReachedThreshold: 1,
+                onSendPressed: _handleSendPressed,
+                showUserAvatars: true,
+                user: types.User(id: userController.user.value.userId.value),
+                inputOptions: InputOptions(onTextChanged: _handleTextChanged),
+                scrollPhysics: const BouncingScrollPhysics(),
+              );
+            }),
           );
   }
 }

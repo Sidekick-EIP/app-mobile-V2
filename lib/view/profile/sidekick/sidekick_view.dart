@@ -369,7 +369,8 @@ class _SidekickViewState extends State<SidekickView> {
                                   : 9,
                               itemBuilder: (BuildContext context, int index) {
                                 return categoryCard(
-                                    activityList[index].iconPath, activityList[index].activityName);
+                                    activityList[index].iconPath,
+                                    activityList[index].activityName);
                               },
                             )
                           ],

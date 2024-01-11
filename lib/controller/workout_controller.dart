@@ -48,7 +48,8 @@ class WorkoutController extends GetxController {
   }
 
   Future<void> getSpecificExercises(String exo) async {
-    final response = await HttpRequest.mainGet("/exercises-library/muscle/?muscle=$exo");
+    final response =
+        await HttpRequest.mainGet("/exercises-library/muscle/?muscle=$exo");
 
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body);

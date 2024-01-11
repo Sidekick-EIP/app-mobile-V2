@@ -258,8 +258,7 @@ class _HomeViewState extends State<HomeView> {
                             ],
                           ),
                           const SizedBox(height: 20),
-                          Expanded(
-                              child: Row(
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               graph(
@@ -280,7 +279,7 @@ class _HomeViewState extends State<HomeView> {
                                   MediaQuery.of(context).size.width,
                                   MediaQuery.of(context).size.height),
                             ],
-                          )),
+                          ),
                           const SizedBox(height: 30),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

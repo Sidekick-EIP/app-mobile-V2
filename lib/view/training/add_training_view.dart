@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:sidekick_app/config/colors.dart';
 import 'package:sidekick_app/config/text_style.dart';
 import 'package:sidekick_app/controller/workout_controller.dart';
+import 'package:sidekick_app/view/training/training_view.dart';
 import 'package:sidekick_app/widget/custom_button.dart';
 import 'package:sidekick_app/widget/custom_textfield.dart';
 import 'dart:io' show Platform;
@@ -33,33 +34,6 @@ class AddTraining extends StatefulWidget {
 
   @override
   State<AddTraining> createState() => _AddTrainingState();
-}
-
-String getMuscleGroupe(String muscle) {
-  switch (muscle) {
-    case "CHEST":
-      return "poitrine";
-    case "BACK":
-      return "dos";
-    case "CARDIO":
-      return "cardio";
-    case "CALF":
-      return "mollets";
-    case "BICEPS":
-      return "biceps";
-    case "LEGS":
-      return "jambes";
-    case "TRICEPS":
-      return "triceps";
-    case "SHOULDERS":
-      return "épaules";
-    case "GLUTES":
-      return "fessier";
-    case "ABS":
-      return "abdos";
-    default:
-      return muscle;
-  }
 }
 
 class _AddTrainingState extends State<AddTraining> {

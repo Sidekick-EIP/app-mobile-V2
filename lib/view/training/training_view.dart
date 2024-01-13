@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:sidekick_app/config/colors.dart';
 import 'package:sidekick_app/config/text_style.dart';
 import 'package:sidekick_app/controller/workout_controller.dart';
+import 'package:sidekick_app/view/training/add_training_view.dart';
 
 import '../../config/images.dart';
 
@@ -23,7 +24,7 @@ String getMuscleGroupe(String muscle) {
     case "CARDIO":
       return "cardio";
     case "CALF":
-      return "mollet";
+      return "mollets";
     case "BICEPS":
       return "biceps";
     case "LEGS":
@@ -49,7 +50,7 @@ String getMuscleGroupeReverse(String muscle) {
       return "BACK";
     case "cardio":
       return "CARDIO";
-    case "mollet":
+    case "mollets":
       return "CALF";
     case "biceps":
       return "BICEPS";
@@ -358,7 +359,30 @@ class _TrainingViewState extends State<TrainingView> {
                                                   .workout[x].length,
                                               itemBuilder: (context, y) {
                                                 return InkWell(
-                                                  onTap: () {},
+                                                  onTap: () {
+                                                    showModalBottomSheet(
+                                                      context: context,
+                                                      isScrollControlled: true,
+                                                      shape: const RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.only(
+                                                          topLeft: Radius.circular(30),
+                                                          topRight: Radius.circular(30),
+                                                        ),
+                                                      ),
+                                                      builder: (v) => FractionallySizedBox(
+                                                        heightFactor: 0.9,
+                                                        child: AddTraining(
+                                                          name: workoutController.workout[x][y].name,
+                                                          id: workoutController.workout[x][y].id,
+                                                          thumbnail: workoutController.workout[x][y].thumbnail,
+                                                          video: workoutController.workout[x][y].video,
+                                                          muscle:workoutController.workout[x][y].muscleGroup,
+                                                          calories: workoutController.workout[x][y].burnedCalories,
+                                                          date: workoutController.workout[x][y].date
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
                                                   child: Padding(
                                                     padding:
                                                         const EdgeInsets.only(
@@ -366,7 +390,7 @@ class _TrainingViewState extends State<TrainingView> {
                                                     child: workoutCard(
                                                         workoutController
                                                             .workout[x][y].name,
-                                                        "${workoutController.workout[x][y].duration} min",
+                                                        "${workoutController.workout[x][y].duration} sec",
                                                         workoutController
                                                             .workout[x][y]
                                                             .thumbnail,
@@ -394,7 +418,30 @@ class _TrainingViewState extends State<TrainingView> {
                                 itemBuilder: (context, elem) {
                                   return Column(children: [
                                     InkWell(
-                                      onTap: () {},
+                                      onTap: () {
+                                        showModalBottomSheet(
+                                          context: context,
+                                          isScrollControlled: true,
+                                          shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(30),
+                                              topRight: Radius.circular(30),
+                                            ),
+                                          ),
+                                          builder: (v) => FractionallySizedBox(
+                                            heightFactor: 0.9,
+                                            child: AddTraining(
+                                              name: workoutController.exercise[elem].name,
+                                              id: workoutController.exercise[elem].id,
+                                              thumbnail: workoutController.exercise[elem].thumbnail,
+                                              video: workoutController.exercise[elem].video,
+                                              muscle: workoutController.exercise[elem].muscleGroup,
+                                              calories: 0,
+                                              date: ""
+                                            ),
+                                          ),
+                                        );
+                                      },
                                       child: Padding(
                                         padding:
                                             const EdgeInsets.only(bottom: 10),

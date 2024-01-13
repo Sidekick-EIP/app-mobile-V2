@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:sidekick_app/models/exercise.dart';
@@ -58,6 +59,43 @@ class WorkoutController extends GetxController {
       exercise.value = exercises;
     } else {
       throw Exception('Failed to get exercises');
+    }
+  }
+
+  Future<void> addExercise(body) async {
+    try {
+      final response =
+        await HttpRequest.mainPost("/workouts/add", jsonEncode(body));
+
+      if (response.statusCode == 201) {
+        Get.snackbar(
+            "Succès",
+            "Exercice ajouté avec succès.",
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.green,
+            colorText: Colors.white,
+          );
+        getAllWorkouts();
+      } else {
+        Get.snackbar(
+          "Erreur",
+          "Erreur lors de l'ajout d'un exercice au calendrier.",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      Get.snackbar(
+        "Erreur",
+        "Erreur lors de l'ajout d'un exercice au calendrier.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
   }
 

@@ -32,6 +32,11 @@ class _MessageViewState extends State<MessageView> {
     }
   }
 
+  Future<void> _handleOnEndReached() async {
+    await Future.delayed(const Duration(seconds: 1), (){});
+    await messageController.fetchFurtherMessagesFromBack();
+  }
+
   void _handleSendPressed(types.PartialText message) {
     final socketController = Get.put(SocketController(), permanent: true);
     final userController = Get.find<UserController>();
@@ -130,6 +135,7 @@ class _MessageViewState extends State<MessageView> {
                             status: o.status,
                             showStatus: o.showStatus))
                         .toList(),
+                onEndReached: _handleOnEndReached,
                 onEndReachedThreshold: 1,
                 onSendPressed: _handleSendPressed,
                 showUserAvatars: true,

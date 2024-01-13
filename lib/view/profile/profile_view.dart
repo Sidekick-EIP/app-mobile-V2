@@ -436,49 +436,6 @@ class _ProfileViewState extends State<ProfileView> {
                             ),
                             const SizedBox(height: 10),
                             row(
-                              "Thème sombre",
-                              "",
-                              () {},
-                              SizedBox(
-                                height: 20,
-                                child: Obx(
-                                  () => CupertinoSwitch(
-                                    value: preferenceController
-                                        .preference.value.isDarkMode.value,
-                                    activeColor: ConstColors.primaryColor,
-                                    onChanged: (v) async {
-                                      preferenceController.preference.value
-                                          .isDarkMode.value = v;
-                                      try {
-                                        await preferenceController
-                                            .updatePreference();
-                                        Get.snackbar('Succès',
-                                            'Choix du thème mis à jour avec succès !',
-                                            snackPosition: SnackPosition.BOTTOM,
-                                            backgroundColor: Colors.green,
-                                            colorText: Colors.white,
-                                            duration:
-                                                const Duration(seconds: 1));
-                                      } catch (e) {
-                                        Get.snackbar('Erreur',
-                                            'Erreur lors de la mise à jour du thème.',
-                                            snackPosition: SnackPosition.BOTTOM,
-                                            backgroundColor: Colors.red,
-                                            colorText: Colors.white,
-                                            duration:
-                                                const Duration(seconds: 1));
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            const Divider(
-                              color: Color(0xffA9B2BA),
-                            ),
-                            const SizedBox(height: 10),
-                            row(
                               "Signaler le sidekick",
                               "",
                               () {

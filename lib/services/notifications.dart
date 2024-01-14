@@ -38,8 +38,9 @@ class NotificationService {
                   _id++, title, body, await _notificationDetails(),
                   payload: payload);
             }));
-    await _notifications.initialize(settings, onDidReceiveNotificationResponse:
-        (NotificationResponse notificationResponse) async {});
+    await _notifications.initialize(settings,
+        onDidReceiveNotificationResponse:
+            (NotificationResponse notificationResponse) async {});
   }
 
   static Future clearAllNotifications() async {

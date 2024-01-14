@@ -74,7 +74,17 @@ class _TrainingViewState extends State<TrainingView> {
 
   var page = 0;
   var selectedExercise = -1;
-  final allWorkouts = ["dos", "cardio", "épaules", "biceps", "triceps", "mollet", "jambes", "fessier", "abdos"];
+  final allWorkouts = [
+    "dos",
+    "cardio",
+    "épaules",
+    "biceps",
+    "triceps",
+    "mollet",
+    "jambes",
+    "fessier",
+    "abdos"
+  ];
 
   @override
   void initState() {
@@ -131,7 +141,9 @@ class _TrainingViewState extends State<TrainingView> {
                             },
                             child: Container(
                               decoration: BoxDecoration(
-                                color: page == 0 ? ConstColors.primaryColor : Colors.transparent,
+                                color: page == 0
+                                    ? ConstColors.primaryColor
+                                    : Colors.transparent,
                                 borderRadius: BorderRadius.circular(15.41),
                               ),
                               child: Center(
@@ -139,7 +151,9 @@ class _TrainingViewState extends State<TrainingView> {
                                   "Recap",
                                   style: pSemiBold18.copyWith(
                                     fontSize: 11.56,
-                                    color: page == 0 ? ConstColors.secondaryColor : ConstColors.blackColor,
+                                    color: page == 0
+                                        ? ConstColors.secondaryColor
+                                        : ConstColors.blackColor,
                                   ),
                                 ),
                               ),
@@ -155,7 +169,9 @@ class _TrainingViewState extends State<TrainingView> {
                             },
                             child: Container(
                               decoration: BoxDecoration(
-                                color: page == 1 ? ConstColors.primaryColor : Colors.transparent,
+                                color: page == 1
+                                    ? ConstColors.primaryColor
+                                    : Colors.transparent,
                                 borderRadius: BorderRadius.circular(15.41),
                               ),
                               child: Center(
@@ -163,7 +179,9 @@ class _TrainingViewState extends State<TrainingView> {
                                   "Exercices",
                                   style: pSemiBold18.copyWith(
                                     fontSize: 11.56,
-                                    color: page == 1 ? ConstColors.secondaryColor : ConstColors.blackColor,
+                                    color: page == 1
+                                        ? ConstColors.secondaryColor
+                                        : ConstColors.blackColor,
                                   ),
                                 ),
                               ),
@@ -204,15 +222,23 @@ class _TrainingViewState extends State<TrainingView> {
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      color: selectedExercise == -1 ? ConstColors.lightBlackColor : Colors.transparent,
-                                      borderRadius: BorderRadius.circular(15.41),
+                                      color: selectedExercise == -1
+                                          ? ConstColors.lightBlackColor
+                                          : Colors.transparent,
+                                      borderRadius:
+                                          BorderRadius.circular(15.41),
                                     ),
                                     child: Container(
-                                      margin: const EdgeInsets.only(left: 10, right: 10),
+                                      margin: const EdgeInsets.only(
+                                          left: 10, right: 10),
                                       child: Center(
                                         child: Text(
                                           "tout",
-                                          style: pSemiBold18.copyWith(fontSize: 11.56, color: selectedExercise == -1 ? ConstColors.secondaryColor : ConstColors.blackColor),
+                                          style: pSemiBold18.copyWith(
+                                              fontSize: 11.56,
+                                              color: selectedExercise == -1
+                                                  ? ConstColors.secondaryColor
+                                                  : ConstColors.blackColor),
                                         ),
                                       ),
                                     ),
@@ -226,20 +252,29 @@ class _TrainingViewState extends State<TrainingView> {
                                     onTap: () {
                                       setState(() {
                                         selectedExercise = index;
-                                        workoutController.getSpecificExercises(getMuscleGroupeReverse(item));
+                                        workoutController.getSpecificExercises(
+                                            getMuscleGroupeReverse(item));
                                       });
                                     },
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        color: selectedExercise == index ? ConstColors.lightBlackColor : Colors.transparent,
-                                        borderRadius: BorderRadius.circular(15.41),
+                                        color: selectedExercise == index
+                                            ? ConstColors.lightBlackColor
+                                            : Colors.transparent,
+                                        borderRadius:
+                                            BorderRadius.circular(15.41),
                                       ),
                                       child: Container(
-                                        margin: const EdgeInsets.only(left: 10, right: 10),
+                                        margin: const EdgeInsets.only(
+                                            left: 10, right: 10),
                                         child: Center(
                                           child: Text(
                                             item,
-                                            style: pSemiBold18.copyWith(fontSize: 11.56, color: selectedExercise == index ? ConstColors.secondaryColor : ConstColors.blackColor),
+                                            style: pSemiBold18.copyWith(
+                                                fontSize: 11.56,
+                                                color: selectedExercise == index
+                                                    ? ConstColors.secondaryColor
+                                                    : ConstColors.blackColor),
                                           ),
                                         ),
                                       ),
@@ -260,7 +295,8 @@ class _TrainingViewState extends State<TrainingView> {
                               Image.asset(DefaultImages.noExerice),
                               const SizedBox(height: 30),
                               Padding(
-                                padding: const EdgeInsets.only(left: 10, right: 10),
+                                padding:
+                                    const EdgeInsets.only(left: 10, right: 10),
                                 child: Text(
                                   'Vous n\'avez pas encore d\'exercice dans votre historique.',
                                   textAlign: TextAlign.center,
@@ -272,7 +308,8 @@ class _TrainingViewState extends State<TrainingView> {
                             ],
                           )
                         : (workoutController.workout == []
-                            ? const CircularProgressIndicator(color: ConstColors.primaryColor)
+                            ? const CircularProgressIndicator(
+                                color: ConstColors.primaryColor)
                             : Expanded(
                                 child: ListView.builder(
                                     padding: const EdgeInsets.all(5),
@@ -280,60 +317,122 @@ class _TrainingViewState extends State<TrainingView> {
                                     itemBuilder: (context, x) {
                                       return Column(children: [
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              DateFormat('dd MMM y').format(DateTime.parse(workoutController.workout[x][0].date)),
+                                              DateFormat('dd MMM y').format(
+                                                  DateTime.parse(
+                                                      workoutController
+                                                          .workout[x][0].date)),
                                               style: pRegular14.copyWith(
                                                 fontSize: 11.55,
-                                                color: ConstColors.lightBlackColor,
+                                                color:
+                                                    ConstColors.lightBlackColor,
                                               ),
                                             ),
                                             Text(
-                                              workoutController.workout[x].length == 1 ? "${workoutController.workout[x].length} workout" : "${workoutController.workout[x].length} workouts",
+                                              workoutController
+                                                          .workout[x].length ==
+                                                      1
+                                                  ? "${workoutController.workout[x].length} workout"
+                                                  : "${workoutController.workout[x].length} workouts",
                                               style: pRegular14.copyWith(
                                                 fontSize: 11.55,
-                                                color: ConstColors.lightBlackColor,
+                                                color:
+                                                    ConstColors.lightBlackColor,
                                               ),
                                             ),
                                           ],
                                         ),
                                         const SizedBox(height: 20),
                                         SizedBox(
-                                          height: (95 * (workoutController.workout[x].length)).toDouble(),
+                                          height: (95 *
+                                                  (workoutController
+                                                      .workout[x].length))
+                                              .toDouble(),
                                           child: ListView.builder(
                                               shrinkWrap: false,
-                                              physics: const NeverScrollableScrollPhysics(),
-                                              itemCount: workoutController.workout[x].length,
+                                              physics:
+                                                  const NeverScrollableScrollPhysics(),
+                                              itemCount: workoutController
+                                                  .workout[x].length,
                                               itemBuilder: (context, y) {
                                                 return InkWell(
                                                   onTap: () {
                                                     showModalBottomSheet(
                                                       context: context,
                                                       isScrollControlled: true,
-                                                      shape: const RoundedRectangleBorder(
-                                                        borderRadius: BorderRadius.only(
-                                                          topLeft: Radius.circular(30),
-                                                          topRight: Radius.circular(30),
+                                                      shape:
+                                                          const RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.only(
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  30),
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  30),
                                                         ),
                                                       ),
-                                                      builder: (v) => FractionallySizedBox(
+                                                      builder: (v) =>
+                                                          FractionallySizedBox(
                                                         heightFactor: 0.9,
                                                         child: AddTraining(
-                                                            name: workoutController.workout[x][y].name,
-                                                            id: workoutController.workout[x][y].id,
-                                                            thumbnail: workoutController.workout[x][y].thumbnail,
-                                                            video: workoutController.workout[x][y].video,
-                                                            muscle: workoutController.workout[x][y].muscleGroup,
-                                                            calories: workoutController.workout[x][y].burnedCalories,
-                                                            date: workoutController.workout[x][y].date),
+                                                            name:
+                                                                workoutController
+                                                                    .workout[x]
+                                                                        [y]
+                                                                    .name,
+                                                            id: workoutController
+                                                                .workout[x][y]
+                                                                .exerciseId,
+                                                            thumbnail:
+                                                                workoutController
+                                                                    .workout[x]
+                                                                        [y]
+                                                                    .thumbnail,
+                                                            video:
+                                                                workoutController
+                                                                    .workout[x]
+                                                                        [y]
+                                                                    .video,
+                                                            muscle:
+                                                                workoutController
+                                                                    .workout[x]
+                                                                        [y]
+                                                                    .muscleGroup,
+                                                            calories:
+                                                                workoutController
+                                                                    .workout[x]
+                                                                        [y]
+                                                                    .burnedCalories,
+                                                            date:
+                                                                workoutController
+                                                                    .workout[x]
+                                                                        [y]
+                                                                    .date),
                                                       ),
                                                     );
                                                   },
                                                   child: Padding(
-                                                    padding: const EdgeInsets.only(bottom: 10),
-                                                    child: workoutCard(workoutController.workout[x][y].name, "${workoutController.workout[x][y].duration} sec",
-                                                        workoutController.workout[x][y].thumbnail, DateTime.parse(workoutController.workout[x][y].date).isBefore(DateTime.now())),
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            bottom: 10),
+                                                    child: workoutCard(
+                                                        workoutController
+                                                            .workout[x][y].name,
+                                                        "${workoutController.workout[x][y].duration} sec",
+                                                        workoutController
+                                                            .workout[x][y]
+                                                            .thumbnail,
+                                                        DateTime.parse(
+                                                                workoutController
+                                                                    .workout[x]
+                                                                        [y]
+                                                                    .date)
+                                                            .isBefore(DateTime
+                                                                .now())),
                                                   ),
                                                 );
                                               }),
@@ -342,7 +441,8 @@ class _TrainingViewState extends State<TrainingView> {
                                     }),
                               ))
                     : (workoutController.exercise == []
-                        ? const CircularProgressIndicator(color: ConstColors.primaryColor)
+                        ? const CircularProgressIndicator(
+                            color: ConstColors.primaryColor)
                         : Expanded(
                             child: ListView.builder(
                                 padding: const EdgeInsets.all(5),
@@ -363,20 +463,32 @@ class _TrainingViewState extends State<TrainingView> {
                                           builder: (v) => FractionallySizedBox(
                                             heightFactor: 0.9,
                                             child: AddTraining(
-                                                name: workoutController.exercise[elem].name,
-                                                id: workoutController.exercise[elem].id,
-                                                thumbnail: workoutController.exercise[elem].thumbnail,
-                                                video: workoutController.exercise[elem].video,
-                                                muscle: workoutController.exercise[elem].muscleGroup,
+                                                name: workoutController
+                                                    .exercise[elem].name,
+                                                id: workoutController
+                                                    .exercise[elem].id,
+                                                thumbnail: workoutController
+                                                    .exercise[elem].thumbnail,
+                                                video: workoutController
+                                                    .exercise[elem].video,
+                                                muscle: workoutController
+                                                    .exercise[elem].muscleGroup,
                                                 calories: 0,
                                                 date: ""),
                                           ),
                                         );
                                       },
                                       child: Padding(
-                                        padding: const EdgeInsets.only(bottom: 10),
+                                        padding:
+                                            const EdgeInsets.only(bottom: 10),
                                         child: workoutCard(
-                                            workoutController.exercise[elem].name, getMuscleGroupe(workoutController.exercise[elem].muscleGroup), workoutController.exercise[elem].thumbnail, false),
+                                            workoutController
+                                                .exercise[elem].name,
+                                            getMuscleGroupe(workoutController
+                                                .exercise[elem].muscleGroup),
+                                            workoutController
+                                                .exercise[elem].thumbnail,
+                                            false),
                                       ),
                                     )
                                   ]);
@@ -445,7 +557,8 @@ Widget workoutCard(String text1, String text2, String image, bool passed) {
           const SizedBox(width: 5),
           CircleAvatar(
             radius: 9,
-            backgroundColor: passed ? ConstColors.primaryColor : Colors.transparent,
+            backgroundColor:
+                passed ? ConstColors.primaryColor : Colors.transparent,
             child: const Icon(
               Icons.check,
               color: ConstColors.secondaryColor,

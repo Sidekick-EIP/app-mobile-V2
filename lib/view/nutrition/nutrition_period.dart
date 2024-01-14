@@ -9,7 +9,6 @@ import 'package:sidekick_app/models/nutrition.dart';
 import 'package:sidekick_app/view/nutrition/add_meal.dart';
 import 'package:sidekick_app/view/nutrition/edit_meal.dart';
 
-
 enum SampleItem { itemOne, itemTwo }
 
 class NutritionPeriod extends StatefulWidget {
@@ -485,10 +484,9 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
                       await getIt<MealEditorBlock>().deleteMeal(widget.food.id, context);
                       await widget.updateNutritionCallback();
                       await widget.updateNutritionData();
-                      var snackBar = const SnackBar(
-                        content: Text("Repas supprimé"),
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      setState(() {});
+                      Get.snackbar('Succès', 'Aliment supprimé avec succès !',
+                          snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.green, colorText: Colors.white, duration: const Duration(seconds: 1));
                     }
                   },
                 ),

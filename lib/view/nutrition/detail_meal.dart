@@ -477,12 +477,11 @@ class _WeightValuesState extends State<WeightValues> {
                       await postNewMeal(widget.showResult, context);
                       await widget.updateNutritionCallback();
                       await widget.updateNutritionData();
-
-                      var snackBar = const SnackBar(
-                        content: Text("Aliment ajouté"),
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       setState(() {});
+                      Get.snackbar('Succès', 'Aliment ajouté avec succès !',
+                          snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.green, colorText: Colors.white, duration: const Duration(seconds: 1));
+                      setState(() {});
+                      await Future.delayed(const Duration(seconds: 2));
                       Get.back();
                       Get.back();
                     },

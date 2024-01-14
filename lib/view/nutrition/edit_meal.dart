@@ -483,13 +483,13 @@ class _WeightValuesState extends State<WeightValues> {
                         ),
                       ),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       widget.callback(widget.nutritionData);
                       editMeal(widget.food, widget.food.id, context);
-                      var snackBar = const SnackBar(
-                        content: Text("Repas modifié"),
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      Get.snackbar('Succès', 'Aliment modifié avec succès !',
+                          snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.green, colorText: Colors.white, duration: const Duration(seconds: 1));
+                      setState(() {});
+                      await Future.delayed(const Duration(seconds: 2));
                       Get.back();
                     },
                     child: Text(

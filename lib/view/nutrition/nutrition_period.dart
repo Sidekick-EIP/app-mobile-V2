@@ -8,9 +8,7 @@ import 'package:sidekick_app/main.dart';
 import 'package:sidekick_app/models/nutrition.dart';
 import 'package:sidekick_app/view/nutrition/add_meal.dart';
 import 'package:sidekick_app/view/nutrition/edit_meal.dart';
-import 'package:sidekick_app/view/nutrition/nutrition_view.dart';
 
-import '../../config/colors.dart';
 
 enum SampleItem { itemOne, itemTwo }
 
@@ -71,12 +69,15 @@ class _NutritionPeriodState extends State<NutritionPeriod> {
           onPressed: () => Get.back(),
         ),
         backgroundColor: Colors.transparent,
-        elevation: 0.0, // Remove shadow
+        elevation: 0.0,
         actions: [
           InkWell(
             onTap: () {
               Get.to(
-                () => const AddMeal(),
+                () => AddMeal(
+                  updateNutritionCallback: widget.updateNutritionCallback,
+                  updateNutritionData: updateNutritionData,
+                ),
                 transition: Transition.rightToLeft,
               );
             },
@@ -296,7 +297,7 @@ class _MealViewBuilderState extends State<MealViewBuilder> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Pas d'aliment pour ce repas...",
+                        "Aucun aliment pour ce repas...",
                         style: TextStyle(fontWeight: FontWeight.w500, fontSize: widget.width * widget.height * 0.00005),
                       ),
                       SizedBox(
@@ -478,11 +479,12 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
                       );
                       setState(() {
                         widget.updateNutritionCallback();
+                        widget.updateNutritionData();
                       });
                     } else if (choice == 'Supprimer') {
                       await getIt<MealEditorBlock>().deleteMeal(widget.food.id, context);
                       await widget.updateNutritionCallback();
-                      widget.updateNutritionData();
+                      await widget.updateNutritionData();
                       var snackBar = const SnackBar(
                         content: Text("Repas supprimé"),
                       );

@@ -6,8 +6,13 @@ import 'package:sidekick_app/models/open_food_fact.dart';
 import 'package:sidekick_app/view/nutrition/detail_meal.dart';
 
 class AddMeal extends StatefulWidget {
-  const AddMeal({Key? key}) : super(key: key);
-
+  const AddMeal({
+    Key? key,
+    required this.updateNutritionCallback,
+    required this.updateNutritionData,
+  }) : super(key: key);
+  final Function updateNutritionCallback;
+  final Function updateNutritionData;
   @override
   State<AddMeal> createState() => _AddFoodState();
 }
@@ -33,9 +38,12 @@ class _AddFoodState extends State<AddMeal> {
       body: SafeArea(
         child: Container(
           padding: const EdgeInsets.all(8.0),
-          child: const SingleChildScrollView(
+          child: SingleChildScrollView(
             child: Column(children: [
-              TopBar(),
+              TopBar(
+                updateNutritionCallback: widget.updateNutritionCallback,
+                updateNutritionData: widget.updateNutritionData,
+              ),
             ]),
           ),
         ),
@@ -47,8 +55,11 @@ class _AddFoodState extends State<AddMeal> {
 class TopBar extends StatefulWidget {
   const TopBar({
     Key? key,
+    required this.updateNutritionCallback,
+    required this.updateNutritionData,
   }) : super(key: key);
-
+  final Function updateNutritionCallback;
+  final Function updateNutritionData;
   @override
   State<TopBar> createState() => _TopBarState();
 }
@@ -115,8 +126,9 @@ class _TopBarState extends State<TopBar> {
           height: height * 0.01,
         ),
         ShowSearchAPIResult(
-          // callback: widget.callback,
           searchQuery: query.value,
+          updateNutritionCallback: widget.updateNutritionCallback,
+          updateNutritionData: widget.updateNutritionData,
         ),
       ],
     );
@@ -124,12 +136,16 @@ class _TopBarState extends State<TopBar> {
 }
 
 class ShowSearchAPIResult extends StatefulWidget {
-  const ShowSearchAPIResult(
-      {Key? key,
-      required this.searchQuery})
-      : super(key: key);
+  const ShowSearchAPIResult({
+    Key? key,
+    required this.searchQuery,
+    required this.updateNutritionCallback,
+    required this.updateNutritionData,
+  }) : super(key: key);
 
   final String searchQuery;
+  final Function updateNutritionCallback;
+  final Function updateNutritionData;
 
   @override
   State<ShowSearchAPIResult> createState() => _ShowSearchAPIResultState();
@@ -164,6 +180,8 @@ class _ShowSearchAPIResultState extends State<ShowSearchAPIResult> {
                         mealName: showResult[index].name,
                         emojiImg: showResult[index].urlImage,
                         showResult: showResult[index],
+                        updateNutritionCallback: widget.updateNutritionCallback,
+                        updateNutritionData: widget.updateNutritionData,
                       ),
                       const SizedBox(height: 10)
                     ],
@@ -179,7 +197,7 @@ class _ShowSearchAPIResultState extends State<ShowSearchAPIResult> {
         } else if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
         } else {
-          return (const Text("NoData"));
+          return (const Text("Aucun résultat"));
         }
       },
     );
@@ -291,6 +309,8 @@ class MealPeriodCard extends StatefulWidget {
     required this.mealName,
     required this.emojiImg,
     required this.showResult,
+    required this.updateNutritionCallback,
+    required this.updateNutritionData,
   });
 
   final double width;
@@ -300,21 +320,25 @@ class MealPeriodCard extends StatefulWidget {
   final String mealName;
   final String emojiImg;
   ResultSearch showResult;
+  final Function updateNutritionCallback;
+  final Function updateNutritionData;
 
   @override
   State<MealPeriodCard> createState() => _MealPeriodCardState();
 }
 
 class _MealPeriodCardState extends State<MealPeriodCard> {
-  // SampleItem? selectedMenu;
-
   @override
   Widget build(BuildContext context) {
     double totalMacros = widget.showResult.carbohydrates + widget.showResult.proteines + widget.showResult.lipides;
     return InkWell(
       onTap: () {
         Get.to(
-          () => detailMeal(showResult: widget.showResult),
+          () => DetailMeal(
+            showResult: widget.showResult,
+            updateNutritionCallback: widget.updateNutritionCallback,
+            updateNutritionData: widget.updateNutritionData,
+          ),
           transition: Transition.rightToLeft,
         );
       },
@@ -392,7 +416,7 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
                   grams: "${widget.showResult.carbohydrates.toString()} g",
                   macros: "Glucides",
                   barColor: const Color.fromARGB(255, 98, 7, 255),
-                  percent: widget.showResult.carbohydrates / totalMacros,
+                  percent: widget.showResult.carbohydrates == 0 ? 0 : widget.showResult.carbohydrates / totalMacros,
                 ),
                 MacrosWidgetCard(
                   width: widget.width,
@@ -400,7 +424,7 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
                   grams: "${widget.showResult.proteines.toString()} g",
                   macros: "Proteines",
                   barColor: Colors.red,
-                  percent: widget.showResult.proteines / totalMacros,
+                  percent: widget.showResult.proteines == 0 ? 0 : widget.showResult.proteines / totalMacros,
                 ),
                 MacrosWidgetCard(
                   width: widget.width,
@@ -408,7 +432,7 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
                   grams: "${widget.showResult.lipides.toString()} g",
                   macros: "Lipides",
                   barColor: Colors.amber,
-                  percent: widget.showResult.lipides / totalMacros,
+                  percent: widget.showResult.lipides == 0 ? 0 : widget.showResult.lipides / totalMacros,
                 ),
               ],
             )

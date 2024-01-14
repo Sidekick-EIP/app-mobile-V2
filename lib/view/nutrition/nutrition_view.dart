@@ -1,7 +1,6 @@
 import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:sidekick_app/config/colors.dart';
 import 'package:sidekick_app/config/text_style.dart';
@@ -561,18 +560,17 @@ class _TodaysMealsState extends State<TodaysMeals> {
             child: Column(
               children: [
                 MealPeriodCard(
-                  width: widget.width,
-                  height: widget.height,
-                  color: const Color.fromRGBO(34, 73, 34, 1),
-                  colorAccent: const Color.fromARGB(255, 198, 251, 225),
-                  mealPeriodName: "Petit déjeuner   ",
-                  emojiImg: "🍳",
-                  nutritionData: widget.nutritionData,
-                  period: "breakfast",
-                  date: widget.date,
-                  callbackPeriod: widget.callbackPeriod,
-                  updateNutritionCallback: widget.updateNutritionCallback,
-                ),
+                    width: widget.width,
+                    height: widget.height,
+                    color: const Color.fromRGBO(34, 73, 34, 1),
+                    colorAccent: const Color.fromARGB(255, 198, 251, 225),
+                    mealPeriodName: "Petit déjeuner   ",
+                    emojiImg: "🍳",
+                    nutritionData: widget.nutritionData,
+                    period: "breakfast",
+                    date: widget.date,
+                    callbackPeriod: widget.callbackPeriod,
+                    updateNutritionCallback: widget.updateNutritionCallback),
                 SizedBox(
                   height: widget.height * 0.01,
                 ),

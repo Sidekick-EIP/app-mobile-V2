@@ -1,30 +1,28 @@
-import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:sidekick_app/config/colors.dart';
 import 'package:sidekick_app/config/images.dart';
-import 'package:sidekick_app/config/text_style.dart';
-import 'package:sidekick_app/controller/home_controller.dart';
 import 'package:sidekick_app/controller/nutrition_controller.dart';
 import 'package:sidekick_app/controller/user_controller.dart';
-import 'package:sidekick_app/main.dart';
 import 'package:sidekick_app/models/nutrition.dart';
 import 'package:sidekick_app/models/open_food_fact.dart';
 
-class detailMeal extends StatefulWidget {
-  detailMeal({
+class DetailMeal extends StatefulWidget {
+  DetailMeal({
     super.key,
     required this.showResult,
+    required this.updateNutritionCallback,
+    required this.updateNutritionData,
   });
   ResultSearch showResult;
+  final Function updateNutritionCallback;
+  final Function updateNutritionData;
 
   @override
-  State<detailMeal> createState() => _detailMealState();
+  State<DetailMeal> createState() => _DetailMealState();
 }
 
-class _detailMealState extends State<detailMeal> {
+class _DetailMealState extends State<DetailMeal> {
   late Future<Nutrition> futureNutrition;
   final userController = Get.find<UserController>();
 
@@ -66,6 +64,8 @@ class _detailMealState extends State<detailMeal> {
                   width: width,
                   height: height,
                   showResult: widget.showResult,
+                  updateNutritionCallback: widget.updateNutritionCallback,
+                  updateNutritionData: widget.updateNutritionData,
                 );
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');
@@ -85,11 +85,15 @@ class DisplayNutritionPage extends StatefulWidget {
     required this.width,
     required this.height,
     required this.showResult,
+    required this.updateNutritionCallback,
+    required this.updateNutritionData,
   });
 
   final double width;
   final double height;
   ResultSearch showResult;
+  final Function updateNutritionCallback;
+  final Function updateNutritionData;
 
   @override
   State<DisplayNutritionPage> createState() => _DisplayNutritionPageState();
@@ -142,7 +146,7 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                 image: DefaultImages.carbs,
                 macrosValue: "${(widget.showResult.carbohydrates * (widget.showResult.quantity / 100)).toString()}g",
                 progressColor: const Color.fromARGB(255, 98, 7, 255),
-                percent: widget.showResult.carbohydrates / totalMacros,
+                percent: widget.showResult.carbohydrates == 0 ? 0 : widget.showResult.carbohydrates / totalMacros,
               ),
               MacrosCard(
                 width: widget.width,
@@ -151,7 +155,7 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                 image: DefaultImages.proteins,
                 macrosValue: "${(widget.showResult.proteines * (widget.showResult.quantity / 100)).toString()}g",
                 progressColor: Colors.red,
-                percent: widget.showResult.proteines / totalMacros,
+                percent: widget.showResult.proteines == 0 ? 0 : widget.showResult.proteines / totalMacros,
               ),
               MacrosCard(
                 width: widget.width,
@@ -160,7 +164,7 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                 image: DefaultImages.fat,
                 macrosValue: "${(widget.showResult.lipides * (widget.showResult.quantity / 100)).toString()}g",
                 progressColor: Colors.amber,
-                percent: widget.showResult.lipides / totalMacros,
+                percent: widget.showResult.lipides == 0 ? 0 : widget.showResult.lipides / totalMacros,
               ),
               WeightValues(
                 width: widget.width,
@@ -168,6 +172,8 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                 foodWeight: widget.showResult.quantity,
                 updateWeight: updateWeight,
                 showResult: widget.showResult,
+                updateNutritionCallback: widget.updateNutritionCallback,
+                updateNutritionData: widget.updateNutritionData,
               ),
             ],
           ),
@@ -370,6 +376,8 @@ class WeightValues extends StatefulWidget {
     required this.foodWeight,
     required this.updateWeight,
     required this.showResult,
+    required this.updateNutritionCallback,
+    required this.updateNutritionData,
   });
 
   final double width;
@@ -377,6 +385,8 @@ class WeightValues extends StatefulWidget {
   late int foodWeight;
   final Function(int) updateWeight;
   ResultSearch showResult;
+  final Function updateNutritionCallback;
+  final Function updateNutritionData;
 
   @override
   State<WeightValues> createState() => _WeightValuesState();
@@ -463,12 +473,16 @@ class _WeightValuesState extends State<WeightValues> {
                         ),
                       ),
                     ),
-                    onPressed: () {
-                      postNewMeal(widget.showResult, context);
+                    onPressed: () async {
+                      await postNewMeal(widget.showResult, context);
+                      await widget.updateNutritionCallback();
+                      await widget.updateNutritionData();
+
                       var snackBar = const SnackBar(
                         content: Text("Aliment ajouté"),
                       );
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      setState(() {});
                       Get.back();
                       Get.back();
                     },

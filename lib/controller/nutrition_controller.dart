@@ -10,9 +10,6 @@ import 'package:sidekick_app/models/open_food_fact.dart';
 import '../utils/http_request.dart';
 import '../utils/token_storage.dart';
 
-
-
-
 class NutritionController {
   final TokenStorage tokenStorage = TokenStorage();
   String apiUrl = dotenv.env['API_BACK_URL'] ?? "";
@@ -37,12 +34,17 @@ class NutritionController {
 //  edit meal function
 
 Future editMeal(Food food, int id, BuildContext context) async {
+  String dateString = getIt<MealEditorBlock>().selectedDate;
+  DateTime parsedDateTime = DateTime.parse(dateString);
+
+  DateTime dateWithMidnightTime = DateTime(parsedDateTime.year, parsedDateTime.month, parsedDateTime.day);
+
   if (getIt<MealEditorBlock>().period.toUpperCase() == "DINNERS") {
     Map<String, dynamic> body = {
       "period": "DINNER",
       "name": food.name,
       "picture": food.picture,
-      "date": getIt<MealEditorBlock>().selectedDate,
+      "date": "${dateWithMidnightTime.toIso8601String()}Z",
       "protein": food.protein,
       "carbs": food.carbs,
       "fat": food.fat,
@@ -61,7 +63,7 @@ Future editMeal(Food food, int id, BuildContext context) async {
     "period": getIt<MealEditorBlock>().period.toUpperCase(),
     "name": food.name,
     "picture": food.picture,
-    "date": getIt<MealEditorBlock>().selectedDate,
+    "date": "${dateWithMidnightTime.toIso8601String()}Z",
     "protein": food.protein,
     "carbs": food.carbs,
     "fat": food.fat,
@@ -155,11 +157,11 @@ Future postNewMeal(ResultSearch ingredient, BuildContext context) async {
     "name": ingredient.name,
     "picture": ingredient.urlImage,
     "date": "${dateWithMidnightTime.toIso8601String()}Z",
-    "protein": ingredient.proteines,
-    "carbs": ingredient.carbohydrates,
+    "protein": ingredient.proteines.toInt(),
+    "carbs": ingredient.carbohydrates.toInt(),
     "fat": ingredient.lipides.toInt(),
-    "weight": ingredient.quantity,
-    "calories": ingredient.kcalories
+    "weight": ingredient.quantity.toInt(),
+    "calories": ingredient.kcalories.toInt()
   };
   String jsonBody = json.encode(body);
 
@@ -167,6 +169,8 @@ Future postNewMeal(ResultSearch ingredient, BuildContext context) async {
     '/nutrition',
     jsonBody,
   );
+
+  inspect(response);
 
   if (response.statusCode == 201) {
     var products = jsonDecode(response.body);

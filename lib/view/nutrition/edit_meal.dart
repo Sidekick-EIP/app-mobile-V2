@@ -53,7 +53,7 @@ class _EditMealState extends State<EditMeal> {
           onPressed: () => Get.back(),
         ),
         backgroundColor: Colors.transparent,
-        elevation: 0.0, // Remove shadow
+        elevation: 0.0,
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,7 +148,7 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                 image: DefaultImages.carbs,
                 macrosValue: "${(widget.food.carbs * (widget.food.weight / 100)).toString()}g",
                 progressColor: const Color.fromARGB(255, 98, 7, 255),
-                percent: widget.food.carbs / totalMacros,
+                percent: widget.food.carbs == 0 ? 0 : widget.food.carbs / totalMacros,
               ),
               MacrosCard(
                 width: widget.width,
@@ -157,7 +157,7 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                 image: DefaultImages.proteins,
                 macrosValue: "${(widget.food.protein * (widget.food.weight / 100)).toString()}g",
                 progressColor: Colors.red,
-                percent: widget.food.protein / totalMacros,
+                percent: widget.food.protein / totalMacros == 0 ? 0 : widget.food.protein / totalMacros,
               ),
               MacrosCard(
                 width: widget.width,
@@ -166,7 +166,7 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                 image: DefaultImages.fat,
                 macrosValue: "${(widget.food.fat * (widget.food.weight / 100)).toString()}g",
                 progressColor: Colors.amber,
-                percent: widget.food.fat / totalMacros,
+                percent: widget.food.fat / totalMacros == 0 ? 0 : widget.food.fat / totalMacros,
               ),
               WeightValues(
                 width: widget.width,
@@ -485,8 +485,6 @@ class _WeightValuesState extends State<WeightValues> {
                     ),
                     onPressed: () {
                       widget.callback(widget.nutritionData);
-                      // widget.callback(widget.showResult.kcalories, widget.showResult.quantity, widget.index);
-                      // widget.showResult.kcalories * widget.showResult.quantity;
                       editMeal(widget.food, widget.food.id, context);
                       var snackBar = const SnackBar(
                         content: Text("Repas modifié"),

@@ -1,9 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:sidekick_app/utils/http_request.dart';
 import 'package:sidekick_app/view/auth/register/info_screen.dart';
 import 'package:sidekick_app/view/auth/reset_password_screen.dart';
 import 'package:sidekick_app/view/auth/register/signup_screen.dart';
@@ -27,21 +28,30 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  bool isLoading = false;
-
-  String apiUrl = dotenv.env['API_BACK_URL'] ?? "";
+  final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
   final TokenStorage tokenStorage = TokenStorage();
 
-  Future<bool> checkUserInfos() async {
-    String? accessToken = await tokenStorage.getAccessToken();
+  bool isLoading = false;
+  String apiUrl = dotenv.env['API_BACK_URL'] ?? "";
 
-    final response = await http.get(
-      Uri.parse("$apiUrl/user_infos/"),
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Authorization": "Bearer $accessToken"
-      },
-    );
+  @override
+  void initState() {
+    super.initState();
+    loadLoginInfo();
+  }
+
+  Future<void> loadLoginInfo() async {
+    final email = await secureStorage.read(key: 'email') ?? '';
+    final password = await secureStorage.read(key: 'password') ?? '';
+
+    setState(() {
+      emailController.text = email;
+      passwordController.text = password;
+    });
+  }
+
+  Future<bool> checkUserInfos() async {
+    final response = await HttpRequest.mainGet("/user_infos/");
 
     return response.statusCode == 200;
   }
@@ -67,13 +77,16 @@ class _SignInScreenState extends State<SignInScreen> {
     });
 
     try {
-      final response = await http.post(
-        Uri.parse("$apiUrl/auth/login"),
-        headers: {"Content-Type": "application/x-www-form-urlencoded"},
-        body: {
+      Map<String, String> headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+      };
+      final response = await HttpRequest.mainPost(
+        "/auth/login",
+        {
           "email": emailController.text,
           "password": passwordController.text,
         },
+        headers: headers,
       );
 
       if (response.statusCode == 201) {
@@ -81,7 +94,6 @@ class _SignInScreenState extends State<SignInScreen> {
         await tokenStorage.storeAccessToken(decodedResponse['access_token']);
         await tokenStorage.storeRefreshToken(decodedResponse['refresh_token']);
 
-        // 2. Vérification des informations de l'utilisateur après une connexion réussie
         bool hasValidInfos = await checkUserInfos();
         if (hasValidInfos) {
           Get.offAll(
@@ -112,6 +124,9 @@ class _SignInScreenState extends State<SignInScreen> {
         isLoading = false;
       });
     }
+
+    await secureStorage.write(key: 'email', value: emailController.text);
+    await secureStorage.write(key: 'password', value: passwordController.text);
   }
 
   @override
@@ -220,7 +235,8 @@ class _SignInScreenState extends State<SignInScreen> {
               child: Container(
                 color: ConstColors.secondaryColor,
                 child: const Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(
+                      color: ConstColors.primaryColor),
                 ),
               ),
             ),

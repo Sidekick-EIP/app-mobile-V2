@@ -1,16 +1,12 @@
-import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:sidekick_app/config/colors.dart';
 import 'package:sidekick_app/config/images.dart';
-import 'package:sidekick_app/config/text_style.dart';
-import 'package:sidekick_app/controller/home_controller.dart';
 import 'package:sidekick_app/controller/nutrition_controller.dart';
 import 'package:sidekick_app/controller/user_controller.dart';
-import 'package:sidekick_app/main.dart';
 import 'package:sidekick_app/models/nutrition.dart';
+
+import '../../config/colors.dart';
 
 class EditMeal extends StatefulWidget {
   const EditMeal({
@@ -19,6 +15,7 @@ class EditMeal extends StatefulWidget {
     required this.callback,
     required this.nutritionData,
   });
+
   final Food food;
   final Function callback;
   final Nutrition nutritionData;
@@ -75,7 +72,7 @@ class _EditMealState extends State<EditMeal> {
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');
               }
-              return const Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator(color: ConstColors.primaryColor));
             },
           )
         ],
@@ -398,6 +395,14 @@ class WeightValues extends StatefulWidget {
 }
 
 class _WeightValuesState extends State<WeightValues> {
+  late int foodWeight;
+
+  @override
+  void initState() {
+    super.initState();
+    foodWeight = widget.foodWeight;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(

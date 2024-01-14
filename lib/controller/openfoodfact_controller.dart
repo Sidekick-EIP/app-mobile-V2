@@ -1,5 +1,5 @@
-import 'package:sidekick_app/models/openFoodFact.dart';
-import 'package:sidekick_app/view/nutrition/nutrition_view.dart';
+import 'package:sidekick_app/main.dart';
+import 'package:sidekick_app/models/open_food_fact.dart';
 import 'package:sidekick_app/view/nutrition/openfoodfactApi.dart';
 
 List<ResultSearch> removeEmptyResult(List<ResultSearch> showResult) {

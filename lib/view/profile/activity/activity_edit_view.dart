@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../config/colors.dart';
-import '../../../config/images.dart';
 import '../../../config/text_style.dart';
 import '../../../controller/user_controller.dart';
-import '../../../enum/activities_map.dart';
+import '../../../enum/activities.dart';
+import '../../../models/activity.dart';
 
 class ActivityEditView extends StatefulWidget {
   const ActivityEditView({Key? key}) : super(key: key);
@@ -16,16 +16,20 @@ class ActivityEditView extends StatefulWidget {
 
 class ActivityEditViewState extends State<ActivityEditView> {
   final userController = Get.find<UserController>();
-  List<String> sportsList = sportsTranslation.values.toList();
+  List<Activity> activityList = [];
 
-  String enumToString(Object? o) => o.toString().split('.').last;
+  List<Activity> getActivities() {
+    return Activities.values.map((e) => Activity(e)).toList();
+  }
 
   List<bool> getActivityStatusBasedOnEnum() {
     List<bool> results = [];
 
-    for (var activityEnum in sportsTranslation.keys) {
+    for (var activityEnum in Activities.values) {
       String enumString = activityEnum.toString().split('.').last;
-      if (userController.user.value.activities.toString().contains(enumString)) {
+      if (userController.user.value.activities
+          .toString()
+          .contains(enumString)) {
         results.add(true);
       } else {
         results.add(false);
@@ -38,6 +42,7 @@ class ActivityEditViewState extends State<ActivityEditView> {
   @override
   void initState() {
     super.initState();
+    activityList = getActivities();
     userController.activityList = getActivityStatusBasedOnEnum();
   }
 
@@ -94,13 +99,14 @@ class ActivityEditViewState extends State<ActivityEditView> {
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: Image.asset(
-                              DefaultImages.a0,
+                              activityList[index].iconPath,
                             ),
                           ),
                         ),
                         const SizedBox(width: 15),
                         Text(
-                          sportsList[index], // get the sport from the list
+                          activityList[index]
+                              .activityName, // get the sport from the list
                           style: pSemiBold18.copyWith(
                             fontSize: 15,
                           ),

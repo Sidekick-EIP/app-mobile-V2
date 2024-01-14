@@ -196,7 +196,7 @@ class _SkipScreenState extends State<SkipScreen> {
                                 authController.skip.value) ==
                             null) {
                           Get.offAll(
-                              () => const PlanScreen(),
+                            () => const PlanScreen(),
                             transition: Transition.rightToLeft,
                           );
                         } else {

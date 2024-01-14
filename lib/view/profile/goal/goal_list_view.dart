@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 import '../../../config/images.dart';
 import '../../../config/text_style.dart';
@@ -70,7 +69,8 @@ class GoalListViewState extends State<GoalListView> {
               padding: const EdgeInsets.only(left: 5, right: 5),
               child: Row(
                 children: [
-                  Image.asset(getGoalImage(userController.user.value.goal.value)),
+                  Image.asset(
+                      getGoalImage(userController.user.value.goal.value)),
                   const SizedBox(width: 15),
                   Text(
                     getGoalText(userController.user.value.goal.value),

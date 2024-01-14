@@ -1,20 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:sidekick_app/controller/openfoodfact_controller.dart';
-import 'package:sidekick_app/models/openFoodFact.dart';
-import 'package:sidekick_app/view/nutrition/edit_meal.dart';
+import 'package:sidekick_app/models/open_food_fact.dart';
 import 'package:sidekick_app/view/nutrition/detail_meal.dart';
 
-import '../../main.dart';
-
-// typedef CallBackTypeInt = void Function(int a);
-// typedef CallBackType = void Function(ResultSearch newAliment);
-
 class AddMeal extends StatefulWidget {
-  // final CallBackType callback;
-
   const AddMeal({Key? key}) : super(key: key);
 
   @override
@@ -32,7 +23,7 @@ class _AddFoodState extends State<AddMeal> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        elevation: 0.0, // Remove shadow
+        elevation: 0.0,
         leading: IconButton(
           color: Colors.black,
           icon: const Icon(Icons.arrow_back),
@@ -54,11 +45,8 @@ class _AddFoodState extends State<AddMeal> {
 }
 
 class TopBar extends StatefulWidget {
-  // final CallBackType callback;
-
   const TopBar({
     Key? key,
-    // required this.callback
   }) : super(key: key);
 
   @override
@@ -138,12 +126,10 @@ class _TopBarState extends State<TopBar> {
 class ShowSearchAPIResult extends StatefulWidget {
   const ShowSearchAPIResult(
       {Key? key,
-      // required this.callback,
       required this.searchQuery})
       : super(key: key);
 
   final String searchQuery;
-  // final CallBackType callback;
 
   @override
   State<ShowSearchAPIResult> createState() => _ShowSearchAPIResultState();
@@ -328,7 +314,7 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
     return InkWell(
       onTap: () {
         Get.to(
-          () =>  detailMeal(showResult: widget.showResult),
+          () => detailMeal(showResult: widget.showResult),
           transition: Transition.rightToLeft,
         );
       },

@@ -11,7 +11,7 @@ import 'package:sidekick_app/controller/nutrition_controller.dart';
 import 'package:sidekick_app/controller/user_controller.dart';
 import 'package:sidekick_app/main.dart';
 import 'package:sidekick_app/models/nutrition.dart';
-import 'package:sidekick_app/models/openFoodFact.dart';
+import 'package:sidekick_app/models/open_food_fact.dart';
 
 class detailMeal extends StatefulWidget {
   detailMeal({
@@ -53,7 +53,7 @@ class _detailMealState extends State<detailMeal> {
           onPressed: () => Get.back(),
         ),
         backgroundColor: Colors.transparent,
-        elevation: 0.0, // Remove shadow
+        elevation: 0.0,
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -465,14 +465,11 @@ class _WeightValuesState extends State<WeightValues> {
                     ),
                     onPressed: () {
                       postNewMeal(widget.showResult, context);
-                      // widget.callback(widget.nutritionData);
-                      // widget.callback(widget.showResult.kcalories, widget.showResult.quantity, widget.index);
-                      // widget.showResult.kcalories * widget.showResult.quantity;
-
                       var snackBar = const SnackBar(
                         content: Text("Aliment ajouté"),
                       );
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      Get.back();
                       Get.back();
                     },
                     child: Text(

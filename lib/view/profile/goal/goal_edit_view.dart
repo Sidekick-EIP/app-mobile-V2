@@ -34,7 +34,8 @@ class GoalEditViewState extends State<GoalEditView> {
   @override
   void initState() {
     super.initState();
-    userController.goalList = translateGoalToBooleanList(userController.user.value.goal.value);
+    userController.goalList =
+        translateGoalToBooleanList(userController.user.value.goal.value);
   }
 
   @override
@@ -58,9 +59,7 @@ class GoalEditViewState extends State<GoalEditView> {
             return InkWell(
               onTap: () {
                 setState(() {
-                  for (var i = 0;
-                  i < userController.goalList.length;
-                  i++) {
+                  for (var i = 0; i < userController.goalList.length; i++) {
                     if (i == index) {
                       userController.goalList[i] = true;
                     } else {
@@ -90,20 +89,20 @@ class GoalEditViewState extends State<GoalEditView> {
                           index == 0
                               ? DefaultImages.goal1
                               : index == 1
-                              ? DefaultImages.goal2
-                              : index == 2
-                              ? DefaultImages.goal3
-                              : DefaultImages.goal4,
+                                  ? DefaultImages.goal2
+                                  : index == 2
+                                      ? DefaultImages.goal3
+                                      : DefaultImages.goal4,
                         ),
                         const SizedBox(width: 15),
                         Text(
                           index == 0
                               ? "Perdre du poids"
                               : index == 1
-                              ? "Rester en forme"
-                              : index == 2
-                              ? "Prendre du volume musculaire"
-                              : "Se muscler",
+                                  ? "Rester en forme"
+                                  : index == 2
+                                      ? "Prendre du volume musculaire"
+                                      : "Se muscler",
                           style: pSemiBold18.copyWith(
                             fontSize: 15,
                           ),

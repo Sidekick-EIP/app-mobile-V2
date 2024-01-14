@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../config/colors.dart';
-import '../../../../config/images.dart';
 import '../../../../config/text_style.dart';
 import '../../../../controller/auth_controller.dart';
-import '../../../../enum/activities_map.dart';
+import '../../../../enum/activities.dart';
+import '../../../../models/activity.dart';
 
 class ActivityView extends StatefulWidget {
   final AuthController authController;
@@ -18,7 +18,17 @@ class ActivityView extends StatefulWidget {
 }
 
 class _ActivityViewState extends State<ActivityView> {
-  List<String> sportsList = sportsTranslation.values.toList();
+  List<Activity> activityList = [];
+
+  List<Activity> getActivities() {
+    return Activities.values.map((e) => Activity(e)).toList();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    activityList = getActivities();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +45,7 @@ class _ActivityViewState extends State<ActivityView> {
         ),
         const SizedBox(height: 30),
         ListView.builder(
-          itemCount: sportsList.length,
+          itemCount: activityList.length,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) {
@@ -43,7 +53,7 @@ class _ActivityViewState extends State<ActivityView> {
               onTap: () {
                 setState(() {
                   widget.authController.activityList[index] =
-                  !widget.authController.activityList[index];
+                      !widget.authController.activityList[index];
                 });
               },
               child: Padding(
@@ -73,13 +83,14 @@ class _ActivityViewState extends State<ActivityView> {
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: Image.asset(
-                              DefaultImages.a0,
+                              activityList[index].iconPath,
                             ),
                           ),
                         ),
                         const SizedBox(width: 15),
                         Text(
-                          sportsList[index],  // get the sport from the list
+                          activityList[index]
+                              .activityName, // get the sport from the list
                           style: pSemiBold18.copyWith(
                             fontSize: 15,
                           ),
@@ -91,15 +102,15 @@ class _ActivityViewState extends State<ActivityView> {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: widget.authController.activityList[index] ==
-                                true
+                                    true
                                 ? const Color(0xffF25D29)
                                 : Colors.transparent,
                             border: Border.all(
                               color:
-                              widget.authController.activityList[index] ==
-                                  true
-                                  ? const Color(0xffF25D29)
-                                  : const Color(0xffDAE0E8),
+                                  widget.authController.activityList[index] ==
+                                          true
+                                      ? const Color(0xffF25D29)
+                                      : const Color(0xffDAE0E8),
                             ),
                           ),
                           child: const Icon(

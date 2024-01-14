@@ -5,7 +5,6 @@ import '../../../../config/images.dart';
 import '../../../../config/text_style.dart';
 import '../../../../controller/auth_controller.dart';
 
-
 class GoalView extends StatefulWidget {
   final AuthController authController;
   const GoalView({Key? key, required this.authController}) : super(key: key);

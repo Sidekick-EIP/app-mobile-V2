@@ -1,41 +1,17 @@
-import 'dart:developer';
-
 import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:sidekick_app/config/colors.dart';
-import 'package:sidekick_app/config/images.dart';
 import 'package:sidekick_app/config/text_style.dart';
-import 'package:sidekick_app/controller/home_controller.dart';
 import 'package:sidekick_app/controller/nutrition_controller.dart';
 import 'package:sidekick_app/controller/user_controller.dart';
+import 'package:sidekick_app/main.dart';
 import 'package:sidekick_app/models/nutrition.dart';
 import 'package:sidekick_app/view/nutrition/nutrition_period.dart';
 
-import 'package:get_it/get_it.dart';
-import 'package:sidekick_app/view/nutrition/openfoodfactApi.dart';
-
-final GetIt getIt = GetIt.instance;
-
-void getItConf() {
-  String dateNow = DateTime.now().toString();
-
-  String day = DateFormat('yyyy-MM-dd').format(DateTime.parse(dateNow)).toString();
-  getIt.registerSingleton(MealEditorBlock(day, "Déjeuner", false));
-  getIt.registerSingleton(
-    ApiClient("https://world.openfoodfacts.org/cgi/", ""),
-  );
-}
-
 class NutritionView extends StatefulWidget {
-  getItConf() {
-    throw UnimplementedError();
-  }
-
   const NutritionView({Key? key}) : super(key: key);
 
   @override
@@ -49,6 +25,12 @@ class _NutritionViewState extends State<NutritionView> {
   final nutritionController = Get.put(NutritionController(), permanent: true);
   String getDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0).toIso8601String();
 
+  void updateNutritionData() {
+    setState(() {
+      futureNutrition = nutritionController.fetchNutrition("${getDate}Z");
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -58,6 +40,7 @@ class _NutritionViewState extends State<NutritionView> {
   void updateDate(String newDate) {
     setState(() {
       getDate = newDate;
+      getIt<MealEditorBlock>().setSelectedDate(getDate);
       futureNutrition = nutritionController.fetchNutrition("${getDate}Z");
     });
   }
@@ -106,7 +89,7 @@ class _NutritionViewState extends State<NutritionView> {
                     activeDayColor: Colors.white,
                     activeBackgroundDayColor: const Color.fromRGBO(242, 93, 41, 1),
                     dotsColor: const Color(0xFF333A47),
-                    locale: 'en_ISO',
+                    locale: 'fr',
                   ));
             },
           ),
@@ -116,11 +99,17 @@ class _NutritionViewState extends State<NutritionView> {
           future: futureNutrition,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return DisplayNutritionPage(width: width, height: height, nutritionData: snapshot.data!, date: getDate);
+              return DisplayNutritionPage(
+                width: width,
+                height: height,
+                nutritionData: snapshot.data!,
+                date: getDate,
+                updateNutritionCallback: updateNutritionData,
+              );
             } else if (snapshot.hasError) {
               return Text('${snapshot.error}');
             }
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator(color: ConstColors.primaryColor));
           },
         )
       ],
@@ -129,24 +118,37 @@ class _NutritionViewState extends State<NutritionView> {
 }
 
 class DisplayNutritionPage extends StatefulWidget {
-  DisplayNutritionPage({super.key, required this.width, required this.height, required this.nutritionData, required this.date});
+  const DisplayNutritionPage({
+    super.key,
+    required this.width,
+    required this.height,
+    required this.nutritionData,
+    required this.date,
+    required this.updateNutritionCallback,
+  });
 
   final double width;
   final double height;
-  late Nutrition nutritionData;
+  final Nutrition nutritionData;
   final String date;
+  final Function updateNutritionCallback;
 
   @override
   State<DisplayNutritionPage> createState() => _DisplayNutritionPageState();
 }
 
 class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
+  late Nutrition nutritionData;
+
+  @override
+  void initState() {
+    super.initState();
+    nutritionData = widget.nutritionData;
+  }
+
   callbackPeriod(Nutrition meals) {
     setState(() {
-      print("callbackkkk");
-      widget.nutritionData = meals;
-      print(widget.nutritionData.calories);
-      print(meals.calories);
+      nutritionData = meals;
     });
   }
 
@@ -344,7 +346,7 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                                         radius: 60,
                                         lineWidth: 12,
                                         animation: true,
-                                        percent: widget.nutritionData.calories > 2100 ? 0.0 : ((2100 - widget.nutritionData.calories) / 2100),
+                                        percent: widget.nutritionData.calories > 2100 ? 1.0 : ((widget.nutritionData.calories) / 2100),
                                         circularStrokeCap: CircularStrokeCap.round,
                                         progressColor: Colors.greenAccent,
                                         backgroundColor: const Color.fromARGB(255, 200, 200, 200).withOpacity(0.2),
@@ -476,6 +478,7 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                 nutritionData: widget.nutritionData,
                 date: widget.date,
                 callbackPeriod: callbackPeriod,
+                updateNutritionCallback: widget.updateNutritionCallback,
               ),
             ],
           ),
@@ -493,6 +496,7 @@ class TodaysMeals extends StatefulWidget {
     required this.nutritionData,
     required this.date,
     required this.callbackPeriod,
+    required this.updateNutritionCallback,
   });
 
   final double width;
@@ -500,6 +504,7 @@ class TodaysMeals extends StatefulWidget {
   final Nutrition nutritionData;
   final String date;
   final Function callbackPeriod;
+  final Function updateNutritionCallback;
 
   @override
   State<TodaysMeals> createState() => _TodaysMealsState();
@@ -528,6 +533,7 @@ class _TodaysMealsState extends State<TodaysMeals> {
                       nutritionData: widget.nutritionData,
                       callbackPeriod: widget.callbackPeriod,
                       period: "breakfast",
+                      updateNutritionCallback: widget.updateNutritionCallback,
                     ),
                     transition: Transition.rightToLeft,
                   );
@@ -565,6 +571,7 @@ class _TodaysMealsState extends State<TodaysMeals> {
                   period: "breakfast",
                   date: widget.date,
                   callbackPeriod: widget.callbackPeriod,
+                  updateNutritionCallback: widget.updateNutritionCallback,
                 ),
                 SizedBox(
                   height: widget.height * 0.01,
@@ -580,6 +587,7 @@ class _TodaysMealsState extends State<TodaysMeals> {
                   period: "lunch",
                   date: widget.date,
                   callbackPeriod: widget.callbackPeriod,
+                  updateNutritionCallback: widget.updateNutritionCallback,
                 ),
                 SizedBox(
                   height: widget.height * 0.01,
@@ -595,6 +603,7 @@ class _TodaysMealsState extends State<TodaysMeals> {
                   period: "dinners",
                   date: widget.date,
                   callbackPeriod: widget.callbackPeriod,
+                  updateNutritionCallback: widget.updateNutritionCallback,
                 ),
                 SizedBox(
                   height: widget.height * 0.01,
@@ -610,6 +619,7 @@ class _TodaysMealsState extends State<TodaysMeals> {
                   period: "snacks",
                   date: widget.date,
                   callbackPeriod: widget.callbackPeriod,
+                  updateNutritionCallback: widget.updateNutritionCallback,
                 ),
               ],
             ))
@@ -631,6 +641,7 @@ class MealPeriodCard extends StatefulWidget {
     required this.period,
     required this.date,
     required this.callbackPeriod,
+    required this.updateNutritionCallback,
   });
 
   final double width;
@@ -643,6 +654,7 @@ class MealPeriodCard extends StatefulWidget {
   final String period;
   final String date;
   final Function callbackPeriod;
+  final Function updateNutritionCallback;
 
   @override
   State<MealPeriodCard> createState() => _MealPeriodCardState();
@@ -659,6 +671,7 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
             nutritionData: widget.nutritionData,
             callbackPeriod: widget.callbackPeriod,
             period: widget.period,
+            updateNutritionCallback: widget.updateNutritionCallback,
           ),
           transition: Transition.rightToLeft,
         );

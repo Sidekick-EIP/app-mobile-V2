@@ -6,14 +6,13 @@ class Exercise {
   final String video;
   final String muscleGroup;
 
-  Exercise({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.thumbnail,
-    required this.video,
-    required this.muscleGroup
-  });
+  Exercise(
+      {required this.id,
+      required this.name,
+      required this.description,
+      required this.thumbnail,
+      required this.video,
+      required this.muscleGroup});
 
   static Exercise fromJSON(Map<String, dynamic> json) {
     return Exercise(

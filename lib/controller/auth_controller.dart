@@ -11,6 +11,7 @@ class AuthController extends GetxController {
   RxString firstname = RxString("");
   RxString birthDate = RxString("");
   RxString description = RxString("");
+  RxString city = RxString("");
 
   void updateLastname(String value) {
     lastname.value = value;
@@ -28,7 +29,11 @@ class AuthController extends GetxController {
     description.value = value;
   }
 
-  RxString height = RxString("168");
-  RxString weight = RxString("55");
-  RxString goalWeight = RxString("60");
+  void updateCity(String value) {
+    city.value = value;
+  }
+
+  RxString height = RxString("178");
+  RxString weight = RxString("80");
+  RxString goalWeight = RxString("75");
 }

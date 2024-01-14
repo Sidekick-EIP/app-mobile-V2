@@ -180,6 +180,11 @@ class _EditableFieldScreenState extends State<EditableFieldScreen> {
                               DateFormat format = DateFormat("dd/MM/yyyy");
                               try {
                                 DateTime parsedBirthDate = format.parse(value);
+                                parsedBirthDate = parsedBirthDate
+                                    .add(Duration(
+                                        hours: parsedBirthDate
+                                            .timeZoneOffset.inHours))
+                                    .toUtc();
                                 widget.fieldObservable.value = parsedBirthDate;
                               } catch (e) {
                                 if (kDebugMode) {

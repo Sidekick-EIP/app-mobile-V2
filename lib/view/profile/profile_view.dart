@@ -1,18 +1,22 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sidekick_app/view/profile/activity/activity_screen.dart';
+import 'package:sidekick_app/view/profile/sidekick/report/report_sidekick_screen.dart';
 import 'package:sidekick_app/view/profile/training/training_screen.dart';
+import 'package:sidekick_app/utils/http_request.dart';
 
 import '../../config/colors.dart';
 import '../../config/images.dart';
 import '../../config/text_style.dart';
 import '../../controller/home_controller.dart';
+import '../../controller/preference_controller.dart';
 import '../../controller/user_controller.dart';
 import '../../utils/calculate_age.dart';
 import '../../widget/custom_button.dart';
 import '../auth/signin_screen.dart';
 import 'account_screen.dart';
-import 'filter_view.dart';
+import 'sidekick/sidekick_view.dart';
 import 'goal/goal_screen.dart';
 
 class ProfileView extends StatefulWidget {
@@ -25,6 +29,95 @@ class ProfileView extends StatefulWidget {
 class _ProfileViewState extends State<ProfileView> {
   final homeController = Get.put(HomeController());
   final userController = Get.find<UserController>();
+  final preferenceController = Get.find<PreferenceController>();
+
+  @override
+  void initState() {
+    super.initState();
+    userController.fetchUserFromBack();
+  }
+
+  void _showWarningPopup() {
+    Get.dialog(
+      AlertDialog(
+        title: Text('Changer de Sidekick', style: pSemiBold20),
+        content: Text('Êtes-vous sûr de vouloir changer votre sidekick ?',
+            style: pRegular14),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Annuler', style: pSemiBold18),
+            onPressed: () {
+              Get.back();
+            },
+          ),
+          TextButton(
+            child: Text('Confirmer',
+                style: pSemiBold18.copyWith(
+                  color: ConstColors.primaryColor,
+                )),
+            onPressed: () {
+              Get.back(); // Ferme le premier dialogue
+              _showConfirmationPopup(); // Ouvre le dialogue de confirmation
+            },
+          ),
+        ],
+      ),
+      barrierDismissible:
+          false, // Empêche la fermeture du dialogue en tapant à l'extérieur
+    );
+  }
+
+  void _showConfirmationPopup() {
+    Get.dialog(
+      AlertDialog(
+        title: Text('Confirmation', style: pSemiBold20),
+        content: Text(
+            'Veuillez confirmer le changement de votre sidekick.\n\nCette action est irréversible.',
+            style: pRegular14),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Annuler',
+                style: pSemiBold18.copyWith(
+                  color: Colors.red,
+                )),
+            onPressed: () {
+              Get.back();
+            },
+          ),
+          TextButton(
+            child: Text('Confirmer',
+                style: pSemiBold18.copyWith(color: Colors.green)),
+            onPressed: () async {
+              userController.isSidekickLoading.value = false;
+              final response = await HttpRequest.mainPost("/reports/change", {},
+                  headers: {});
+              Get.back();
+              if (response.statusCode == 201) {
+                Get.snackbar('Succès', 'Sidekick changé avec succès !',
+                    snackPosition: SnackPosition.BOTTOM,
+                    backgroundColor: Colors.green,
+                    colorText: Colors.white,
+                    duration: const Duration(seconds: 1));
+              } else if (response.statusCode == 404) {
+                Get.snackbar('Erreur', "Vous n'avez pas de sidekick",
+                    snackPosition: SnackPosition.BOTTOM,
+                    backgroundColor: Colors.red,
+                    colorText: Colors.white,
+                    duration: const Duration(seconds: 2));
+              } else {
+                Get.snackbar('Erreur', 'Le signalement a échoué',
+                    snackPosition: SnackPosition.BOTTOM,
+                    backgroundColor: Colors.red,
+                    colorText: Colors.white,
+                    duration: const Duration(seconds: 1));
+              }
+            },
+          ),
+        ],
+      ),
+      barrierDismissible: false,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +207,7 @@ class _ProfileViewState extends State<ProfileView> {
                           ),
                           builder: (v) => const FractionallySizedBox(
                             heightFactor: 0.9,
-                            child: FilterView(),
+                            child: SidekickView(),
                           ),
                         );
                       },
@@ -257,9 +350,115 @@ class _ProfileViewState extends State<ProfileView> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             row(
-                              "Préférences",
+                              "Autoriser les mails",
                               "",
                               () {},
+                              SizedBox(
+                                height: 20,
+                                child: Obx(
+                                  () => CupertinoSwitch(
+                                    value: preferenceController
+                                        .preference.value.notifications.value,
+                                    activeColor: ConstColors.primaryColor,
+                                    onChanged: (v) async {
+                                      preferenceController.preference.value
+                                          .notifications.value = v;
+                                      try {
+                                        await preferenceController
+                                            .updatePreference();
+                                        Get.snackbar('Succès',
+                                            'Mails mis à jour avec succès !',
+                                            snackPosition: SnackPosition.BOTTOM,
+                                            backgroundColor: Colors.green,
+                                            colorText: Colors.white,
+                                            duration:
+                                                const Duration(seconds: 1));
+                                      } catch (e) {
+                                        Get.snackbar('Erreur',
+                                            'Erreur lors de la mise à jour des mails.',
+                                            snackPosition: SnackPosition.BOTTOM,
+                                            backgroundColor: Colors.red,
+                                            colorText: Colors.white,
+                                            duration:
+                                                const Duration(seconds: 1));
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            const Divider(
+                              color: Color(0xffA9B2BA),
+                            ),
+                            const SizedBox(height: 10),
+                            row(
+                              "Autoriser les notifications",
+                              "",
+                              () {},
+                              SizedBox(
+                                height: 20,
+                                child: Obx(
+                                  () => CupertinoSwitch(
+                                    value: preferenceController
+                                        .preference.value.sounds.value,
+                                    activeColor: ConstColors.primaryColor,
+                                    onChanged: (v) async {
+                                      preferenceController
+                                          .preference.value.sounds.value = v;
+                                      try {
+                                        await preferenceController
+                                            .updatePreference();
+                                        Get.snackbar('Succès',
+                                            'Notifications mis à jour avec succès !',
+                                            snackPosition: SnackPosition.BOTTOM,
+                                            backgroundColor: Colors.green,
+                                            colorText: Colors.white,
+                                            duration:
+                                                const Duration(seconds: 1));
+                                      } catch (e) {
+                                        Get.snackbar('Erreur',
+                                            'Erreur lors de la mise à jour des notifications.',
+                                            snackPosition: SnackPosition.BOTTOM,
+                                            backgroundColor: Colors.red,
+                                            colorText: Colors.white,
+                                            duration:
+                                                const Duration(seconds: 1));
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            const Divider(
+                              color: Color(0xffA9B2BA),
+                            ),
+                            const SizedBox(height: 10),
+                            row(
+                              "Signaler le sidekick",
+                              "",
+                              () {
+                                Get.to(() => const ReportSidekickScreen(),
+                                    transition: Transition.rightToLeft);
+                              },
+                              const Icon(
+                                Icons.arrow_forward_ios,
+                                color: Color(0xffA9B2BA),
+                                size: 16,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            const Divider(
+                              color: Color(0xffA9B2BA),
+                            ),
+                            const SizedBox(height: 10),
+                            row(
+                              "Changer mon sidekick",
+                              "",
+                              () {
+                                _showWarningPopup();
+                              },
                               const Icon(
                                 Icons.arrow_forward_ios,
                                 color: Color(0xffA9B2BA),

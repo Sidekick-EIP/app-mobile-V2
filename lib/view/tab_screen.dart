@@ -5,7 +5,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:sidekick_app/view/message/message_view.dart';
 import 'package:sidekick_app/view/nutrition/nutrition_view.dart';
-import 'package:sidekick_app/view/nutrition/nutrition_view.dart';
 import 'package:sidekick_app/view/profile/profile_view.dart';
 import 'package:sidekick_app/view/training/training_view.dart';
 
@@ -54,10 +53,14 @@ class _TabScreenState extends State<TabScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               card(
-                DefaultImages.home,
+                DefaultImages.homeOutlined,
                 "Accueil",
-                homeController.flag.value == 0 ? ConstColors.primaryColor : const Color(0xff9299A3),
-                homeController.flag.value == 0 ? ConstColors.primaryColor : const Color(0xff9299A3),
+                homeController.flag.value == 0
+                    ? ConstColors.primaryColor
+                    : const Color(0xff9299A3),
+                homeController.flag.value == 0
+                    ? ConstColors.primaryColor
+                    : const Color(0xff9299A3),
                 () {
                   homeController.flag.value = 0;
                 },
@@ -65,8 +68,12 @@ class _TabScreenState extends State<TabScreen> {
               card(
                 DefaultImages.message,
                 "Message",
-                homeController.flag.value == 1 ? ConstColors.primaryColor : const Color(0xff9299A3),
-                homeController.flag.value == 1 ? ConstColors.primaryColor : const Color(0xff9299A3),
+                homeController.flag.value == 1
+                    ? ConstColors.primaryColor
+                    : const Color(0xff9299A3),
+                homeController.flag.value == 1
+                    ? ConstColors.primaryColor
+                    : const Color(0xff9299A3),
                 () {
                   homeController.flag.value = 1;
                 },
@@ -74,26 +81,38 @@ class _TabScreenState extends State<TabScreen> {
               card(
                 DefaultImages.training,
                 "Entrainement",
-                homeController.flag.value == 2 ? ConstColors.primaryColor : const Color(0xff9299A3),
-                homeController.flag.value == 2 ? ConstColors.primaryColor : const Color(0xff9299A3),
+                homeController.flag.value == 2
+                    ? ConstColors.primaryColor
+                    : const Color(0xff9299A3),
+                homeController.flag.value == 2
+                    ? ConstColors.primaryColor
+                    : const Color(0xff9299A3),
                 () {
                   homeController.flag.value = 2;
                 },
               ),
               card(
-                DefaultImages.nutrition,
+                DefaultImages.nutritionOutlined,
                 "Nutrition",
-                homeController.flag.value == 3 ? ConstColors.primaryColor : const Color(0xff9299A3),
-                homeController.flag.value == 3 ? ConstColors.primaryColor : const Color(0xff9299A3),
+                homeController.flag.value == 3
+                    ? ConstColors.primaryColor
+                    : const Color(0xff9299A3),
+                homeController.flag.value == 3
+                    ? ConstColors.primaryColor
+                    : const Color(0xff9299A3),
                 () {
                   homeController.flag.value = 3;
                 },
               ),
               card(
-                DefaultImages.user,
+                DefaultImages.profileOutlined,
                 "Profile",
-                homeController.flag.value == 4 ? ConstColors.primaryColor : const Color(0xff9299A3),
-                homeController.flag.value == 4 ? ConstColors.primaryColor : const Color(0xff9299A3),
+                homeController.flag.value == 4
+                    ? ConstColors.primaryColor
+                    : const Color(0xff9299A3),
+                homeController.flag.value == 4
+                    ? ConstColors.primaryColor
+                    : const Color(0xff9299A3),
                 () {
                   homeController.flag.value = 4;
                 },
@@ -116,7 +135,8 @@ class _TabScreenState extends State<TabScreen> {
     );
   }
 
-  Widget card(String image, String text, Color imageColor, Color textColor, VoidCallback onTap) {
+  Widget card(String image, String text, Color imageColor, Color textColor,
+      VoidCallback onTap) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 

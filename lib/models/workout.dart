@@ -9,17 +9,16 @@ class Workout {
   final String video;
   final String muscleGroup;
 
-  Workout({
-    required this.id,
-    required this.burnedCalories,
-    required this.duration,
-    required this.date,
-    required this.name,
-    required this.description,
-    required this.thumbnail,
-    required this.video,
-    required this.muscleGroup
-  });
+  Workout(
+      {required this.id,
+      required this.burnedCalories,
+      required this.duration,
+      required this.date,
+      required this.name,
+      required this.description,
+      required this.thumbnail,
+      required this.video,
+      required this.muscleGroup});
 
   static Workout fromJSON(Map<String, dynamic> json) {
     return Workout(

@@ -28,12 +28,13 @@ class DefaultImages {
   static const String home = 'assets/images/home.svg';
   static const String message = 'assets/images/message.svg';
   static const String nutrition = 'assets/images/nutrition.svg';
+  static const String nutritionOutlined =
+      'assets/images/nutrition_outlined.svg';
   static const String user = 'assets/images/user.svg';
   static const String search = 'assets/images/Shape.svg';
   static const String error = 'assets/images/feather_info.svg';
   static const String notification = 'assets/images/Notification.svg';
   static const String filter = 'assets/images/Filter.svg';
-  static const String banner = 'assets/images/Banner.png';
   static const String h1 = 'assets/images/h1.png';
   static const String h2 = 'assets/images/h2.png';
   static const String h3 = 'assets/images/h3.png';
@@ -97,11 +98,25 @@ class DefaultImages {
   static const String share = 'assets/images/share.svg';
   static const String s1 = 'assets/images/s1.png';
   static const String sidekick1 = 'assets/images/sidekick1.png';
-  static const String sidekickLogo = 'assets/images/sidekick_logo-removebg-preview.png';
+  static const String sidekickLogo =
+      'assets/images/sidekick_logo-removebg-preview.png';
   static const String sidekickLogoV2 = 'assets/images/sidekick_logoV2.png';
   static const String m1 = 'assets/images/m1.png';
   static const String proteins = 'assets/images/proteins.png';
   static const String carbs = 'assets/images/carbs.png';
   static const String fat = 'assets/images/fat.png';
   static const String editPicker = 'assets/images/edit_picker.svg';
+  static const String sidekickBanner = 'assets/images/sidekick_banner.png';
+  static const String homeOutlined = 'assets/images/home_outlined.svg';
+  static const String profileOutlined = 'assets/images/profile_outlined.svg';
+  static const String goal1RemoveBg =
+      'assets/images/goal1-removebg-preview.png';
+  static const String goal2RemoveBg =
+      'assets/images/goal2-removebg-preview.png';
+  static const String goal3RemoveBg =
+      'assets/images/goal3-removebg-preview.png';
+  static const String goal4RemoveBg =
+      'assets/images/goal4-removebg-preview.png';
+  static const String noExerice = 'assets/images/no_exercice.png';
+  static const String hourGlass = 'assets/images/hourglass.png';
 }

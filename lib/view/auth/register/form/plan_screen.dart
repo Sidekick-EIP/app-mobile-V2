@@ -3,14 +3,13 @@ import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:sidekick_app/config/colors.dart';
 import 'package:sidekick_app/controller/auth_controller.dart';
 import 'package:sidekick_app/utils/getter/selected_activities.dart';
 import 'package:sidekick_app/utils/getter/selected_training_level.dart';
+import 'package:sidekick_app/utils/http_request.dart';
 import 'package:sidekick_app/view/auth/register/info_screen.dart';
 
 import '../../../../config/text_style.dart';
@@ -33,7 +32,6 @@ class _PlanScreenState extends State<PlanScreen> {
   final authController = Get.find<AuthController>();
 
   Future<void> postUserInfos() async {
-    String apiUrl = dotenv.env['API_BACK_URL'] ?? "";
     final TokenStorage tokenStorage = TokenStorage();
     String? accessToken = await tokenStorage.getAccessToken();
 
@@ -60,10 +58,6 @@ class _PlanScreenState extends State<PlanScreen> {
 
     String formattedBirthDate = parsedBirthDate.toUtc().toIso8601String();
 
-    var headers = {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer $accessToken"
-    };
     var body = {
       "birth_date": formattedBirthDate,
       "firstname": authController.firstname.value,
@@ -79,13 +73,13 @@ class _PlanScreenState extends State<PlanScreen> {
       "activities": getSelectedActivities(authController.activityList)
           .map((activity) => enumToString(activity))
           .toList(),
+      "location": authController.city.value,
     };
 
     try {
-      final response = await http.post(
-        Uri.parse("$apiUrl/user_infos/"),
-        headers: headers,
-        body: jsonEncode(body),
+      final response = await HttpRequest.mainPost(
+        "/user_infos/",
+        jsonEncode(body),
       );
 
       if (response.statusCode == 201) {

@@ -10,6 +10,7 @@ import 'package:sidekick_app/main.dart';
 import 'package:sidekick_app/models/nutrition.dart';
 import 'package:sidekick_app/view/nutrition/add_meal.dart';
 import 'package:sidekick_app/view/nutrition/edit_meal.dart';
+import 'package:sidekick_app/view/nutrition/nutrition_view.dart';
 
 enum SampleItem { itemOne, itemTwo }
 
@@ -204,6 +205,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                 setState(() {
                   selectedCategoryIndex = index;
                   widget.updatePeriod(setCategories[index]);
+                  getIt<MealEditorBlock>().setPeriod(setCategories[index]);
                 });
               },
               child: Container(
@@ -436,7 +438,7 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
                       child: Text('Supprimer'),
                     ),
                   ],
-                  onSelected: (String choice) {
+                  onSelected: (String choice) async {
                     if (choice == 'Modifier') {
                       Get.to(
                         EditMeal(
@@ -447,7 +449,7 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
                         transition: Transition.rightToLeft,
                       );
                     } else if (choice == 'Supprimer') {
-                      // print('Delete chosen');
+                      await getIt<MealEditorBlock>().deleteMeal(widget.food.id, context);
                     }
                   },
                 ),

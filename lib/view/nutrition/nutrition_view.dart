@@ -4,6 +4,7 @@ import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:sidekick_app/config/colors.dart';
@@ -15,7 +16,26 @@ import 'package:sidekick_app/controller/user_controller.dart';
 import 'package:sidekick_app/models/nutrition.dart';
 import 'package:sidekick_app/view/nutrition/nutrition_period.dart';
 
+import 'package:get_it/get_it.dart';
+import 'package:sidekick_app/view/nutrition/openfoodfactApi.dart';
+
+final GetIt getIt = GetIt.instance;
+
+void getItConf() {
+  String dateNow = DateTime.now().toString();
+
+  String day = DateFormat('yyyy-MM-dd').format(DateTime.parse(dateNow)).toString();
+  getIt.registerSingleton(MealEditorBlock(day, "Déjeuner", false));
+  getIt.registerSingleton(
+    ApiClient("https://world.openfoodfacts.org/cgi/", ""),
+  );
+}
+
 class NutritionView extends StatefulWidget {
+  getItConf() {
+    throw UnimplementedError();
+  }
+
   const NutritionView({Key? key}) : super(key: key);
 
   @override

@@ -1,115 +1,293 @@
-import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:sidekick_app/config/colors.dart';
-import 'package:sidekick_app/config/text_style.dart';
-import 'package:sidekick_app/controller/home_controller.dart';
-import 'package:sidekick_app/controller/nutrition_controller.dart';
-import 'package:sidekick_app/controller/user_controller.dart';
-import 'package:sidekick_app/main.dart';
-import 'package:sidekick_app/models/nutrition.dart';
-import 'package:sidekick_app/view/nutrition/add_meal.dart';
+import 'package:sidekick_app/controller/openfoodfact_controller.dart';
+import 'package:sidekick_app/models/openFoodFact.dart';
 import 'package:sidekick_app/view/nutrition/edit_meal.dart';
+import 'package:sidekick_app/view/nutrition/detail_meal.dart';
 
-enum SampleItem { itemOne, itemTwo }
+import '../../main.dart';
+
+// typedef CallBackTypeInt = void Function(int a);
+// typedef CallBackType = void Function(ResultSearch newAliment);
 
 class AddMeal extends StatefulWidget {
+  // final CallBackType callback;
+
   const AddMeal({Key? key}) : super(key: key);
 
   @override
-  State<AddMeal> createState() => _AddMealState();
+  State<AddMeal> createState() => _AddFoodState();
 }
 
-class _AddMealState extends State<AddMeal> {
-  late Future<Nutrition> futureNutrition;
-  final userController = Get.find<UserController>();
-
-  final nutritionController = Get.put(NutritionController(), permanent: true);
-  String getDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0).toIso8601String();
-
+class _AddFoodState extends State<AddMeal> {
   @override
   void initState() {
     super.initState();
-    futureNutrition = nutritionController.fetchNutrition("${getDate}Z");
-  }
-
-  void updateDate(String newDate) {
-    setState(() {
-      getDate = newDate;
-      futureNutrition = nutritionController.fetchNutrition("${getDate}Z");
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Ajouter un aliment',
-          style: TextStyle(color: Colors.black),
-        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0, // Remove shadow
         leading: IconButton(
           color: Colors.black,
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Get.back(),
         ),
-        backgroundColor: Colors.transparent,
-        elevation: 0.0, // Remove shadow
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          FutureBuilder<Nutrition>(
-            future: futureNutrition,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return DisplayNutritionPage(width: width, height: height, nutritionData: snapshot.data!);
-              } else if (snapshot.hasError) {
-                return Text('${snapshot.error}');
-              }
-              return const Center(child: CircularProgressIndicator());
-            },
-          )
-        ],
+      body: SafeArea(
+        child: Container(
+          padding: const EdgeInsets.all(8.0),
+          child: const SingleChildScrollView(
+            child: Column(children: [
+              TopBar(),
+            ]),
+          ),
+        ),
       ),
     );
   }
 }
 
-class DisplayNutritionPage extends StatelessWidget {
-  const DisplayNutritionPage({super.key, required this.width, required this.height, required this.nutritionData});
+class TopBar extends StatefulWidget {
+  // final CallBackType callback;
 
-  final double width;
-  final double height;
-  final Nutrition nutritionData;
+  const TopBar({
+    Key? key,
+    // required this.callback
+  }) : super(key: key);
+
+  @override
+  State<TopBar> createState() => _TopBarState();
+}
+
+class _TopBarState extends State<TopBar> {
+  TextEditingController searchController = TextEditingController();
+  final query = ValueNotifier<String>("riz");
+  final isLoading = ValueNotifier<bool>(false);
+  final isHealthy = ValueNotifier<bool>(false);
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: ListView(
-        physics: const ClampingScrollPhysics(),
-        padding: EdgeInsets.zero,
-        children: [
-          Column(
-            children: [
-              // SizedBox(
-              //   height: height * 0.03,
-              // ),
-              SearchWidget(width: width),
-              Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20),
-                child: Row(
+    var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
+
+    return Column(
+      children: [
+        SearchWidget(
+          width: width,
+          query: query,
+          isLoading: isLoading,
+          getMeal: (value) async {
+            isLoading.value = true;
+            await getMeal(query.value);
+            isLoading.value = false;
+            setState(() {});
+          },
+        ),
+        ValueListenableBuilder(
+          valueListenable: isLoading,
+          builder: (context, value, _) {
+            return ValueListenableBuilder(
+              valueListenable: query,
+              builder: (context, value, _) {
+                return Column(
                   children: [
-                    SizedBox(width: width * 0.05),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: width * .15,
+                        ),
+                        // const Text("Afficher que les aliments sains"),
+                        // ValueListenableBuilder(
+                        //   valueListenable: isHealthy,
+                        //   builder: (context, value, _) {
+                        //     return Switch(
+                        //       value: isHealthy.value,
+                        //       onChanged: (val) {
+                        //         isHealthy.value = !isHealthy.value;
+                        //         getIt<MealEditorBlock>().isHealthy = isHealthy.value;
+                        //       },
+                        //     );
+                        //   },
+                        // )
+                      ],
+                    ),
                   ],
-                ),
+                );
+              },
+            );
+          },
+        ),
+        SizedBox(
+          height: height * 0.01,
+        ),
+        ShowSearchAPIResult(
+          // callback: widget.callback,
+          searchQuery: query.value,
+        ),
+      ],
+    );
+  }
+}
+
+class ShowSearchAPIResult extends StatefulWidget {
+  const ShowSearchAPIResult(
+      {Key? key,
+      // required this.callback,
+      required this.searchQuery})
+      : super(key: key);
+
+  final String searchQuery;
+  // final CallBackType callback;
+
+  @override
+  State<ShowSearchAPIResult> createState() => _ShowSearchAPIResultState();
+}
+
+class _ShowSearchAPIResultState extends State<ShowSearchAPIResult> {
+  @override
+  Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
+    return FutureBuilder<dynamic>(
+      future: getMeal(widget.searchQuery),
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasData) {
+            List<ResultSearch> showResult = snapshot.data as List<ResultSearch>;
+            removeEmptyResult(showResult);
+
+            return SizedBox(
+              width: 400,
+              height: 800,
+              child: (ListView.builder(
+                itemCount: showResult.length,
+                itemBuilder: (context, index) {
+                  return Column(
+                    children: [
+                      MealPeriodCard(
+                        width: width,
+                        height: height,
+                        color: Colors.green,
+                        colorAccent: const Color.fromARGB(255, 255, 255, 255),
+                        mealName: showResult[index].name,
+                        emojiImg: showResult[index].urlImage,
+                        showResult: showResult[index],
+                      ),
+                      const SizedBox(height: 10)
+                    ],
+                  );
+                },
+              )),
+            );
+          }
+          if (snapshot.hasError) {
+            return (const Text("Error"));
+          }
+          return const CircularProgressIndicator();
+        } else if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        } else {
+          return (const Text("NoData"));
+        }
+      },
+    );
+  }
+}
+
+class SearchWidget extends StatefulWidget {
+  final double width;
+  final ValueNotifier<String> query;
+  final ValueNotifier<bool> isLoading;
+  final Function(String) getMeal;
+
+  const SearchWidget({
+    Key? key,
+    required this.width,
+    required this.query,
+    required this.isLoading,
+    required this.getMeal,
+  }) : super(key: key);
+
+  @override
+  _SearchWidgetState createState() => _SearchWidgetState();
+}
+
+class _SearchWidgetState extends State<SearchWidget> {
+  final TextEditingController searchController = TextEditingController();
+
+  void onSearch(String value) async {
+    widget.isLoading.value = true;
+    await widget.getMeal(value);
+    widget.isLoading.value = false;
+  }
+
+  void onTextChanged(String value) {
+    widget.query.value = value;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: CustomSearchBar(
+        controller: searchController,
+        onSearch: onSearch,
+        onTextChanged: onTextChanged,
+        width: widget.width,
+      ),
+    );
+  }
+}
+
+class CustomSearchBar extends StatelessWidget {
+  final TextEditingController controller;
+  final Function(String) onSearch;
+  final Function(String) onTextChanged;
+  final String hintText;
+  final double width;
+
+  const CustomSearchBar({
+    Key? key,
+    required this.controller,
+    required this.onSearch,
+    required this.onTextChanged,
+    this.hintText = 'Chercher un aliment...',
+    required this.width,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width * 0.9,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(
+          color: const Color.fromARGB(66, 128, 128, 128),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: controller,
+              onChanged: onTextChanged,
+              decoration: InputDecoration(
+                hintText: hintText,
+                hintStyle: const TextStyle(color: Colors.grey),
+                icon: const Icon(Icons.search, color: Colors.grey),
+                border: InputBorder.none,
               ),
-              TodaysMeals(width: width, height: height, nutritionData: nutritionData),
-            ],
+              onSubmitted: onSearch,
+            ),
           ),
         ],
       ),
@@ -117,58 +295,17 @@ class DisplayNutritionPage extends StatelessWidget {
   }
 }
 
-class TodaysMeals extends StatelessWidget {
-  const TodaysMeals({
+class MealPeriodCard extends StatefulWidget {
+  MealPeriodCard({
     super.key,
     required this.width,
     required this.height,
-    required this.nutritionData,
+    required this.color,
+    required this.colorAccent,
+    required this.mealName,
+    required this.emojiImg,
+    required this.showResult,
   });
-
-  final double width;
-  final double height;
-  final Nutrition nutritionData;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-            width: width,
-            height: height * 0.7,
-            child: Column(
-              children: [
-                MealPeriodCard(
-                  width: width,
-                  height: height,
-                  color: Colors.green,
-                  colorAccent: Colors.greenAccent,
-                  mealName: "Salade de pates au riz cantonais et a la sauce",
-                  emojiImg: "🥗",
-                  nutritionData: nutritionData,
-                  period: "breakfast",
-                ),
-                SizedBox(
-                  height: height * 0.01,
-                ),
-              ],
-            ))
-      ],
-    );
-  }
-}
-
-class MealPeriodCard extends StatefulWidget {
-  const MealPeriodCard(
-      {super.key,
-      required this.width,
-      required this.height,
-      required this.color,
-      required this.colorAccent,
-      required this.mealName,
-      required this.emojiImg,
-      required this.nutritionData,
-      required this.period});
 
   final double width;
   final double height;
@@ -176,24 +313,24 @@ class MealPeriodCard extends StatefulWidget {
   final Color colorAccent;
   final String mealName;
   final String emojiImg;
-  final Nutrition nutritionData;
-  final String period;
+  ResultSearch showResult;
 
   @override
   State<MealPeriodCard> createState() => _MealPeriodCardState();
 }
 
 class _MealPeriodCardState extends State<MealPeriodCard> {
-  SampleItem? selectedMenu;
+  // SampleItem? selectedMenu;
 
   @override
   Widget build(BuildContext context) {
+    double totalMacros = widget.showResult.carbohydrates + widget.showResult.proteines + widget.showResult.lipides;
     return InkWell(
       onTap: () {
-        // Get.to(
-        //   () => EditMeal(),
-        //   transition: Transition.rightToLeft,
-        // );
+        Get.to(
+          () =>  detailMeal(showResult: widget.showResult),
+          transition: Transition.rightToLeft,
+        );
       },
       child: Container(
         decoration: BoxDecoration(
@@ -221,9 +358,8 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
                     borderRadius: const BorderRadius.all(Radius.circular(20)),
                   ),
                   child: Center(
-                    child: Text(
+                    child: Image.network(
                       widget.emojiImg,
-                      style: const TextStyle(fontSize: 35),
                     ),
                   ),
                 ),
@@ -249,9 +385,9 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
                           SizedBox(
                             width: widget.width * 0.55,
                             height: widget.height * 0.02,
-                            child: const Text(
-                              "390 kcal ° 200 g",
-                              style: TextStyle(fontSize: 12, color: Colors.grey),
+                            child: Text(
+                              "${widget.showResult.kcalories} kcal ° ${widget.showResult.quantity} g",
+                              style: const TextStyle(fontSize: 12, color: Colors.grey),
                             ),
                           )
                         ],
@@ -267,23 +403,26 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
                 MacrosWidgetCard(
                   width: widget.width,
                   height: widget.height,
-                  grams: "40 g",
+                  grams: "${widget.showResult.carbohydrates.toString()} g",
                   macros: "Glucides",
                   barColor: const Color.fromARGB(255, 98, 7, 255),
+                  percent: widget.showResult.carbohydrates / totalMacros,
                 ),
                 MacrosWidgetCard(
                   width: widget.width,
                   height: widget.height,
-                  grams: "50 g",
+                  grams: "${widget.showResult.proteines.toString()} g",
                   macros: "Proteines",
                   barColor: Colors.red,
+                  percent: widget.showResult.proteines / totalMacros,
                 ),
                 MacrosWidgetCard(
                   width: widget.width,
                   height: widget.height,
-                  grams: "25 g",
+                  grams: "${widget.showResult.lipides.toString()} g",
                   macros: "Lipides",
                   barColor: Colors.amber,
+                  percent: widget.showResult.lipides / totalMacros,
                 ),
               ],
             )
@@ -302,6 +441,7 @@ class MacrosWidgetCard extends StatelessWidget {
     required this.grams,
     required this.macros,
     required this.barColor,
+    required this.percent,
   });
 
   final double width;
@@ -309,6 +449,7 @@ class MacrosWidgetCard extends StatelessWidget {
   final String grams;
   final String macros;
   final Color barColor;
+  final double percent;
 
   @override
   Widget build(BuildContext context) {
@@ -335,7 +476,7 @@ class MacrosWidgetCard extends StatelessWidget {
                             animation: true,
                             lineHeight: 10,
                             animationDuration: 1000,
-                            percent: 0.8,
+                            percent: percent,
                             barRadius: const Radius.circular(20),
                             curve: Curves.bounceOut,
                             progressColor: barColor,
@@ -378,75 +519,6 @@ class MacrosWidgetCard extends StatelessWidget {
           ),
         )
       ],
-    );
-  }
-}
-
-class SearchWidget extends StatefulWidget {
-  const SearchWidget({super.key, required this.width});
-  final double width;
-
-  @override
-  _SearchWidgetState createState() => _SearchWidgetState();
-}
-
-class _SearchWidgetState extends State<SearchWidget> {
-  final TextEditingController searchController = TextEditingController();
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Column(
-        children: <Widget>[
-          CustomSearchBar(
-              controller: searchController,
-              onSearch: (value) {
-                print('Search for: $value');
-              },
-              width: widget.width),
-        ],
-      ),
-    );
-  }
-}
-
-class CustomSearchBar extends StatelessWidget {
-  const CustomSearchBar({
-    Key? key,
-    required this.controller,
-    required this.onSearch,
-    this.hintText = 'Chercher un aliment...',
-    required this.width,
-  }) : super(key: key);
-
-  final TextEditingController controller;
-  final Function(String) onSearch;
-  final String hintText;
-  final double width;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: width * 0.9,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(30),
-        border: Border.all(
-          color: const Color.fromARGB(66, 128, 128, 128),
-          width: 1,
-        ),
-      ),
-      child: TextField(
-        controller: controller,
-        decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: const TextStyle(color: Colors.grey),
-          icon: const Icon(Icons.search, color: Colors.grey),
-          border: InputBorder.none,
-        ),
-        onSubmitted: onSearch,
-      ),
     );
   }
 }

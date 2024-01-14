@@ -101,19 +101,6 @@ class _TopBarState extends State<TopBar> {
                         SizedBox(
                           width: width * .15,
                         ),
-                        // const Text("Afficher que les aliments sains"),
-                        // ValueListenableBuilder(
-                        //   valueListenable: isHealthy,
-                        //   builder: (context, value, _) {
-                        //     return Switch(
-                        //       value: isHealthy.value,
-                        //       onChanged: (val) {
-                        //         isHealthy.value = !isHealthy.value;
-                        //         getIt<MealEditorBlock>().isHealthy = isHealthy.value;
-                        //       },
-                        //     );
-                        //   },
-                        // )
                       ],
                     ),
                   ],

@@ -31,8 +31,6 @@ class NutritionController {
   }
 }
 
-//  edit meal function
-
 Future editMeal(Food food, int id, BuildContext context) async {
   String dateString = getIt<MealEditorBlock>().selectedDate;
   DateTime parsedDateTime = DateTime.parse(dateString);
@@ -77,13 +75,6 @@ Future editMeal(Food food, int id, BuildContext context) async {
     '/nutrition/${id.toString()}',
     jsonBody,
   );
-
-  // if (response.statusCode == 201) {
-  //   var products = jsonDecode(response.body);
-  //   return products["id"];
-  // } else {
-  //   throw ("can't fetch the data of the user");
-  // }
 }
 
 class MealEditorBlock {
@@ -115,7 +106,6 @@ class MealEditorBlock {
   Future<void> deleteMeal(int id, BuildContext context) async {
     final response = await HttpRequest.mainDelete(
       '/nutrition/${id.toString()}',
-      // accessToken: Provider.of<Auth>(context, listen: false),
     );
     if (response.statusCode == 200) {
     } else {
@@ -123,8 +113,6 @@ class MealEditorBlock {
     }
   }
 }
-
-//  Add meal function
 
 Future postNewMeal(ResultSearch ingredient, BuildContext context) async {
   String dateString = getIt<MealEditorBlock>().selectedDate;

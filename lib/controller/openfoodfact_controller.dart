@@ -11,9 +11,6 @@ List<ResultSearch> removeEmptyResult(List<ResultSearch> showResult) {
 
     finalShowResult.removeWhere((element) => element.kcalories == -1 || element.proteines == -1 || element.carbohydrates == -1 || element.lipides == -1);
 
-    // if (getIt<MealEditorBlock>().isHealthy) {
-    //   finalShowResult.removeWhere((element) => element.nutriscore == "d" || element.nutriscore == "e");
-    // }
     return finalShowResult;
   }
   return [];

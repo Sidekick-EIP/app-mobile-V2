@@ -373,7 +373,7 @@ class _TrainingViewState extends State<TrainingView> {
                                                         heightFactor: 0.9,
                                                         child: AddTraining(
                                                           name: workoutController.workout[x][y].name,
-                                                          id: workoutController.workout[x][y].id,
+                                                          id: workoutController.workout[x][y].exerciseId,
                                                           thumbnail: workoutController.workout[x][y].thumbnail,
                                                           video: workoutController.workout[x][y].video,
                                                           muscle:workoutController.workout[x][y].muscleGroup,

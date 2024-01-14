@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:sidekick_app/models/exercise.dart';
 import 'package:sidekick_app/models/workout.dart';
+import 'package:sidekick_app/models/workout_calories.dart';
 import 'package:sidekick_app/utils/http_request.dart';
 import 'package:sidekick_app/utils/token_storage.dart';
 
@@ -17,14 +19,14 @@ class WorkoutController extends GetxController {
 
   RxList workout = [].obs;
   RxList exercise = [].obs;
+  RxList calories = [].obs;
 
   Future<void> getAllWorkouts() async {
     final response = await HttpRequest.mainGet("/workouts");
 
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body);
-      List<Workout> workouts =
-          List<Workout>.from(body.map((e) => Workout.fromJSON(e)));
+      List<Workout> workouts = List<Workout>.from(body.map((e) => Workout.fromJSON(e)));
       workouts.sort((a, b) {
         return DateTime.parse(b.date).compareTo(DateTime.parse(a.date));
       });
@@ -40,8 +42,7 @@ class WorkoutController extends GetxController {
 
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body);
-      List<Exercise> exercises =
-          List<Exercise>.from(body.map((e) => Exercise.fromJSON(e)));
+      List<Exercise> exercises = List<Exercise>.from(body.map((e) => Exercise.fromJSON(e)));
       exercise.value = exercises;
     } else {
       throw Exception('Failed to get exercises');
@@ -49,13 +50,11 @@ class WorkoutController extends GetxController {
   }
 
   Future<void> getSpecificExercises(String exo) async {
-    final response =
-        await HttpRequest.mainGet("/exercises-library/muscle/?muscle=$exo");
+    final response = await HttpRequest.mainGet("/exercises-library/muscle/?muscle=$exo");
 
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body);
-      List<Exercise> exercises =
-          List<Exercise>.from(body.map((e) => Exercise.fromJSON(e)));
+      List<Exercise> exercises = List<Exercise>.from(body.map((e) => Exercise.fromJSON(e)));
       exercise.value = exercises;
     } else {
       throw Exception('Failed to get exercises');
@@ -64,17 +63,16 @@ class WorkoutController extends GetxController {
 
   Future<void> addExercise(body) async {
     try {
-      final response =
-        await HttpRequest.mainPost("/workouts/add", jsonEncode(body));
+      final response = await HttpRequest.mainPost("/workouts/add", jsonEncode(body));
 
       if (response.statusCode == 201) {
         Get.snackbar(
-            "Succès",
-            "Exercice ajouté avec succès.",
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.green,
-            colorText: Colors.white,
-          );
+          "Succès",
+          "Exercice ajouté avec succès.",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
         getAllWorkouts();
       } else {
         Get.snackbar(
@@ -96,6 +94,22 @@ class WorkoutController extends GetxController {
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
+    }
+  }
+
+  int getTotalCaloriesBurned() {
+    return calories.fold(0, (total, calorie) => total + (calorie as WorkoutCalories).burnedCalories);
+  }
+
+  Future<void> getWorkoutCalories() async {
+    final response = await HttpRequest.mainGet("/workouts/calories/");
+
+    if (response.statusCode == 200) {
+      var body = jsonDecode(response.body);
+      WorkoutCalories exerciseCalories = WorkoutCalories.fromJSON(body);
+      calories.value = [exerciseCalories];
+    } else {
+      throw Exception('Failed to get workouts');
     }
   }
 

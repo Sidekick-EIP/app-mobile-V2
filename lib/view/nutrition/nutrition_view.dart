@@ -7,6 +7,7 @@ import 'package:sidekick_app/config/text_style.dart';
 import 'package:sidekick_app/controller/nutrition_controller.dart';
 import 'package:sidekick_app/controller/steps_controller.dart';
 import 'package:sidekick_app/controller/user_controller.dart';
+import 'package:sidekick_app/controller/workout_controller.dart';
 import 'package:sidekick_app/main.dart';
 import 'package:sidekick_app/models/nutrition.dart';
 import 'package:sidekick_app/view/nutrition/nutrition_period.dart';
@@ -146,10 +147,12 @@ class DisplayNutritionPage extends StatefulWidget {
 
 class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
   late Nutrition nutritionData;
+  final workoutController = Get.find<WorkoutController>();
 
   @override
   void initState() {
     super.initState();
+    workoutController.getWorkoutCalories();
     nutritionData = widget.nutritionData;
   }
 
@@ -436,7 +439,7 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                                         radius: 60,
                                         lineWidth: 12,
                                         animation: true,
-                                        percent: widget.stepsController.steps.value * 0.4 / 800,
+                                        percent: (workoutController.getTotalCaloriesBurned() / 600).clamp(0.0, 1.0).toDouble(),
                                         circularStrokeCap: CircularStrokeCap.round,
                                         progressColor: const Color.fromARGB(255, 255, 147, 147),
                                         backgroundColor: const Color.fromARGB(255, 180, 180, 180).withOpacity(0.2),
@@ -444,7 +447,7 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              (widget.stepsController.steps.value * 0.4).toInt().toString(),
+                                              '${workoutController.getTotalCaloriesBurned()}',
                                               style: pSemiBold20.copyWith(
                                                 fontSize: 20,
                                               ),

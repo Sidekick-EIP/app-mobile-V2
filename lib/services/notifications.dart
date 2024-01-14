@@ -33,7 +33,10 @@ class NotificationService {
             requestBadgePermission: true,
             requestSoundPermission: true,
             onDidReceiveLocalNotification: (int id, String? title, String? body,
-                String? payload) async {}));
+                String? payload) async {
+              _notifications.show(_id++, title, body, await _notificationDetails(),
+                  payload: payload);
+            }));
     await _notifications.initialize(settings, onDidReceiveNotificationResponse:
         (NotificationResponse notificationResponse) async {
       onNotifications.add(notificationResponse.payload);

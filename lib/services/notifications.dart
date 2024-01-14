@@ -32,12 +32,14 @@ class NotificationService {
             requestAlertPermission: true,
             requestBadgePermission: true,
             requestSoundPermission: true,
-            onDidReceiveLocalNotification: (int id, String? title, String? body,
-                String? payload) async {}));
+            onDidReceiveLocalNotification:
+                (int id, String? title, String? body, String? payload) async {
+              _notifications.show(
+                  _id++, title, body, await _notificationDetails(),
+                  payload: payload);
+            }));
     await _notifications.initialize(settings, onDidReceiveNotificationResponse:
-        (NotificationResponse notificationResponse) async {
-      onNotifications.add(notificationResponse.payload);
-    });
+        (NotificationResponse notificationResponse) async {});
   }
 
   static Future clearAllNotifications() async {

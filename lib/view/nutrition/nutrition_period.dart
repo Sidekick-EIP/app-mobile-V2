@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:sidekick_app/config/colors.dart';
+import 'package:sidekick_app/config/text_style.dart';
 
 import 'package:sidekick_app/controller/nutrition_controller.dart';
 import 'package:sidekick_app/main.dart';
@@ -26,6 +27,7 @@ class NutritionPeriod extends StatefulWidget {
   final Nutrition nutritionData;
   String period;
   final Function updateNutritionCallback;
+
   @override
   State<NutritionPeriod> createState() => _NutritionPeriodState();
 }
@@ -67,7 +69,6 @@ class _NutritionPeriodState extends State<NutritionPeriod> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Get.back(),
         ),
-        backgroundColor: Colors.transparent,
         elevation: 0.0,
         actions: [
           InkWell(
@@ -92,6 +93,7 @@ class _NutritionPeriodState extends State<NutritionPeriod> {
                 children: [
                   Icon(
                     Icons.add,
+                    color: Colors.white,
                     size: 28.0,
                   ),
                 ],
@@ -141,7 +143,9 @@ class _NutritionPeriodState extends State<NutritionPeriod> {
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');
               }
-              return const Center(child: CircularProgressIndicator(color: ConstColors.primaryColor));
+              return const Center(
+                  child: CircularProgressIndicator(
+                      color: ConstColors.primaryColor));
             },
           )
         ],
@@ -170,7 +174,12 @@ class CategoryWidget extends StatefulWidget {
 
 class _CategoryWidgetState extends State<CategoryWidget> {
   late int selectedCategoryIndex;
-  List<String> categories = ['Petit déjeuner', 'Déjeuner', 'Dinner', 'Collation'];
+  List<String> categories = [
+    'Petit déjeuner',
+    'Déjeuner',
+    'Dinner',
+    'Collation'
+  ];
   List<String> setCategories = ['breakfast', 'lunch', 'dinners', 'snacks'];
 
   @override
@@ -222,15 +231,18 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                 width: widget.width * 0.24,
                 height: widget.height * 0.04,
                 decoration: BoxDecoration(
-                  color: selectedCategoryIndex == index ? ConstColors.primaryColor : Colors.transparent,
+                  color: selectedCategoryIndex == index
+                      ? ConstColors.primaryColor
+                      : Colors.transparent,
                   borderRadius: BorderRadius.circular(15.41),
                 ),
                 child: Center(
                   child: Text(
                     categories[index],
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: selectedCategoryIndex == index ? ConstColors.secondaryColor : ConstColors.blackColor,
+                    style: pRegular14.copyWith(
+                      color: selectedCategoryIndex == index
+                          ? ConstColors.secondaryColor
+                          : ConstColors.blackColor,
                     ),
                   ),
                 ),
@@ -297,14 +309,17 @@ class _MealViewBuilderState extends State<MealViewBuilder> {
                     children: [
                       Text(
                         "Aucun aliment pour ce repas...",
-                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: widget.width * widget.height * 0.00005),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: widget.width * widget.height * 0.00005),
                       ),
                       SizedBox(
                         height: widget.height * 0.05,
                       ),
                       const Text(
                         "🍴",
-                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 70),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500, fontSize: 70),
                       ),
                     ],
                   ),
@@ -316,7 +331,8 @@ class _MealViewBuilderState extends State<MealViewBuilder> {
             height: widget.height * 0.75,
             width: widget.width,
             child: ListView.builder(
-                itemCount: widget.nutritionData.meals[widget.period]!["meals"].length,
+                itemCount:
+                    widget.nutritionData.meals[widget.period]!["meals"].length,
                 itemBuilder: (context, index) {
                   return Column(
                     children: [
@@ -329,11 +345,13 @@ class _MealViewBuilderState extends State<MealViewBuilder> {
                                 width: widget.width,
                                 height: widget.height,
                                 color: Colors.green,
-                                food: widget.nutritionData.meals[widget.period]!["meals"][index],
+                                food: widget.nutritionData
+                                    .meals[widget.period]!["meals"][index],
                                 period: "breakfast",
                                 callback: callback,
                                 nutritionData: widget.nutritionData,
-                                updateNutritionCallback: widget.updateNutritionCallback,
+                                updateNutritionCallback:
+                                    widget.updateNutritionCallback,
                                 updateNutritionData: widget.updateNutritionData,
                               ),
                               Container(
@@ -381,7 +399,9 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
 
   @override
   Widget build(BuildContext context) {
-    var kcalSplit = (widget.food.calories * (widget.food.weight / 100)).toString().split('.');
+    var kcalSplit = (widget.food.calories * (widget.food.weight / 100))
+        .toString()
+        .split('.');
 
     int totalMacros = widget.food.carbs + widget.food.protein + widget.food.fat;
     return Container(
@@ -431,7 +451,8 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
                             alignment: Alignment.centerLeft,
                             child: Text(
                               widget.food.name,
-                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              style: const TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
@@ -440,7 +461,8 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
                           height: widget.height * 0.02,
                           child: Text(
                             "${kcalSplit[0]} kcal • ${widget.food.weight} g",
-                            style: const TextStyle(fontSize: 12, color: Colors.grey),
+                            style: const TextStyle(
+                                fontSize: 12, color: Colors.grey),
                           ),
                         )
                       ],
@@ -452,43 +474,54 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
                 width: widget.width * 0.11,
                 height: widget.height * 0.05,
                 decoration: const BoxDecoration(
-                  color: Color.fromARGB(255, 255, 255, 255),
+                  color: Colors.white,
                   borderRadius: BorderRadius.all(Radius.circular(40)),
                 ),
-                child: PopupMenuButton<String>(
-                  itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                    const PopupMenuItem<String>(
-                      value: 'Modifier',
-                      child: Text('Modifier'),
-                    ),
-                    const PopupMenuItem<String>(
-                      value: 'Supprimer',
-                      child: Text('Supprimer'),
-                    ),
-                  ],
-                  onSelected: (String choice) async {
-                    if (choice == 'Modifier') {
-                      Get.to(
-                        EditMeal(
-                          food: widget.food,
-                          callback: widget.callback,
-                          nutritionData: widget.nutritionData,
-                        ),
-                        transition: Transition.rightToLeft,
-                      );
-                      setState(() {
-                        widget.updateNutritionCallback();
-                        widget.updateNutritionData();
-                      });
-                    } else if (choice == 'Supprimer') {
-                      await getIt<MealEditorBlock>().deleteMeal(widget.food.id, context);
-                      await widget.updateNutritionCallback();
-                      await widget.updateNutritionData();
-                      setState(() {});
-                      Get.snackbar('Succès', 'Aliment supprimé avec succès !',
-                          snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.green, colorText: Colors.white, duration: const Duration(seconds: 1));
-                    }
-                  },
+                child: PopupMenuTheme(
+                  data: const PopupMenuThemeData(
+                    color:
+                        ConstColors.secondaryColor,
+                  ),
+                  child: PopupMenuButton<String>(
+                    itemBuilder: (BuildContext context) =>
+                        <PopupMenuEntry<String>>[
+                      const PopupMenuItem<String>(
+                        value: 'Modifier',
+                        child: Text('Modifier'),
+                      ),
+                      const PopupMenuItem<String>(
+                        value: 'Supprimer',
+                        child: Text('Supprimer'),
+                      ),
+                    ],
+                    onSelected: (String choice) async {
+                      if (choice == 'Modifier') {
+                        Get.to(
+                          EditMeal(
+                            food: widget.food,
+                            callback: widget.callback,
+                            nutritionData: widget.nutritionData,
+                          ),
+                          transition: Transition.rightToLeft,
+                        );
+                        setState(() {
+                          widget.updateNutritionCallback();
+                          widget.updateNutritionData();
+                        });
+                      } else if (choice == 'Supprimer') {
+                        await getIt<MealEditorBlock>()
+                            .deleteMeal(widget.food.id, context);
+                        await widget.updateNutritionCallback();
+                        await widget.updateNutritionData();
+                        setState(() {});
+                        Get.snackbar('Succès', 'Aliment supprimé avec succès !',
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: Colors.green,
+                            colorText: Colors.white,
+                            duration: const Duration(seconds: 1));
+                      }
+                    },
+                  ),
                 ),
               ),
             ],
@@ -499,7 +532,8 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
               MacrosWidgetCard(
                 width: widget.width,
                 height: widget.height,
-                grams: (widget.food.carbs * (widget.food.weight / 100)).toString(),
+                grams:
+                    (widget.food.carbs * (widget.food.weight / 100)).toString(),
                 macros: "Glucides",
                 barColor: const Color.fromARGB(255, 98, 7, 255),
                 percent: widget.food.carbs / totalMacros,
@@ -507,7 +541,8 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
               MacrosWidgetCard(
                 width: widget.width,
                 height: widget.height,
-                grams: (widget.food.protein * (widget.food.weight / 100)).toString(),
+                grams: (widget.food.protein * (widget.food.weight / 100))
+                    .toString(),
                 macros: "Proteines",
                 barColor: Colors.red,
                 percent: widget.food.protein / totalMacros,
@@ -515,7 +550,8 @@ class _MealPeriodCardState extends State<MealPeriodCard> {
               MacrosWidgetCard(
                 width: widget.width,
                 height: widget.height,
-                grams: (widget.food.fat * (widget.food.weight / 100)).toString(),
+                grams:
+                    (widget.food.fat * (widget.food.weight / 100)).toString(),
                 macros: "Lipides",
                 barColor: Colors.amber,
                 percent: widget.food.fat / totalMacros,
@@ -595,7 +631,8 @@ class MacrosWidgetCard extends StatelessWidget {
                       height: height * 0.025,
                       child: Text(
                         "${macrosGramsSplit[0]} g",
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 15),
                       ),
                     ),
                     SizedBox(

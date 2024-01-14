@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:sidekick_app/config/colors.dart';
 import 'package:sidekick_app/controller/openfoodfact_controller.dart';
 import 'package:sidekick_app/models/open_food_fact.dart';
 import 'package:sidekick_app/view/nutrition/detail_meal.dart';
@@ -180,9 +181,13 @@ class _ShowSearchAPIResultState extends State<ShowSearchAPIResult> {
           if (snapshot.hasError) {
             return (const Text("Error"));
           }
-          return const CircularProgressIndicator();
+          return const CircularProgressIndicator(
+            color: ConstColors.primaryColor,
+          );
         } else if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
+          return const CircularProgressIndicator(
+            color: ConstColors.primaryColor,
+          );
         } else {
           return (const Text("Aucun résultat"));
         }

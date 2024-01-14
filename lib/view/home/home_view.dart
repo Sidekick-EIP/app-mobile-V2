@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:sidekick_app/controller/home_controller.dart';
+import 'package:sidekick_app/controller/steps_controller.dart';
 import 'package:sidekick_app/controller/user_controller.dart';
 import 'package:sidekick_app/utils/http_request.dart';
 
@@ -34,6 +35,7 @@ class _HomeViewState extends State<HomeView> {
   final userController = Get.put(UserController(), permanent: true);
   final preferenceController = Get.put(PreferenceController(), permanent: true);
   final workoutController = Get.put(WorkoutController(), permanent: true);
+  final stepsController = Get.put(StepsController(), permanent: true);
   bool isLoading = false;
   final TokenStorage tokenStorage = TokenStorage();
   final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
@@ -52,6 +54,7 @@ class _HomeViewState extends State<HomeView> {
     userController.fetchUserFromBack();
     userController.fetchSidekickFromBack();
     activityList = getActivities();
+    stepsController.initPlatformState();
   }
 
   @override
@@ -69,6 +72,7 @@ class _HomeViewState extends State<HomeView> {
     bool isUserFetched = await userController.fetchUserFromBack();
     userController.fetchSidekickFromBack();
     activityList = getActivities();
+    stepsController.initPlatformState();
 
     if (!isPreferenceFetched || !isUserFetched) {
       setState(() => isLoading = true);
@@ -265,7 +269,7 @@ class _HomeViewState extends State<HomeView> {
                                   "Nb. de pas",
                                   "Pas",
                                   DefaultImages.i1,
-                                  8357,
+                                  stepsController.steps.value,
                                   const Color(0xffEFF7FF),
                                   MediaQuery.of(context).size.width,
                                   MediaQuery.of(context).size.height),

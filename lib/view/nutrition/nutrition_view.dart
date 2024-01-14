@@ -5,6 +5,7 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:sidekick_app/config/colors.dart';
 import 'package:sidekick_app/config/text_style.dart';
 import 'package:sidekick_app/controller/nutrition_controller.dart';
+import 'package:sidekick_app/controller/steps_controller.dart';
 import 'package:sidekick_app/controller/user_controller.dart';
 import 'package:sidekick_app/main.dart';
 import 'package:sidekick_app/models/nutrition.dart';
@@ -20,12 +21,14 @@ class NutritionView extends StatefulWidget {
 class _NutritionViewState extends State<NutritionView> {
   late Future<Nutrition> futureNutrition;
   final userController = Get.find<UserController>();
+  final stepsController = Get.put(StepsController(), permanent: true);
 
   final nutritionController = Get.put(NutritionController(), permanent: true);
   String getDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0).toIso8601String();
 
   void updateNutritionData() {
     setState(() {
+      stepsController.initPlatformState();
       futureNutrition = nutritionController.fetchNutrition("${getDate}Z");
     });
   }
@@ -33,6 +36,7 @@ class _NutritionViewState extends State<NutritionView> {
   @override
   void initState() {
     super.initState();
+    stepsController.initPlatformState();
     futureNutrition = nutritionController.fetchNutrition("${getDate}Z");
   }
 
@@ -40,6 +44,7 @@ class _NutritionViewState extends State<NutritionView> {
     setState(() {
       getDate = newDate;
       getIt<MealEditorBlock>().setSelectedDate(getDate);
+      stepsController.initPlatformState();
       futureNutrition = nutritionController.fetchNutrition("${getDate}Z");
     });
   }
@@ -104,6 +109,7 @@ class _NutritionViewState extends State<NutritionView> {
                 nutritionData: snapshot.data!,
                 date: getDate,
                 updateNutritionCallback: updateNutritionData,
+                stepsController: stepsController,
               );
             } else if (snapshot.hasError) {
               return Text('${snapshot.error}');
@@ -124,6 +130,7 @@ class DisplayNutritionPage extends StatefulWidget {
     required this.nutritionData,
     required this.date,
     required this.updateNutritionCallback,
+    required this.stepsController,
   });
 
   final double width;
@@ -131,6 +138,7 @@ class DisplayNutritionPage extends StatefulWidget {
   final Nutrition nutritionData;
   final String date;
   final Function updateNutritionCallback;
+  final StepsController stepsController;
 
   @override
   State<DisplayNutritionPage> createState() => _DisplayNutritionPageState();
@@ -436,7 +444,7 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              "300",
+                                              (widget.stepsController.steps.value * 0.4).toString(),
                                               style: pSemiBold20.copyWith(
                                                 fontSize: 20,
                                               ),

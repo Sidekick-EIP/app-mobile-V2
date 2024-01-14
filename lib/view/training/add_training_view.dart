@@ -134,10 +134,13 @@ class _AddTrainingState extends State<AddTraining> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  '${widget.name} - ${getMuscleGroupe(widget.muscle)}',
-                  style: pSemiBold18.copyWith(),
+                Expanded(
+                  child: Text(
+                    '${widget.name} - ${getMuscleGroupe(widget.muscle)}',
+                    style: pSemiBold18.copyWith(),
+                  ),
                 ),
+                const SizedBox(width: 15),
                 InkWell(
                   onTap: () {
                     Navigator.pop(context);
@@ -274,10 +277,13 @@ class _AddTrainingState extends State<AddTraining> {
                         onTap: () {
                           String? errorMessage = validateData();
                           if (errorMessage == null) {
+                            DateTime parsedDate = DateFormat('dd/MM/yyyy').parse(dateController.text);
+                            DateTime utcDate = DateTime.utc(parsedDate.year, parsedDate.month, parsedDate.day);
+                            String finalDate = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(utcDate);
                             var body = {
                               "exerciseId": widget.id,
                               "duration": int.parse(durationController.text),
-                              "date": DateFormat('dd/MM/yyyy').parse(dateController.text).toUtc().toIso8601String()
+                              "date": finalDate
                             };
                             workoutController.addExercise(body);
                           } else {

@@ -1,5 +1,6 @@
 class Workout {
   final int id;
+  final int exerciseId;
   final int burnedCalories;
   final int duration;
   final String date;
@@ -11,6 +12,7 @@ class Workout {
 
   Workout(
       {required this.id,
+      required this.exerciseId,
       required this.burnedCalories,
       required this.duration,
       required this.date,
@@ -23,6 +25,7 @@ class Workout {
   static Workout fromJSON(Map<String, dynamic> json) {
     return Workout(
       id: json["id"] ?? 0,
+      exerciseId: json["exerciseId"] ?? 0,
       burnedCalories: json["burnedCalories"] ?? 0,
       duration: json["duration"] ?? 0,
       date: json["date"] ?? "",

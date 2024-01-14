@@ -56,6 +56,7 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   flutter_local_notifications: ^14.0.0+2
   rxdart: ^0.27.7
+  pedometer: ^4.0.1
 
   flutter_localizations:
     sdk: flutter

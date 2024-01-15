@@ -363,23 +363,55 @@ class _TrainingViewState extends State<TrainingView> {
                                                     showModalBottomSheet(
                                                       context: context,
                                                       isScrollControlled: true,
-                                                      shape: const RoundedRectangleBorder(
-                                                        borderRadius: BorderRadius.only(
-                                                          topLeft: Radius.circular(30),
-                                                          topRight: Radius.circular(30),
+                                                      shape:
+                                                          const RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.only(
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  30),
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  30),
                                                         ),
                                                       ),
-                                                      builder: (v) => FractionallySizedBox(
+                                                      builder: (v) =>
+                                                          FractionallySizedBox(
                                                         heightFactor: 0.9,
                                                         child: AddTraining(
-                                                          name: workoutController.workout[x][y].name,
-                                                          id: workoutController.workout[x][y].exerciseId,
-                                                          thumbnail: workoutController.workout[x][y].thumbnail,
-                                                          video: workoutController.workout[x][y].video,
-                                                          muscle:workoutController.workout[x][y].muscleGroup,
-                                                          calories: workoutController.workout[x][y].burnedCalories,
-                                                          date: workoutController.workout[x][y].date
-                                                        ),
+                                                            name:
+                                                                workoutController
+                                                                    .workout[x]
+                                                                        [y]
+                                                                    .name,
+                                                            id: workoutController
+                                                                .workout[x][y]
+                                                                .exerciseId,
+                                                            thumbnail:
+                                                                workoutController
+                                                                    .workout[x]
+                                                                        [y]
+                                                                    .thumbnail,
+                                                            video:
+                                                                workoutController
+                                                                    .workout[x]
+                                                                        [y]
+                                                                    .video,
+                                                            muscle:
+                                                                workoutController
+                                                                    .workout[x]
+                                                                        [y]
+                                                                    .muscleGroup,
+                                                            calories:
+                                                                workoutController
+                                                                    .workout[x]
+                                                                        [y]
+                                                                    .burnedCalories,
+                                                            date:
+                                                                workoutController
+                                                                    .workout[x]
+                                                                        [y]
+                                                                    .date),
                                                       ),
                                                     );
                                                   },
@@ -431,14 +463,18 @@ class _TrainingViewState extends State<TrainingView> {
                                           builder: (v) => FractionallySizedBox(
                                             heightFactor: 0.9,
                                             child: AddTraining(
-                                              name: workoutController.exercise[elem].name,
-                                              id: workoutController.exercise[elem].id,
-                                              thumbnail: workoutController.exercise[elem].thumbnail,
-                                              video: workoutController.exercise[elem].video,
-                                              muscle: workoutController.exercise[elem].muscleGroup,
-                                              calories: 0,
-                                              date: ""
-                                            ),
+                                                name: workoutController
+                                                    .exercise[elem].name,
+                                                id: workoutController
+                                                    .exercise[elem].id,
+                                                thumbnail: workoutController
+                                                    .exercise[elem].thumbnail,
+                                                video: workoutController
+                                                    .exercise[elem].video,
+                                                muscle: workoutController
+                                                    .exercise[elem].muscleGroup,
+                                                calories: 0,
+                                                date: ""),
                                           ),
                                         );
                                       },

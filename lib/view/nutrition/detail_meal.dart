@@ -1,34 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:sidekick_app/config/colors.dart';
 import 'package:sidekick_app/config/images.dart';
+import 'package:sidekick_app/config/text_style.dart';
 import 'package:sidekick_app/controller/nutrition_controller.dart';
 import 'package:sidekick_app/controller/user_controller.dart';
 import 'package:sidekick_app/models/nutrition.dart';
+import 'package:sidekick_app/models/open_food_fact.dart';
 
-import '../../config/colors.dart';
-
-class EditMeal extends StatefulWidget {
-  const EditMeal({
+class DetailMeal extends StatefulWidget {
+  DetailMeal({
     super.key,
-    required this.food,
-    required this.callback,
-    required this.nutritionData,
+    required this.showResult,
     required this.updateNutritionCallback,
     required this.updateNutritionData,
   });
 
-  final Food food;
-  final Function callback;
-  final Nutrition nutritionData;
+  ResultSearch showResult;
   final Function updateNutritionCallback;
   final Function updateNutritionData;
 
   @override
-  State<EditMeal> createState() => _EditMealState();
+  State<DetailMeal> createState() => _DetailMealState();
 }
 
-class _EditMealState extends State<EditMeal> {
+class _DetailMealState extends State<DetailMeal> {
   late Future<Nutrition> futureNutrition;
   final userController = Get.find<UserController>();
 
@@ -47,9 +44,9 @@ class _EditMealState extends State<EditMeal> {
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Detail',
-          style: TextStyle(color: Colors.black),
+        title: Text(
+          "Detail de l'aliment",
+          style: pSemiBold20.copyWith(),
         ),
         leading: IconButton(
           color: Colors.black,
@@ -69,16 +66,14 @@ class _EditMealState extends State<EditMeal> {
                 return DisplayNutritionPage(
                   width: width,
                   height: height,
-                  food: widget.food,
-                  callback: widget.callback,
-                  nutritionData: widget.nutritionData,
+                  showResult: widget.showResult,
                   updateNutritionCallback: widget.updateNutritionCallback,
                   updateNutritionData: widget.updateNutritionData,
                 );
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');
               }
-              return const Center(child: CircularProgressIndicator(color: ConstColors.primaryColor));
+              return const Center(child: CircularProgressIndicator());
             },
           )
         ],
@@ -88,22 +83,18 @@ class _EditMealState extends State<EditMeal> {
 }
 
 class DisplayNutritionPage extends StatefulWidget {
-  const DisplayNutritionPage({
+  DisplayNutritionPage({
     super.key,
     required this.width,
     required this.height,
-    required this.food,
-    required this.callback,
-    required this.nutritionData,
+    required this.showResult,
     required this.updateNutritionCallback,
     required this.updateNutritionData,
   });
 
   final double width;
   final double height;
-  final Food food;
-  final Function callback;
-  final Nutrition nutritionData;
+  ResultSearch showResult;
   final Function updateNutritionCallback;
   final Function updateNutritionData;
 
@@ -114,13 +105,13 @@ class DisplayNutritionPage extends StatefulWidget {
 class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
   void updateWeight(int weight) {
     setState(() {
-      widget.food.weight = weight;
+      widget.showResult.quantity = weight;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    int totalMacros = widget.food.carbs + widget.food.protein + widget.food.fat;
+    int totalMacros = widget.showResult.carbohydrates.toInt() + widget.showResult.proteines.toInt() + widget.showResult.lipides.toInt();
     return Expanded(
       child: ListView(
         physics: const ClampingScrollPhysics(),
@@ -142,7 +133,7 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                           width: widget.width * 0.7,
                           height: widget.height * 0.34,
                           child: Image(
-                            image: NetworkImage(widget.food.picture),
+                            image: NetworkImage(widget.showResult.urlImage),
                           ),
                         ),
                       ],
@@ -150,42 +141,40 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                   )
                 ],
               ),
-              MealNameWidget(width: widget.width, height: widget.height, food: widget.food),
+              MealNameWidget(width: widget.width, height: widget.height, showResult: widget.showResult),
               MacrosCard(
                 width: widget.width,
                 height: widget.height,
                 macrosName: "Glucides",
                 image: DefaultImages.carbs,
-                macrosValue: "${(widget.food.carbs * (widget.food.weight / 100)).toString()}g",
+                macrosValue: "${(widget.showResult.carbohydrates * (widget.showResult.quantity / 100)).toString()}g",
                 progressColor: const Color.fromARGB(255, 98, 7, 255),
-                percent: widget.food.carbs == 0 ? 0 : widget.food.carbs / totalMacros,
+                percent: widget.showResult.carbohydrates == 0 ? 0 : widget.showResult.carbohydrates / totalMacros,
               ),
               MacrosCard(
                 width: widget.width,
                 height: widget.height,
                 macrosName: "Proteines",
                 image: DefaultImages.proteins,
-                macrosValue: "${(widget.food.protein * (widget.food.weight / 100)).toString()}g",
+                macrosValue: "${(widget.showResult.proteines * (widget.showResult.quantity / 100)).toString()}g",
                 progressColor: Colors.red,
-                percent: widget.food.protein / totalMacros == 0 ? 0 : widget.food.protein / totalMacros,
+                percent: widget.showResult.proteines == 0 ? 0 : widget.showResult.proteines / totalMacros,
               ),
               MacrosCard(
                 width: widget.width,
                 height: widget.height,
                 macrosName: "Lipides",
                 image: DefaultImages.fat,
-                macrosValue: "${(widget.food.fat * (widget.food.weight / 100)).toString()}g",
+                macrosValue: "${(widget.showResult.lipides * (widget.showResult.quantity / 100)).toString()}g",
                 progressColor: Colors.amber,
-                percent: widget.food.fat / totalMacros == 0 ? 0 : widget.food.fat / totalMacros,
+                percent: widget.showResult.lipides == 0 ? 0 : widget.showResult.lipides / totalMacros,
               ),
               WeightValues(
                 width: widget.width,
                 height: widget.height,
-                foodWeight: widget.food.weight,
+                foodWeight: widget.showResult.quantity,
                 updateWeight: updateWeight,
-                callback: widget.callback,
-                nutritionData: widget.nutritionData,
-                food: widget.food,
+                showResult: widget.showResult,
                 updateNutritionCallback: widget.updateNutritionCallback,
                 updateNutritionData: widget.updateNutritionData,
               ),
@@ -198,20 +187,20 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
 }
 
 class MealNameWidget extends StatelessWidget {
-  const MealNameWidget({
+  MealNameWidget({
     super.key,
     required this.width,
     required this.height,
-    required this.food,
+    required this.showResult,
   });
 
   final double width;
   final double height;
-  final Food food;
+  ResultSearch showResult;
 
   @override
   Widget build(BuildContext context) {
-    var kcalSplit = (food.calories * (food.weight / 100)).toString().split('.');
+    var kcalSplit = (showResult.kcalories * (showResult.quantity / 100)).toString().split('.');
 
     return SizedBox(
       width: width,
@@ -230,7 +219,7 @@ class MealNameWidget extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.bottomLeft,
                     child: Text(
-                      food.name,
+                      showResult.name,
                       style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
                     ),
                   ),
@@ -241,7 +230,7 @@ class MealNameWidget extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.bottomRight,
                     child: Text(
-                      "${food.weight.toString()}g",
+                      "${showResult.quantity.toString()}g",
                       style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
                     ),
                   ),
@@ -389,9 +378,7 @@ class WeightValues extends StatefulWidget {
     required this.height,
     required this.foodWeight,
     required this.updateWeight,
-    required this.callback,
-    required this.nutritionData,
-    required this.food,
+    required this.showResult,
     required this.updateNutritionCallback,
     required this.updateNutritionData,
   });
@@ -400,9 +387,7 @@ class WeightValues extends StatefulWidget {
   final double height;
   late int foodWeight;
   final Function(int) updateWeight;
-  final Function callback;
-  final Nutrition nutritionData;
-  final Food food;
+  ResultSearch showResult;
   final Function updateNutritionCallback;
   final Function updateNutritionData;
 
@@ -411,14 +396,6 @@ class WeightValues extends StatefulWidget {
 }
 
 class _WeightValuesState extends State<WeightValues> {
-  late int foodWeight;
-
-  @override
-  void initState() {
-    super.initState();
-    foodWeight = widget.foodWeight;
-  }
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -444,14 +421,16 @@ class _WeightValuesState extends State<WeightValues> {
                       children: [
                         Container(
                           decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 255, 255, 255),
+                            color: ConstColors.secondaryColor,
                             borderRadius: BorderRadius.circular(15),
                           ),
-                          width: widget.width * .1,
-                          height: widget.height * .057,
+                          constraints: const BoxConstraints.tightFor(
+                            width: 50.0,
+                            height: 50.0,
+                          ),
                           child: IconButton(
                             padding: const EdgeInsets.only(bottom: 13),
-                            color: const Color.fromARGB(255, 0, 0, 0),
+                            color: ConstColors.lightBlackColor,
                             icon: const Icon(
                               Icons.minimize,
                             ),
@@ -473,9 +452,12 @@ class _WeightValuesState extends State<WeightValues> {
                             color: const Color.fromARGB(255, 255, 255, 255),
                             borderRadius: BorderRadius.circular(15),
                           ),
-                          width: widget.width * .1,
-                          height: widget.height * .057,
+                          constraints: const BoxConstraints.tightFor(
+                            width: 50.0,
+                            height: 50.0,
+                          ),
                           child: IconButton(
+                            padding: EdgeInsets.zero,
                             color: const Color.fromARGB(255, 0, 0, 0),
                             icon: const Icon(
                               Icons.add,
@@ -492,7 +474,7 @@ class _WeightValuesState extends State<WeightValues> {
                   height: widget.height * .07,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromRGBO(241, 137, 90, 1),
+                      backgroundColor: ConstColors.primaryColor,
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(
                           Radius.circular(18),
@@ -500,17 +482,17 @@ class _WeightValuesState extends State<WeightValues> {
                       ),
                     ),
                     onPressed: () async {
-                      widget.callback(widget.nutritionData);
-                      editMeal(widget.food, widget.food.id, context);
+                      await postNewMeal(widget.showResult, context);
                       await widget.updateNutritionCallback();
                       await widget.updateNutritionData();
                       setState(() {});
-                      Get.snackbar('Succès', 'Aliment modifié avec succès !',
+                      Get.snackbar('Succès', 'Aliment ajouté avec succès !',
                           snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.green, colorText: Colors.white, duration: const Duration(seconds: 1));
+                      setState(() {});
                     },
                     child: Text(
-                      'Appliquer',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: widget.width * .05, color: const Color.fromARGB(255, 255, 255, 255)),
+                      'Ajouter',
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: widget.width * .05, color: ConstColors.secondaryColor),
                     ),
                   ),
                 ),

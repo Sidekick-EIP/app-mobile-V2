@@ -3,7 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:sidekick_app/controller/nutrition_controller.dart';
 import 'package:sidekick_app/providers/auth.dart';
 import 'package:sidekick_app/services/notifications.dart';
 import 'package:sidekick_app/utils/token_storage.dart';
@@ -11,12 +14,15 @@ import 'package:sidekick_app/view/auth/signin_screen.dart';
 import 'package:sidekick_app/view/onboarding/onboarding_screen.dart';
 import 'package:sidekick_app/view/tab_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:sidekick_app/view/nutrition/openfoodfactApi.dart';
 
 import 'models/first_launch.dart';
 
 Future main() async {
   await dotenv.load(fileName: ".env");
   WidgetsFlutterBinding.ensureInitialized();
+
+  getItConf();
 
   NotificationService.init();
   SystemChrome.setPreferredOrientations([
@@ -29,6 +35,19 @@ Future main() async {
         child: const MyApp(),
       ),
     ),
+  );
+}
+
+final GetIt getIt = GetIt.instance;
+
+void getItConf() {
+  String dateNow = DateTime.now().toString();
+
+  String day = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(DateTime.parse(dateNow)).toString();
+  getIt.registerSingleton(MealEditorBlock(day, "BREAKFAST", false));
+
+  getIt.registerSingleton(
+    ApiClient("https://world.openfoodfacts.org/cgi/", ""),
   );
 }
 

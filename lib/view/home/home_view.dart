@@ -43,9 +43,7 @@ class _HomeViewState extends State<HomeView> {
 
   List<Activity> getActivities() {
     return userController.user.value.activities
-        .map((activity) => Activity(Activities.values.firstWhere(
-            (e) => e.toString().split('.').last == activity.value,
-            orElse: () => throw Exception('Activity not found: $activity'))))
+        .map((activity) => Activity(Activities.values.firstWhere((e) => e.toString().split('.').last == activity.value, orElse: () => throw Exception('Activity not found: $activity'))))
         .toList();
   }
 
@@ -55,6 +53,7 @@ class _HomeViewState extends State<HomeView> {
     userController.fetchSidekickFromBack();
     activityList = getActivities();
     stepsController.initPlatformState();
+    workoutController.getWorkoutCalories(DateTime.now().toString());
   }
 
   @override
@@ -67,35 +66,31 @@ class _HomeViewState extends State<HomeView> {
     final email = secureStorage.read(key: 'email').toString();
     final password = secureStorage.read(key: 'password').toString();
 
-    bool isPreferenceFetched =
-        await preferenceController.fetchPreferenceFromBack();
+    bool isPreferenceFetched = await preferenceController.fetchPreferenceFromBack();
     bool isUserFetched = await userController.fetchUserFromBack();
     userController.fetchSidekickFromBack();
     activityList = getActivities();
     stepsController.initPlatformState();
+    workoutController.getWorkoutCalories(DateTime.now().toString());
 
     if (!isPreferenceFetched || !isUserFetched) {
       setState(() => isLoading = true);
       if (email.isNotEmpty && password.isNotEmpty) {
         bool isReLogin = await attemptReLogin(email, password);
         if (isReLogin) {
-          bool isPreferenceFetched =
-              await preferenceController.fetchPreferenceFromBack();
+          bool isPreferenceFetched = await preferenceController.fetchPreferenceFromBack();
           bool isUserFetched = await userController.fetchUserFromBack();
           userController.fetchSidekickFromBack();
           if (isPreferenceFetched && isUserFetched) {
             setState(() => isLoading = false);
           } else {
-            Get.offAll(() => const SignInScreen(),
-                transition: Transition.rightToLeft);
+            Get.offAll(() => const SignInScreen(), transition: Transition.rightToLeft);
           }
         } else {
-          Get.offAll(() => const SignInScreen(),
-              transition: Transition.rightToLeft);
+          Get.offAll(() => const SignInScreen(), transition: Transition.rightToLeft);
         }
       } else {
-        Get.offAll(() => const SignInScreen(),
-            transition: Transition.rightToLeft);
+        Get.offAll(() => const SignInScreen(), transition: Transition.rightToLeft);
       }
     } else {
       setState(() => isLoading = false);
@@ -116,17 +111,11 @@ class _HomeViewState extends State<HomeView> {
         await tokenStorage.storeRefreshToken(decodedResponse['refresh_token']);
         return true;
       } else {
-        Get.snackbar("Erreur", "Échec de la reconnexion automatique",
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-            snackPosition: SnackPosition.BOTTOM);
+        Get.snackbar("Erreur", "Échec de la reconnexion automatique", backgroundColor: Colors.red, colorText: Colors.white, snackPosition: SnackPosition.BOTTOM);
       }
       return false;
     } catch (error) {
-      Get.snackbar("Erreur", "Une erreur s'est produite lors de la connexion.",
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar("Erreur", "Une erreur s'est produite lors de la connexion.", backgroundColor: Colors.red, colorText: Colors.white, snackPosition: SnackPosition.BOTTOM);
     }
     return false;
   }
@@ -138,9 +127,7 @@ class _HomeViewState extends State<HomeView> {
         init: HomeController(),
         builder: (builder) {
           if (userController.isLoading.value || isLoading) {
-            return const Center(
-                child:
-                    CircularProgressIndicator(color: ConstColors.primaryColor));
+            return const Center(child: CircularProgressIndicator(color: ConstColors.primaryColor));
           } else {
             return Padding(
               padding: const EdgeInsets.only(left: 20, right: 20),
@@ -200,11 +187,7 @@ class _HomeViewState extends State<HomeView> {
                           userController.user.value.sidekickId != null
                               ? InkWell(
                                   onTap: () => {homeController.flag.value = 1},
-                                  child: WelcomeCardWSidekick(
-                                      sidekickName: userController
-                                          .partner.value.firstname.value,
-                                      imagePath: userController
-                                          .partner.value.avatar.value))
+                                  child: WelcomeCardWSidekick(sidekickName: userController.partner.value.firstname.value, imagePath: userController.partner.value.avatar.value))
                               : const WelcomeCardWOutSidekick(),
                           const SizedBox(height: 30),
                           Row(
@@ -241,11 +224,7 @@ class _HomeViewState extends State<HomeView> {
                                 itemCount: activityList.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   return Row(
-                                    children: [
-                                      categoryCard(activityList[index].iconPath,
-                                          activityList[index].activityName),
-                                      const SizedBox(width: 10)
-                                    ],
+                                    children: [categoryCard(activityList[index].iconPath, activityList[index].activityName), const SizedBox(width: 10)],
                                   );
                                 }),
                           ),
@@ -265,23 +244,11 @@ class _HomeViewState extends State<HomeView> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              graph(
-                                  "Nb. de pas",
-                                  "Pas",
-                                  DefaultImages.i1,
-                                  stepsController.steps.value,
-                                  const Color(0xffEFF7FF),
-                                  MediaQuery.of(context).size.width,
-                                  MediaQuery.of(context).size.height),
+                              graph("Nb. de pas", "Pas", DefaultImages.i1, stepsController.steps.value, const Color(0xffEFF7FF), MediaQuery.of(context).size.width, MediaQuery.of(context).size.height,
+                                  "steps"),
                               const SizedBox(width: 15),
-                              graph(
-                                  "Calories",
-                                  "kCal",
-                                  DefaultImages.i4,
-                                  300,
-                                  const Color(0xffFFEFDD),
-                                  MediaQuery.of(context).size.width,
-                                  MediaQuery.of(context).size.height),
+                              graph("Calories", "kCal", DefaultImages.i4, workoutController.workoutCalories.toInt(), const Color(0xffFFEFDD), MediaQuery.of(context).size.width,
+                                  MediaQuery.of(context).size.height, "calories"),
                             ],
                           ),
                           const SizedBox(height: 30),
@@ -349,10 +316,8 @@ class _HomeViewState extends State<HomeView> {
                                         ),
                                         const SizedBox(width: 14),
                                         Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               index == 0
@@ -371,16 +336,14 @@ class _HomeViewState extends State<HomeView> {
                                               "0:30",
                                               style: pRegular14.copyWith(
                                                 fontSize: 13.47,
-                                                color:
-                                                    ConstColors.lightBlackColor,
+                                                color: ConstColors.lightBlackColor,
                                               ),
                                             ),
                                           ],
                                         ),
                                         const Expanded(child: SizedBox()),
                                         Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 14),
+                                          padding: const EdgeInsets.only(right: 14),
                                           child: SizedBox(
                                             height: 19.25,
                                             width: 19.25,
@@ -412,8 +375,14 @@ class _HomeViewState extends State<HomeView> {
   }
 }
 
-Widget graph(String title, String subtitle, String image, int number,
-    Color color, double width, double height) {
+Widget graph(String title, String subtitle, String image, int number, Color color, double width, double height, String graphType) {
+  double calculatedPercent;
+
+  if (graphType == "steps") {
+    calculatedPercent = number / 10000;
+  } else {
+    calculatedPercent = (number / 800).clamp(0.0, 1.0).toDouble();
+  }
   return Container(
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(7.7),
@@ -460,11 +429,10 @@ Widget graph(String title, String subtitle, String image, int number,
             radius: 60,
             lineWidth: 12,
             animation: true,
-            percent: number / 10000,
+            percent: calculatedPercent,
             circularStrokeCap: CircularStrokeCap.round,
             progressColor: const Color.fromARGB(255, 241, 56, 42),
-            backgroundColor:
-                const Color.fromARGB(255, 180, 180, 180).withOpacity(0.2),
+            backgroundColor: const Color.fromARGB(255, 180, 180, 180).withOpacity(0.2),
             center: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

@@ -20,9 +20,7 @@ class NotificationService {
           priority: Priority.high,
           groupKey: groupKey,
         ),
-        iOS: DarwinNotificationDetails(
-            categoryIdentifier: 'plainCategory',
-            threadIdentifier: 'thread id'));
+        iOS: DarwinNotificationDetails(categoryIdentifier: 'plainCategory', threadIdentifier: 'thread id'));
   }
 
   static Future init() async {
@@ -32,13 +30,10 @@ class NotificationService {
             requestAlertPermission: true,
             requestBadgePermission: true,
             requestSoundPermission: true,
-            onDidReceiveLocalNotification: (int id, String? title, String? body,
-                String? payload) async {
-              _notifications.show(_id++, title, body, await _notificationDetails(),
-                  payload: payload);
+            onDidReceiveLocalNotification: (int id, String? title, String? body, String? payload) async {
+              _notifications.show(_id++, title, body, await _notificationDetails(), payload: payload);
             }));
-    await _notifications.initialize(settings, onDidReceiveNotificationResponse:
-        (NotificationResponse notificationResponse) async {
+    await _notifications.initialize(settings, onDidReceiveNotificationResponse: (NotificationResponse notificationResponse) async {
       onNotifications.add(notificationResponse.payload);
     });
   }
@@ -48,8 +43,5 @@ class NotificationService {
     await _notifications.cancelAll();
   }
 
-  static Future showNotification(
-          {int id = 0, String? title, String? body, String? payload}) async =>
-      _notifications.show(_id++, title, body, await _notificationDetails(),
-          payload: payload);
+  static Future showNotification({int id = 0, String? title, String? body, String? payload}) async => _notifications.show(_id++, title, body, await _notificationDetails(), payload: payload);
 }

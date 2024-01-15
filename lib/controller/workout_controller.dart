@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:sidekick_app/models/exercise.dart';
 import 'package:sidekick_app/models/workout.dart';
 import 'package:sidekick_app/models/workout_calories.dart';
@@ -19,7 +20,11 @@ class WorkoutController extends GetxController {
 
   RxList workout = [].obs;
   RxList exercise = [].obs;
-  RxList calories = [].obs;
+
+  var workoutCalories = 0.obs;
+  final int maxCalories = 800;
+  double get caloriesPercent => workoutCalories.value / maxCalories;
+  var caloriesFetched = false.obs;
 
   Future<void> getAllWorkouts() async {
     final response = await HttpRequest.mainGet("/workouts");
@@ -97,19 +102,22 @@ class WorkoutController extends GetxController {
     }
   }
 
-  int getTotalCaloriesBurned() {
-    return calories.fold(0, (total, calorie) => total + (calorie as WorkoutCalories).burnedCalories);
-  }
+  Future<int> getWorkoutCalories(String dateString) async {
+    DateTime parsedDateTime = DateTime.parse(dateString);
+    DateTime midnightUtc = DateTime.utc(parsedDateTime.year, parsedDateTime.month, parsedDateTime.day);
+    String formattedDate = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(midnightUtc);
+    String url = "/workouts/calories/?day=$formattedDate";
 
-  Future<void> getWorkoutCalories() async {
-    final response = await HttpRequest.mainGet("/workouts/calories/");
+    final response = await HttpRequest.mainGet(url);
 
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body);
-      WorkoutCalories exerciseCalories = WorkoutCalories.fromJSON(body);
-      calories.value = [exerciseCalories];
+      WorkoutCalories caloriesData = WorkoutCalories.fromJSON(body);
+      workoutCalories.value = caloriesData.burnedCalories;
+      caloriesFetched.value = true;
+      return caloriesData.burnedCalories;
     } else {
-      throw Exception('Failed to get workouts');
+      throw Exception('Failed to get workouts for the day');
     }
   }
 

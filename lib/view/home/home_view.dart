@@ -53,6 +53,7 @@ class _HomeViewState extends State<HomeView> {
     userController.fetchSidekickFromBack();
     activityList = getActivities();
     stepsController.initPlatformState();
+    workoutController.getWorkoutCalories(DateTime.now().toString());
   }
 
   @override
@@ -70,6 +71,7 @@ class _HomeViewState extends State<HomeView> {
     userController.fetchSidekickFromBack();
     activityList = getActivities();
     stepsController.initPlatformState();
+    workoutController.getWorkoutCalories(DateTime.now().toString());
 
     if (!isPreferenceFetched || !isUserFetched) {
       setState(() => isLoading = true);
@@ -245,7 +247,7 @@ class _HomeViewState extends State<HomeView> {
                               graph("Nb. de pas", "Pas", DefaultImages.i1, stepsController.steps.value, const Color(0xffEFF7FF), MediaQuery.of(context).size.width, MediaQuery.of(context).size.height,
                                   "steps"),
                               const SizedBox(width: 15),
-                              graph("Calories", "kCal", DefaultImages.i4, workoutController.getTotalCaloriesBurned(), const Color(0xffFFEFDD), MediaQuery.of(context).size.width,
+                              graph("Calories", "kCal", DefaultImages.i4, workoutController.workoutCalories.toInt(), const Color(0xffFFEFDD), MediaQuery.of(context).size.width,
                                   MediaQuery.of(context).size.height, "calories"),
                             ],
                           ),
@@ -379,7 +381,7 @@ Widget graph(String title, String subtitle, String image, int number, Color colo
   if (graphType == "steps") {
     calculatedPercent = number / 10000;
   } else {
-    calculatedPercent = (number / 600).clamp(0.0, 1.0).toDouble();
+    calculatedPercent = (number / 800).clamp(0.0, 1.0).toDouble();
   }
   return Container(
     decoration: BoxDecoration(

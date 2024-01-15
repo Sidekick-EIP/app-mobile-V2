@@ -14,11 +14,15 @@ class EditMeal extends StatefulWidget {
     required this.food,
     required this.callback,
     required this.nutritionData,
+    required this.updateNutritionCallback,
+    required this.updateNutritionData,
   });
 
   final Food food;
   final Function callback;
   final Nutrition nutritionData;
+  final Function updateNutritionCallback;
+  final Function updateNutritionData;
 
   @override
   State<EditMeal> createState() => _EditMealState();
@@ -68,6 +72,8 @@ class _EditMealState extends State<EditMeal> {
                   food: widget.food,
                   callback: widget.callback,
                   nutritionData: widget.nutritionData,
+                  updateNutritionCallback: widget.updateNutritionCallback,
+                  updateNutritionData: widget.updateNutritionData,
                 );
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');
@@ -89,6 +95,8 @@ class DisplayNutritionPage extends StatefulWidget {
     required this.food,
     required this.callback,
     required this.nutritionData,
+    required this.updateNutritionCallback,
+    required this.updateNutritionData,
   });
 
   final double width;
@@ -96,6 +104,8 @@ class DisplayNutritionPage extends StatefulWidget {
   final Food food;
   final Function callback;
   final Nutrition nutritionData;
+  final Function updateNutritionCallback;
+  final Function updateNutritionData;
 
   @override
   State<DisplayNutritionPage> createState() => _DisplayNutritionPageState();
@@ -176,6 +186,8 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                 callback: widget.callback,
                 nutritionData: widget.nutritionData,
                 food: widget.food,
+                updateNutritionCallback: widget.updateNutritionCallback,
+                updateNutritionData: widget.updateNutritionData,
               ),
             ],
           ),
@@ -380,6 +392,8 @@ class WeightValues extends StatefulWidget {
     required this.callback,
     required this.nutritionData,
     required this.food,
+    required this.updateNutritionCallback,
+    required this.updateNutritionData,
   });
 
   final double width;
@@ -389,6 +403,8 @@ class WeightValues extends StatefulWidget {
   final Function callback;
   final Nutrition nutritionData;
   final Food food;
+  final Function updateNutritionCallback;
+  final Function updateNutritionData;
 
   @override
   State<WeightValues> createState() => _WeightValuesState();
@@ -486,11 +502,11 @@ class _WeightValuesState extends State<WeightValues> {
                     onPressed: () async {
                       widget.callback(widget.nutritionData);
                       editMeal(widget.food, widget.food.id, context);
+                      await widget.updateNutritionCallback();
+                      await widget.updateNutritionData();
+                      setState(() {});
                       Get.snackbar('Succès', 'Aliment modifié avec succès !',
                           snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.green, colorText: Colors.white, duration: const Duration(seconds: 1));
-                      setState(() {});
-                      await Future.delayed(const Duration(seconds: 2));
-                      Get.back();
                     },
                     child: Text(
                       'Appliquer',

@@ -144,7 +144,7 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
   @override
   void initState() {
     super.initState();
-    workoutController.getWorkoutCalories();
+    workoutController.getWorkoutCalories(getIt<MealEditorBlock>().selectedDate);
     nutritionData = widget.nutritionData;
   }
 
@@ -427,30 +427,46 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                                       SizedBox(
                                         height: widget.height * 0.02,
                                       ),
-                                      CircularPercentIndicator(
-                                        radius: 60,
-                                        lineWidth: 12,
-                                        animation: true,
-                                        percent: (workoutController.getTotalCaloriesBurned() / 600).clamp(0.0, 1.0).toDouble(),
-                                        circularStrokeCap: CircularStrokeCap.round,
-                                        progressColor: const Color.fromARGB(255, 255, 147, 147),
-                                        backgroundColor: const Color.fromARGB(255, 180, 180, 180).withOpacity(0.2),
-                                        center: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              '${workoutController.getTotalCaloriesBurned()}',
-                                              style: pSemiBold20.copyWith(
-                                                fontSize: 20,
-                                              ),
+                                      Obx(() {
+                                        if (workoutController.caloriesFetched.isTrue) {
+                                          return CircularPercentIndicator(
+                                            radius: 60,
+                                            lineWidth: 12,
+                                            animation: true,
+                                            circularStrokeCap: CircularStrokeCap.round,
+                                            progressColor: const Color.fromARGB(255, 255, 147, 147),
+                                            backgroundColor: const Color.fromARGB(255, 180, 180, 180).withOpacity(0.2),
+                                            center: FutureBuilder<int>(
+                                              future: workoutController.getWorkoutCalories(getIt<MealEditorBlock>().selectedDate),
+                                              builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                                  return const Text("Loading...");
+                                                } else if (snapshot.hasError) {
+                                                  return Text("Error: ${snapshot.error}");
+                                                } else {
+                                                  double percent = (snapshot.data ?? 0) / 1000;
+                                                  return Column(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      Text(
+                                                        '${snapshot.data}',
+                                                        style: pSemiBold20.copyWith(fontSize: 20),
+                                                      ),
+                                                      Text(
+                                                        "KCal",
+                                                        style: pRegular14.copyWith(fontSize: 16, color: Colors.grey),
+                                                      ),
+                                                    ],
+                                                  );
+                                                }
+                                              },
                                             ),
-                                            Text(
-                                              "KCal",
-                                              style: pRegular14.copyWith(fontSize: 16, color: Colors.grey),
-                                            )
-                                          ],
-                                        ),
-                                      ),
+                                            percent: workoutController.caloriesPercent,
+                                          );
+                                        } else {
+                                          return const CircularProgressIndicator();
+                                        }
+                                      }),
                                     ],
                                   ),
                                 ),
@@ -598,7 +614,7 @@ class _TodaysMealsState extends State<TodaysMeals> {
                   height: widget.height,
                   color: const Color.fromRGBO(6, 50, 86, 1),
                   colorAccent: const Color.fromARGB(255, 199, 220, 255),
-                  mealPeriodName: "Dinner   ",
+                  mealPeriodName: "Dîner   ",
                   emojiImg: "🥗",
                   nutritionData: widget.nutritionData,
                   period: "dinners",

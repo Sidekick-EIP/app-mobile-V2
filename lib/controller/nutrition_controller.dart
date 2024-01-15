@@ -47,7 +47,7 @@ Future editMeal(Food food, int id, BuildContext context) async {
       "carbs": food.carbs,
       "fat": food.fat,
       "weight": food.weight,
-      "calories": food.calories
+      "calories": food.calories * (food.weight / 100)
     };
     String jsonBody = json.encode(body);
 
@@ -66,7 +66,7 @@ Future editMeal(Food food, int id, BuildContext context) async {
     "carbs": food.carbs,
     "fat": food.fat,
     "weight": food.weight,
-    "calories": food.calories
+    "calories": food.calories * (food.weight / 100)
   };
 
   String jsonBody = json.encode(body);
@@ -126,11 +126,11 @@ Future postNewMeal(ResultSearch ingredient, BuildContext context) async {
       "name": ingredient.name,
       "picture": ingredient.urlImage,
       "date": "${dateWithMidnightTime.toIso8601String()}Z",
-      "protein": ingredient.proteines,
-      "carbs": ingredient.carbohydrates,
+      "protein": ingredient.proteines.toInt(),
+      "carbs": ingredient.carbohydrates.toInt(),
       "fat": ingredient.lipides.toInt(),
-      "weight": ingredient.quantity,
-      "calories": ingredient.kcalories
+      "weight": ingredient.quantity.toInt(),
+      "calories": (ingredient.kcalories * (ingredient.quantity / 100)).toInt()
     };
     String jsonBody = json.encode(body);
 
@@ -149,7 +149,7 @@ Future postNewMeal(ResultSearch ingredient, BuildContext context) async {
     "carbs": ingredient.carbohydrates.toInt(),
     "fat": ingredient.lipides.toInt(),
     "weight": ingredient.quantity.toInt(),
-    "calories": ingredient.kcalories.toInt()
+    "calories": (ingredient.kcalories * (ingredient.quantity / 100)).toInt()
   };
   String jsonBody = json.encode(body);
 
@@ -157,8 +157,6 @@ Future postNewMeal(ResultSearch ingredient, BuildContext context) async {
     '/nutrition',
     jsonBody,
   );
-
-  inspect(response);
 
   if (response.statusCode == 201) {
     var products = jsonDecode(response.body);

@@ -461,12 +461,18 @@ class _AccountScreenState extends State<AccountScreen> {
                     Row(
                       children: [
                         Obx(
-                          () => Text(
-                            "${userController.user.value.description}"
-                            "  ",
-                            style: pRegular14.copyWith(
-                              fontSize: 15.41,
-                              color: ConstColors.lightBlackColor,
+                          () => SizedBox(
+                            width: Get.width * 0.6,
+                            child: Text(
+                              "${userController.user.value.description}"
+                              "  ",
+                              overflow: TextOverflow.fade,
+                              maxLines: 1,
+                              softWrap: false,
+                              style: pRegular14.copyWith(
+                                fontSize: 15.41,
+                                color: ConstColors.lightBlackColor,
+                              ),
                             ),
                           ),
                         ),

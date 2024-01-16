@@ -14,6 +14,7 @@ import '../../controller/preference_controller.dart';
 import '../../controller/user_controller.dart';
 import '../../utils/calculate_age.dart';
 import '../../widget/custom_button.dart';
+import '../../widget/custom_textfield.dart';
 import '../auth/signin_screen.dart';
 import 'account_screen.dart';
 import 'sidekick/sidekick_view.dart';
@@ -40,6 +41,7 @@ class _ProfileViewState extends State<ProfileView> {
   void _showWarningPopup() {
     Get.dialog(
       AlertDialog(
+        backgroundColor: Colors.white,
         title: Text('Changer de Sidekick', style: pSemiBold20),
         content: Text('Êtes-vous sûr de vouloir changer votre sidekick ?',
             style: pRegular14),
@@ -106,6 +108,108 @@ class _ProfileViewState extends State<ProfileView> {
                     duration: const Duration(seconds: 2));
               } else {
                 Get.snackbar('Erreur', 'Le signalement a échoué',
+                    snackPosition: SnackPosition.BOTTOM,
+                    backgroundColor: Colors.red,
+                    colorText: Colors.white,
+                    duration: const Duration(seconds: 1));
+              }
+            },
+          ),
+        ],
+      ),
+      barrierDismissible: false,
+    );
+  }
+
+  void _showDeleteAccountPopup() {
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
+    Get.dialog(
+      AlertDialog(
+        title: Text('Confirmation', style: pSemiBold20),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+                'Veuillez saisir votre adresse email ainsi que votre mot de passe pour confirmer la suppression de votre compte.',
+                style: pRegular14),
+            const SizedBox(height: 20),
+            CustomTextField(
+              text: "Email",
+              textEditingController: emailController,
+            ),
+            const SizedBox(height: 15),
+            CustomTextField(
+              text: "Mot de passe",
+              textEditingController: passwordController,
+              isPassword: true,
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Annuler', style: pSemiBold18.copyWith()),
+            onPressed: () {
+              Get.back();
+            },
+          ),
+          TextButton(
+            child: Text('Confirmer',
+                style: pSemiBold18.copyWith(color: ConstColors.primaryColor)),
+            onPressed: () async {
+              String email = emailController.text;
+              String password = passwordController.text;
+
+              if (email.isEmpty || password.isEmpty) {
+                Get.snackbar(
+                  'Erreur',
+                  'Veuillez remplir tous les champs',
+                  snackPosition: SnackPosition.BOTTOM,
+                  backgroundColor: Colors.red,
+                  colorText: Colors.white,
+                );
+                return;
+              }
+
+              if (!RegExp(r'\S+@\S+\.\S+').hasMatch(email)) {
+                Get.snackbar(
+                  'Erreur',
+                  'Veuillez entrer un email valide',
+                  snackPosition: SnackPosition.BOTTOM,
+                  backgroundColor: Colors.red,
+                  colorText: Colors.white,
+                );
+                return;
+              }
+
+              final response = await HttpRequest.mainPost(
+                  "/auth/delete",
+                  {
+                    "email": email,
+                    "password": password,
+                  },
+                  headers: {"Content-Type": "application/x-www-form-urlencoded"});
+              Get.back();
+              if (response.statusCode == 201) {
+                Get.snackbar('Succès', 'Compte supprimé avec succès !',
+                    snackPosition: SnackPosition.BOTTOM,
+                    backgroundColor: Colors.green,
+                    colorText: Colors.white,
+                    duration: const Duration(seconds: 1));
+                homeController.logout();
+                Get.offAll(
+                  () => const SignInScreen(),
+                  transition: Transition.rightToLeft,
+                );
+              } else if (response.statusCode == 404) {
+                Get.snackbar('Erreur', "Compte introuvable",
+                    snackPosition: SnackPosition.BOTTOM,
+                    backgroundColor: Colors.red,
+                    colorText: Colors.white,
+                    duration: const Duration(seconds: 2));
+              } else {
+                Get.snackbar('Erreur', 'La suppression a échoué',
                     snackPosition: SnackPosition.BOTTOM,
                     backgroundColor: Colors.red,
                     colorText: Colors.white,
@@ -320,8 +424,8 @@ class _ProfileViewState extends State<ProfileView> {
                               },
                               const Icon(
                                 Icons.logout_outlined,
-                                color: Color(0xffA9B2BA),
-                                size: 16,
+                                color: Colors.red,
+                                size: 20,
                               ),
                             ),
                           ],
@@ -471,13 +575,15 @@ class _ProfileViewState extends State<ProfileView> {
                             ),
                             const SizedBox(height: 10),
                             row(
-                              "Contacts Support",
+                              "Supprimer le compte",
                               "",
-                              () {},
+                              () {
+                                _showDeleteAccountPopup();
+                              },
                               const Icon(
-                                Icons.arrow_forward_ios,
-                                color: Color(0xffA9B2BA),
-                                size: 16,
+                                Icons.delete_outline,
+                                color: Colors.red,
+                                size: 20,
                               ),
                             ),
                           ],
@@ -507,6 +613,7 @@ Widget row(String text1, String image, VoidCallback onTap, Widget widget) {
           "$text1  ",
           style: pRegular14.copyWith(
             fontSize: 15.41,
+            color: text1 == "Supprimer le compte" ? Colors.red : null,
           ),
         ),
         image != ""

@@ -559,15 +559,7 @@ Widget workoutCard(String text1, String text2, String image, bool delete, Workou
             icon: const Icon(Icons.delete),
             color: ConstColors.primaryColor,
             onPressed: () => workoutController.deleteWorkout(id)
-          ) : const CircleAvatar(
-            radius: 9,
-            backgroundColor: Colors.transparent,
-            child: Icon(
-              Icons.delete,
-              color: ConstColors.secondaryColor,
-              size: 10,
-            ),
-          ),
+          ) : const SizedBox(width: 9)
         ],
       ),
     ),

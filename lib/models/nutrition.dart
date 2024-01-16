@@ -17,30 +17,10 @@ class Nutrition {
       json['protein'],
       json['fat'],
       {
-        'breakfast': {
-          "meals": (json['meals']['breakfast']["meals"] as List<dynamic>)
-              .map((e) => Food.fromJson(e))
-              .toList(),
-          "calories": json['meals']['breakfast']["calories"]
-        },
-        'lunch': {
-          "meals": (json['meals']['lunch']["meals"] as List<dynamic>)
-              .map((e) => Food.fromJson(e))
-              .toList(),
-          "calories": json['meals']['lunch']["calories"]
-        },
-        'dinners': {
-          "meals": (json['meals']['dinners']["meals"] as List<dynamic>)
-              .map((e) => Food.fromJson(e))
-              .toList(),
-          "calories": json['meals']['dinners']["calories"]
-        },
-        'snacks': {
-          "meals": (json['meals']['snacks']["meals"] as List<dynamic>)
-              .map((e) => Food.fromJson(e))
-              .toList(),
-          "calories": json['meals']['snacks']["calories"]
-        },
+        'breakfast': {"meals": (json['meals']['breakfast']["meals"] as List<dynamic>).map((e) => Food.fromJson(e)).toList(), "calories": json['meals']['breakfast']["calories"]},
+        'lunch': {"meals": (json['meals']['lunch']["meals"] as List<dynamic>).map((e) => Food.fromJson(e)).toList(), "calories": json['meals']['lunch']["calories"]},
+        'dinners': {"meals": (json['meals']['dinners']["meals"] as List<dynamic>).map((e) => Food.fromJson(e)).toList(), "calories": json['meals']['dinners']["calories"]},
+        'snacks': {"meals": (json['meals']['snacks']["meals"] as List<dynamic>).map((e) => Food.fromJson(e)).toList(), "calories": json['meals']['snacks']["calories"]},
       },
     );
   }

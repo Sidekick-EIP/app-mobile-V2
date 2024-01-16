@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
@@ -37,40 +36,19 @@ Future editMeal(Food food, int id, BuildContext context) async {
 
   DateTime dateWithMidnightTime = DateTime(parsedDateTime.year, parsedDateTime.month, parsedDateTime.day);
 
-  if (getIt<MealEditorBlock>().period.toUpperCase() == "DINNERS") {
-    Map<String, dynamic> body = {
-      "period": "DINNER",
-      "name": food.name,
-      "picture": food.picture,
-      "date": "${dateWithMidnightTime.toIso8601String()}Z",
-      "protein": food.protein,
-      "carbs": food.carbs,
-      "fat": food.fat,
-      "weight": food.weight,
-      "calories": food.calories * (food.weight / 100)
-    };
-    String jsonBody = json.encode(body);
-
-    await HttpRequest.mainPut(
-      '/nutrition/${id.toString()}',
-      jsonBody,
-    );
-  }
-
   Map<String, dynamic> body = {
-    "period": getIt<MealEditorBlock>().period.toUpperCase(),
+    'period': getIt<MealEditorBlock>().period.toUpperCase() == "DINNERS" ? "DINNER" : getIt<MealEditorBlock>().period.toUpperCase(),
     "name": food.name,
     "picture": food.picture,
     "date": "${dateWithMidnightTime.toIso8601String()}Z",
-    "protein": food.protein,
-    "carbs": food.carbs,
-    "fat": food.fat,
-    "weight": food.weight,
-    "calories": food.calories * (food.weight / 100)
+    "protein": food.protein.toInt(),
+    "carbs": food.carbs.toInt(),
+    "fat": food.fat.toInt(),
+    "weight": food.weight.toInt(),
+    "calories": (food.calories * (food.weight / 100)).toInt()
   };
 
   String jsonBody = json.encode(body);
-
   await HttpRequest.mainPut(
     '/nutrition/${id.toString()}',
     jsonBody,
@@ -120,28 +98,8 @@ Future postNewMeal(ResultSearch ingredient, BuildContext context) async {
 
   DateTime dateWithMidnightTime = DateTime(parsedDateTime.year, parsedDateTime.month, parsedDateTime.day);
 
-  if (getIt<MealEditorBlock>().period.toUpperCase() == "DINNERS") {
-    var body = {
-      'period': getIt<MealEditorBlock>().period.toUpperCase(),
-      "name": ingredient.name,
-      "picture": ingredient.urlImage,
-      "date": "${dateWithMidnightTime.toIso8601String()}Z",
-      "protein": ingredient.proteines.toInt(),
-      "carbs": ingredient.carbohydrates.toInt(),
-      "fat": ingredient.lipides.toInt(),
-      "weight": ingredient.quantity.toInt(),
-      "calories": (ingredient.kcalories * (ingredient.quantity / 100)).toInt()
-    };
-    String jsonBody = json.encode(body);
-
-    await HttpRequest.mainPost(
-      '/nutrition',
-      jsonBody,
-    );
-  }
-
   var body = {
-    'period': getIt<MealEditorBlock>().period.toUpperCase(),
+    'period': getIt<MealEditorBlock>().period.toUpperCase() == "DINNERS" ? "DINNER" : getIt<MealEditorBlock>().period.toUpperCase(),
     "name": ingredient.name,
     "picture": ingredient.urlImage,
     "date": "${dateWithMidnightTime.toIso8601String()}Z",

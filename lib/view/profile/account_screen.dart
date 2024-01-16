@@ -469,6 +469,7 @@ class _AccountScreenState extends State<AccountScreen> {
                               overflow: TextOverflow.fade,
                               maxLines: 1,
                               softWrap: false,
+                              textAlign: TextAlign.right,
                               style: pRegular14.copyWith(
                                 fontSize: 15.41,
                                 color: ConstColors.lightBlackColor,

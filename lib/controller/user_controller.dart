@@ -156,11 +156,6 @@ class UserController extends GetxController {
       if (user.value.sidekickId != null) {
         await fetchSidekickFromBack();
       }
-      final socketController = Get.put(SocketController(), permanent: true);
-      socketController.initSocket(user.value.userId.value);
-      socketController.connectToSocket();
-      socketController.setOnMessage();
-      socketController.setOnMatching();
     } catch (e) {
       if (kDebugMode) {
         print("Error fetching user: $e");

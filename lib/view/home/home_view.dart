@@ -14,6 +14,7 @@ import '../../controller/preference_controller.dart';
 import '../../config/colors.dart';
 import '../../config/images.dart';
 import '../../config/text_style.dart';
+import '../../controller/socket_controller.dart';
 import '../../controller/workout_controller.dart';
 import '../../utils/token_storage.dart';
 import '../../widget/search_field.dart';
@@ -36,6 +37,7 @@ class _HomeViewState extends State<HomeView> {
   final preferenceController = Get.put(PreferenceController(), permanent: true);
   final workoutController = Get.put(WorkoutController(), permanent: true);
   final stepsController = Get.put(StepsController(), permanent: true);
+  final socketController = Get.put(SocketController(), permanent: true);
   bool isLoading = false;
   final TokenStorage tokenStorage = TokenStorage();
   final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
@@ -62,12 +64,22 @@ class _HomeViewState extends State<HomeView> {
     fetchInitialData();
   }
 
+  void connectToSocket() {
+    if (!socketController.isConnected()) {
+      socketController.initSocket(userController.user.value.userId.value);
+      socketController.connectToSocket();
+      socketController.setOnMessage();
+      socketController.setOnMatching();
+    }
+  }
+
   void fetchInitialData() async {
     final email = secureStorage.read(key: 'email').toString();
     final password = secureStorage.read(key: 'password').toString();
 
     bool isPreferenceFetched = await preferenceController.fetchPreferenceFromBack();
     bool isUserFetched = await userController.fetchUserFromBack();
+    connectToSocket();
     userController.fetchSidekickFromBack();
     activityList = getActivities();
     stepsController.initPlatformState();

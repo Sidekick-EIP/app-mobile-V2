@@ -420,19 +420,16 @@ class _TrainingViewState extends State<TrainingView> {
                                                         const EdgeInsets.only(
                                                             bottom: 10),
                                                     child: workoutCard(
-                                                        workoutController
-                                                            .workout[x][y].name,
-                                                        "${workoutController.workout[x][y].duration} sec",
-                                                        workoutController
-                                                            .workout[x][y]
-                                                            .thumbnail,
-                                                        DateTime.parse(
-                                                                workoutController
-                                                                    .workout[x]
-                                                                        [y]
-                                                                    .date)
-                                                            .isBefore(DateTime
-                                                                .now())),
+                                                      workoutController
+                                                          .workout[x][y].name,
+                                                      "${workoutController.workout[x][y].duration} sec",
+                                                      workoutController
+                                                          .workout[x][y]
+                                                          .thumbnail,
+                                                      true,
+                                                      workoutController,
+                                                      workoutController.workout[x][y].id
+                                                    ),
                                                   ),
                                                 );
                                               }),
@@ -482,13 +479,16 @@ class _TrainingViewState extends State<TrainingView> {
                                         padding:
                                             const EdgeInsets.only(bottom: 10),
                                         child: workoutCard(
-                                            workoutController
-                                                .exercise[elem].name,
-                                            getMuscleGroupe(workoutController
-                                                .exercise[elem].muscleGroup),
-                                            workoutController
-                                                .exercise[elem].thumbnail,
-                                            false),
+                                          workoutController
+                                              .exercise[elem].name,
+                                          getMuscleGroupe(workoutController
+                                              .exercise[elem].muscleGroup),
+                                          workoutController
+                                              .exercise[elem].thumbnail,
+                                          false,
+                                          workoutController,
+                                          0
+                                        ),
                                       ),
                                     )
                                   ]);
@@ -503,7 +503,7 @@ class _TrainingViewState extends State<TrainingView> {
   }
 }
 
-Widget workoutCard(String text1, String text2, String image, bool passed) {
+Widget workoutCard(String text1, String text2, String image, bool delete, WorkoutController workoutController, int id) {
   return Container(
     width: Get.width,
     decoration: BoxDecoration(
@@ -555,12 +555,15 @@ Widget workoutCard(String text1, String text2, String image, bool passed) {
             ),
           ),
           const SizedBox(width: 5),
-          CircleAvatar(
+          delete ? IconButton(
+            icon: const Icon(Icons.delete),
+            color: ConstColors.primaryColor,
+            onPressed: () => workoutController.deleteWorkout(id)
+          ) : const CircleAvatar(
             radius: 9,
-            backgroundColor:
-                passed ? ConstColors.primaryColor : Colors.transparent,
-            child: const Icon(
-              Icons.check,
+            backgroundColor: Colors.transparent,
+            child: Icon(
+              Icons.delete,
               color: ConstColors.secondaryColor,
               size: 10,
             ),

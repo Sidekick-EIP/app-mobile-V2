@@ -197,7 +197,7 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
   }
 }
 
-class MealNameWidget extends StatelessWidget {
+class MealNameWidget extends StatefulWidget {
   const MealNameWidget({
     super.key,
     required this.width,
@@ -210,38 +210,51 @@ class MealNameWidget extends StatelessWidget {
   final Food food;
 
   @override
+  State<MealNameWidget> createState() => _MealNameWidgetState();
+}
+
+class _MealNameWidgetState extends State<MealNameWidget> {
+  late bool isOriginalWeight;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.food.calories = widget.food.calories ~/ (widget.food.weight / 100);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    var kcalSplit = (food.calories * (food.weight / 100)).toString().split('.');
+    int kcalValue = (widget.food.calories * (widget.food.weight / 100)).round();
 
     return SizedBox(
-      width: width,
-      height: height * 0.1,
+      width: widget.width,
+      height: widget.height * 0.1,
       child: Column(
         children: [
           SizedBox(
-            width: width,
-            height: height * 0.06,
+            width: widget.width,
+            height: widget.height * 0.06,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                  width: width * 0.75,
-                  height: height * 0.6,
+                  width: widget.width * 0.75,
+                  height: widget.height * 0.6,
                   child: Align(
                     alignment: Alignment.bottomLeft,
                     child: Text(
-                      food.name,
+                      widget.food.name,
                       style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
                     ),
                   ),
                 ),
                 SizedBox(
-                  width: width * 0.15,
-                  height: height * 0.06,
+                  width: widget.width * 0.15,
+                  height: widget.height * 0.06,
                   child: Align(
                     alignment: Alignment.bottomRight,
                     child: Text(
-                      "${food.weight.toString()}g",
+                      "${widget.food.weight.toString()}g",
                       style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
                     ),
                   ),
@@ -250,26 +263,26 @@ class MealNameWidget extends StatelessWidget {
             ),
           ),
           SizedBox(
-            width: width,
-            height: height * 0.04,
+            width: widget.width,
+            height: widget.height * 0.04,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                  width: width * 0.72,
-                  height: height * 0.6,
+                  width: widget.width * 0.72,
+                  height: widget.height * 0.6,
                   child: const Text(
                     "Valeurs nutritionelles",
                     style: TextStyle(color: Colors.grey),
                   ),
                 ),
                 SizedBox(
-                  width: width * 0.18,
-                  height: height * 0.06,
+                  width: widget.width * 0.18,
+                  height: widget.height * 0.06,
                   child: Align(
                     alignment: Alignment.topRight,
                     child: Text(
-                      "${kcalSplit[0]} Kcal",
+                      "$kcalValue Kcal",
                       style: const TextStyle(color: Colors.grey),
                     ),
                   ),

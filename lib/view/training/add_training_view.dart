@@ -9,7 +9,6 @@ import 'package:sidekick_app/controller/workout_controller.dart';
 import 'package:sidekick_app/view/training/training_view.dart';
 import 'package:sidekick_app/widget/custom_button.dart';
 import 'package:sidekick_app/widget/custom_textfield.dart';
-import 'dart:io' show Platform;
 import 'package:url_launcher/url_launcher_string.dart';
 
 class AddTraining extends StatefulWidget {
@@ -95,22 +94,16 @@ class _AddTrainingState extends State<AddTraining> {
   }
 
   _launchURL() async {
-    if (Platform.isIOS) {
-      if (await canLaunchUrlString(widget.video)) {
-        await launchUrlString(widget.video);
-      } else {
-        if (await canLaunchUrlString(widget.video)) {
-          await launchUrlString(widget.video);
-        } else {
-          throw 'Could not launch the video';
-        }
-      }
+    if (await canLaunchUrlString(widget.video)) {
+      await launchUrlString(widget.video);
     } else {
-      if (await canLaunchUrlString(widget.video)) {
-        await launchUrlString(widget.video);
-      } else {
-        throw 'Could not launch the video';
-      }
+      Get.snackbar(
+        "Erreur",
+        "Erreur lors du lancement de la vidéo.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
   }
 

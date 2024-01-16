@@ -54,6 +54,25 @@ class WorkoutController extends GetxController {
     }
   }
 
+  Future<void> deleteWorkout(int id) async {
+    final response = await HttpRequest.mainDelete(
+      '/workouts/remove/${id.toString()}',
+    );
+
+    if (response.statusCode == 200) {
+      Get.snackbar(
+        "Succès",
+        "Exercice ajouté avec succès.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+      );
+      getAllWorkouts();
+    } else {
+      throw Exception('Failed to delete workout');
+    }
+  }
+
   Future<void> getSpecificExercises(String exo) async {
     final response = await HttpRequest.mainGet("/exercises-library/muscle/?muscle=$exo");
 
@@ -117,7 +136,7 @@ class WorkoutController extends GetxController {
       caloriesFetched.value = true;
       return caloriesData.burnedCalories;
     } else {
-      throw Exception('Failed to get workouts for the day');
+      return 0;
     }
   }
 

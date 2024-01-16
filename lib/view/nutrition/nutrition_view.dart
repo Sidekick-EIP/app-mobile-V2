@@ -461,7 +461,7 @@ class _DisplayNutritionPageState extends State<DisplayNutritionPage> {
                                                 }
                                               },
                                             ),
-                                            percent: workoutController.caloriesPercent,
+                                            percent: workoutController.caloriesPercent > 1 ? 1 : workoutController.caloriesPercent,
                                           );
                                         } else {
                                           return const CircularProgressIndicator();
